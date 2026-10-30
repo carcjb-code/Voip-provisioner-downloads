@@ -1,16 +1,19 @@
 # VoIP Provisioner — Descargas oficiales
 
-Este repositorio se reserva para los instaladores públicos de VoIP Provisioner. El código fuente y la configuración interna permanecen en el repositorio privado.
+Este repositorio contiene exclusivamente los paquetes públicos de distribución de VoIP Provisioner. El código fuente y la configuración interna permanecen en un repositorio privado.
 
-## Estado
+## Estado de las descargas
 
-Las compilaciones iniciales se publicarán como **versiones de prueba (pre-release)** hasta completar las comprobaciones de instalación, compatibilidad y conservación de los perfiles guardados.
+Las compilaciones disponibles se publicarán como **versiones de prueba (pre-release)** hasta completar las comprobaciones de instalación, compatibilidad y conservación de los perfiles guardados.
 
-## Plataformas previstas
+- **Windows 32 y 64 bits:** preparación de una publicación de prueba.
+- **Android 32 y 64 bits:** publicación pendiente de adaptar y validar el mecanismo de actualizaciones para que no dependa de credenciales de acceso al repositorio privado.
 
-- Android ARM 32 bits (APK)
-- Android ARM 64 bits (APK)
-- Windows 32 bits (paquete portable ZIP)
-- Windows 64 bits (paquete portable ZIP)
+## Recomendaciones
 
-No instalar una versión de prueba en un entorno de producción sin validarla primero en un equipo de laboratorio.
+No utilizar compilaciones de prueba en centrales de producción sin validarlas primero en un entorno de laboratorio. Antes de reinstalar o cambiar una versión, exportar los perfiles de servidor y comprobar que puedan restaurarse.
+
+## Lanzamientos
+
+Los instaladores y sus notas se publicarán en [Releases](https://github.com/carcjb-code/Voip-provisioner-downloads/releases).
+
