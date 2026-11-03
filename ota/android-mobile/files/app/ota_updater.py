@@ -354,6 +354,28 @@ def _fetch_file(path, platform, expected_sha):
     return raw
 
 
+def _make_tree_writable(root):
+    """Normaliza permisos de la copia temporal sin tocar la version activa."""
+    if not os.path.isdir(root):
+        os.makedirs(root, exist_ok=True)
+    for base, dirs, names in os.walk(root):
+        try:
+            os.chmod(base, 0o700)
+        except Exception:
+            pass
+        for name in names:
+            full = os.path.join(base, name)
+            try:
+                if not os.path.islink(full):
+                    os.chmod(full, 0o600)
+            except Exception:
+                pass
+    try:
+        os.chmod(root, 0o700)
+    except Exception:
+        pass
+
+
 def _write_checked(stage, path, content):
     path = _normalize_path(path)
     if not path or not _updateable_path(path):
@@ -365,6 +387,10 @@ def _write_checked(stage, path, content):
     parent = os.path.dirname(destination)
     if not os.path.isdir(parent):
         os.makedirs(parent, exist_ok=True)
+    try:
+        os.chmod(parent, 0o700)
+    except Exception:
+        pass
     with open(destination + '.tmp', 'wb') as fh:
         fh.write(content)
     os.replace(destination + '.tmp', destination)
@@ -406,6 +432,9 @@ def apply_updates():
             shutil.copytree(current, stage)
         else:
             os.makedirs(stage, exist_ok=True)
+        # copytree conserva permisos del arbol anterior; si una version dejo
+        # carpetas/archivos de solo lectura, la nueva etapa no podia escribirse.
+        _make_tree_writable(stage)
 
         for path in deleted_paths:
             existing = os.path.abspath(os.path.join(stage, *path.split('/')))
