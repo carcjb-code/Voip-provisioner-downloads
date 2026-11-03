@@ -418,21 +418,32 @@ Seleccione un servidor y abra el explorador.
     </div>
 
 <div class="card-neutral" id="appServerBackupCard" style="display:none;">
-        <h3>🛡️ Respaldo de servidores guardados</h3>
+        <h3>🛡️ Respaldo cifrado de servidores</h3>
         <p style="margin:10px 0 12px;">
-            Exportá los perfiles SSH y sus contraseñas a un JSON privado antes de una reinstalación o para migrarlos a otro teléfono.
-            Guardá ese archivo en un lugar seguro: contiene credenciales.
+            Protege IP, usuarios y contraseñas SSH con cifrado AES-256-GCM. La copia se guarda fuera de la aplicación, en
+            <b>Documentos/VoIP Provisioner</b>. La primera vez elegí la carpeta Documentos; después se actualiza automáticamente cada vez que modificás los servidores.
+            Al instalar nuevamente, la app te preguntará si querés buscar ese archivo en Documentos y restaurar los servidores.
+        </p>
+        <p style="margin:0 0 12px;color:#8a5b00;font-size:13px;">
+            Definí una clave maestra y guardala en un lugar seguro. No se almacena en texto plano y no podemos recuperarla si la olvidás.
         </p>
         <div style="display:flex;gap:8px;flex-wrap:wrap;">
-            <button type="button" class="btn btn-secondary" onclick="VoipProvisionerAndroid.exportarRespaldoServidores()">
-                📤 Exportar servidores
+            <button type="button" class="btn btn-primary" onclick="VoipProvisionerAndroid.configurarRespaldoCifrado()">
+                🔐 Activar / actualizar respaldo
             </button>
-            <button type="button" class="btn btn-primary" onclick="document.getElementById('appServerBackupFile').click()">
-                📥 Seleccionar respaldo JSON
+            <button type="button" class="btn btn-secondary" onclick="VoipProvisionerAndroid.restaurarRespaldoCifrado()">
+                📥 Restaurar servidores
             </button>
-            <input type="file" id="appServerBackupFile" accept=".json,application/json" style="display:none;" onchange="importarRespaldoServidores()">
+            <button type="button" class="btn btn-secondary" onclick="VoipProvisionerAndroid.prepararDesinstalacion()">
+                📦 Antes de desinstalar
+            </button>
+            <button type="button" class="btn btn-danger" onclick="VoipProvisionerAndroid.eliminarRespaldoCifrado()">
+                🗑️ Eliminar copia cifrada
+            </button>
         </div>
-        <div id="appServerBackupMessage" role="status" aria-live="polite" style="display:none;margin-top:12px;white-space:pre-wrap;overflow-wrap:anywhere;font-size:13px;line-height:1.45;"></div>
+        <small style="display:block;margin-top:10px;color:#777;line-height:1.45;">
+            Android no permite mostrar una pregunta durante la desinstalación desde Ajustes. Usá “Antes de desinstalar” para elegir si conservar o borrar la copia.
+        </small>
     </div>
 
     
@@ -2876,38 +2887,6 @@ function adminButtonProgressReset(target){
         if (check) check.disabled = false;
     }
 
-
-    window.importarRespaldoServidores = async function () {
-        var input = el('appServerBackupFile');
-        var area = el('appServerBackupMessage');
-        var file = input && input.files && input.files.length ? input.files[0] : null;
-        if (!file) return;
-        if (area) {
-            area.style.display = 'block';
-            area.style.color = '#4b5563';
-            area.textContent = 'Validando respaldo JSON e importando los perfiles...';
-        }
-        try {
-            var form = new FormData();
-            form.append('file', file, file.name);
-            var d = await pedirJson('/api/mantenimiento/servidores/importar', {
-                method: 'POST',
-                body: form,
-                headers: {'Cache-Control': 'no-cache'}
-            });
-            if (area) {
-                area.style.color = '#18794e';
-                area.textContent = d.message || 'Respaldo importado correctamente.';
-            }
-            input.value = '';
-            if (typeof cargarPerfiles === 'function') cargarPerfiles();
-        } catch (e) {
-            if (area) {
-                area.style.color = '#b42318';
-                area.textContent = e.message || 'No se pudo importar el respaldo.';
-            }
-        }
-    };
 
     window.inicializarActualizadorApp = async function () {
         var card = el('appUpdateCard');

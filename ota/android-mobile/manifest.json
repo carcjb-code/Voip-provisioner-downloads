@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "platform": "android-mobile",
-  "source_commit": "027bce57034d7d94b383567bcd64104a65a68773",
-  "updated_at": "2026-11-03T00:45:51.019920+00:00",
+  "source_commit": "d0f5ab5ac90eb17f19891a8231b35471734645f5",
+  "updated_at": "2026-11-03T03:22:10.171500+00:00",
   "files": [
     {
       "path": "app/ami_client.py",
@@ -176,8 +176,8 @@
     },
     {
       "path": "templates/admin.html",
-      "sha256": "291f9ca55163dd98e2a8d6faa3df17caddc7a20f399140e8b6e96f0b31fd0bbd",
-      "size": 115892
+      "sha256": "bf1b7f75f205af81776bca40aa0ba43adfb1059f4ae9cf9524e2ec8597b7ee0b",
+      "size": 115350
     },
     {
       "path": "templates/dashboard.html",
@@ -5221,6 +5221,57 @@
       "source_commit": "027bce57034d7d94b383567bcd64104a65a68773",
       "requires_full_update": false,
       "full_update_paths": []
+    },
+    {
+      "source_commit": "bd7d35624c9f5d98d69f0949d972ee03e1ec377f",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "android/app/src/main/AndroidManifest.xml",
+        "android/app/src/main/java/ar/com/voipprovisioner/EncryptedServerBackup.java",
+        "android/app/src/main/java/ar/com/voipprovisioner/MainActivity.java"
+      ]
+    },
+    {
+      "source_commit": "5899253a764017471097a93539e18e4adeb4d789",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "android/app/build.gradle",
+        "android/app/src/main/AndroidManifest.xml",
+        "android/app/src/main/java/ar/com/voipprovisioner/EncryptedServerBackup.java",
+        "android/app/src/main/java/ar/com/voipprovisioner/MainActivity.java"
+      ]
+    },
+    {
+      "source_commit": "0c612349f4f638793624b429e94ae4b89785b97c",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "android/app/src/main/java/ar/com/voipprovisioner/EncryptedServerBackup.java",
+        "android/app/src/main/java/ar/com/voipprovisioner/MainActivity.java"
+      ]
+    },
+    {
+      "source_commit": "7d83ea0014b309150420f3d1b7861c818af3c474",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "android/app/src/main/java/ar/com/voipprovisioner/MainActivity.java"
+      ]
+    },
+    {
+      "source_commit": "89e0cd4da394e1ea582c5d9953e755e5e87d24cb",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "5c875f8b62027e988e0d0dfa226735b60a30b61c",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "d0f5ab5ac90eb17f19891a8231b35471734645f5",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "android/app/src/main/java/ar/com/voipprovisioner/MainActivity.java"
+      ]
     }
   ]
 }
