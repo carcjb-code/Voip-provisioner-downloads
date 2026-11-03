@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "platform": "android-mobile",
-  "source_commit": "5b80ddaf1d0913c4ed00b8ffff3fd695a671b23c",
-  "updated_at": "2026-11-03T12:18:56.680912+00:00",
+  "source_commit": "52e861fe9a4767c4026882e04ea7f2448f3149c9",
+  "updated_at": "2026-11-03T12:57:22.973626+00:00",
   "files": [
     {
       "path": "app/ami_client.py",
@@ -61,8 +61,8 @@
     },
     {
       "path": "app/ota_updater.py",
-      "sha256": "c317686ac6cc3c272766e550cd35a256f937898e56f68ae362e15a0e8f806745",
-      "size": 20039
+      "sha256": "6d0b249de221219e550eb3a5a3f0f27723e4541a2952652458f378aa59c0984f",
+      "size": 20421
     },
     {
       "path": "app/progress.py",
@@ -5285,6 +5285,11 @@
     },
     {
       "source_commit": "5b80ddaf1d0913c4ed00b8ffff3fd695a671b23c",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "52e861fe9a4767c4026882e04ea7f2448f3149c9",
       "requires_full_update": false,
       "full_update_paths": []
     }

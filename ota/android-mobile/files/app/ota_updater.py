@@ -355,14 +355,23 @@ def _fetch_file(path, platform, expected_sha):
 
 
 def _make_tree_writable(root):
-    """Normaliza permisos de la copia temporal sin tocar la version activa."""
+    """Habilita primero cada directorio antes de intentar recorrerlo."""
     if not os.path.isdir(root):
         os.makedirs(root, exist_ok=True)
-    for base, dirs, names in os.walk(root):
+    # topdown=True es importante: chmod de los directorios hijos ANTES
+    # de que os.walk intente hacer scandir dentro de ellos.
+    for base, dirs, names in os.walk(root, topdown=True):
         try:
             os.chmod(base, 0o700)
         except Exception:
             pass
+        for dirname in dirs:
+            full_dir = os.path.join(base, dirname)
+            try:
+                if not os.path.islink(full_dir):
+                    os.chmod(full_dir, 0o700)
+            except Exception:
+                pass
         for name in names:
             full = os.path.join(base, name)
             try:
