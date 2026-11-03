@@ -385,6 +385,61 @@ def _make_tree_writable(root):
         pass
 
 
+def _copy_cached_update_tree(source, destination):
+    """Copia la cache OTA sin heredar permisos restrictivos del arbol anterior."""
+    if not os.path.isdir(source):
+        os.makedirs(destination, mode=0o700, exist_ok=True)
+        return
+
+    # La cache current pertenece al almacenamiento privado de esta app.
+    # Se normaliza antes de recorrer para poder leer incluso entradas 000/solo lectura.
+    try:
+        os.chmod(source, 0o700)
+    except Exception as exc:
+        raise RuntimeError('No se pudo habilitar la lectura de la cache OTA: {}'.format(str(exc)[:180]))
+
+    os.makedirs(destination, mode=0o700, exist_ok=True)
+
+    for base, dirs, names in os.walk(source, topdown=True, followlinks=False):
+        relative = os.path.relpath(base, source)
+        target_base = destination if relative == '.' else os.path.join(destination, relative)
+        os.makedirs(target_base, mode=0o700, exist_ok=True)
+
+        try:
+            os.chmod(base, 0o700)
+        except Exception as exc:
+            raise RuntimeError('No se pudo acceder a una carpeta de la cache OTA: {}'.format(str(exc)[:180]))
+
+        # Habilitar directorios hijos antes de que os.walk intente entrar en ellos.
+        for dirname in list(dirs):
+            source_dir = os.path.join(base, dirname)
+            if os.path.islink(source_dir):
+                dirs.remove(dirname)
+                continue
+            try:
+                os.chmod(source_dir, 0o700)
+            except Exception as exc:
+                raise RuntimeError('No se pudo habilitar una subcarpeta OTA: {}'.format(str(exc)[:180]))
+            os.makedirs(os.path.join(target_base, dirname), mode=0o700, exist_ok=True)
+
+        for filename in names:
+            source_file = os.path.join(base, filename)
+            if os.path.islink(source_file):
+                continue
+            target_file = os.path.join(target_base, filename)
+            try:
+                os.chmod(source_file, 0o600)
+                with open(source_file, 'rb') as src_fh:
+                    with open(target_file, 'wb') as dst_fh:
+                        shutil.copyfileobj(src_fh, dst_fh)
+                os.chmod(target_file, 0o600)
+            except Exception as exc:
+                raise RuntimeError('No se pudo copiar el archivo de cache {}: {}'.format(
+                    os.path.relpath(source_file, source).replace(os.sep, '/'),
+                    str(exc)[:180]
+                ))
+
+
 def _write_checked(stage, path, content):
     path = _normalize_path(path)
     if not path or not _updateable_path(path):
@@ -437,10 +492,7 @@ def apply_updates():
     downloaded = []
 
     try:
-        if os.path.isdir(current):
-            shutil.copytree(current, stage)
-        else:
-            os.makedirs(stage, exist_ok=True)
+        _copy_cached_update_tree(current, stage)
         # copytree conserva permisos del arbol anterior; si una version dejo
         # carpetas/archivos de solo lectura, la nueva etapa no podia escribirse.
         _make_tree_writable(stage)
