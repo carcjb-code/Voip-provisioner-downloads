@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>VoIP Provisioner - Monitoreo</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f4f6f8;
+    color: #20252b;
+}
+
+.header {
+    background: #ffffff;
+    border-bottom: 1px solid #dfe3e8;
+    padding: 15px 25px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 22px;
+}
+
+.header small {
+    color: #68717a;
+}
+
+.container {
+    padding: 20px;
+}
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.card {
+    background: #fff;
+    border: 1px solid #dfe3e8;
+    border-radius: 8px;
+    padding: 18px;
+}
+
+.card .number {
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.card .label {
+    color: #68717a;
+    margin-top: 5px;
+}
+
+.section {
+    background: #fff;
+    border: 1px solid #dfe3e8;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+
+.section-title {
+    padding: 14px 18px;
+    font-weight: bold;
+    border-bottom: 1px solid #dfe3e8;
+    background: #fafbfc;
+}
+
+.table-wrap {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th,
+td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #edf0f2;
+    text-align: left;
+    white-space: nowrap;
+}
+
+th {
+    font-size: 13px;
+    color: #68717a;
+}
+
+.status {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.online {
+    background: #e6f7ed;
+    color: #168044;
+}
+
+.offline {
+    background: #fdecec;
+    color: #c62828;
+}
+
+.unknown {
+    background: #fff5d9;
+    color: #946200;
+}
+
+.degraded {
+    background: #fff0d6;
+    color: #a35a00;
+}
+
+.empty {
+    padding: 20px;
+    color: #777;
+    text-align: center;
+}
+
+@media(max-width:900px) {
+    .cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media(max-width:600px) {
+    .cards {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+    <div>
+        <h1>VoIP Provisioner</h1>
+        <small>Monitoreo de Asterisk</small>
+    </div>
+
+    <div>
+        <span id="lastUpdate">Actualizando...</span>
+    </div>
+</div>
+
+<div class="container">
+
+    <div class="cards">
+        <div class="card">
+            <div class="number" id="totalEndpoints">0</div>
+            <div class="label">Teléfonos</div>
+        </div>
+
+        <div class="card">
+            <div class="number" id="onlineEndpoints">0</div>
+            <div class="label">Teléfonos online</div>
+        </div>
+
+        <div class="card">
+            <div class="number" id="totalTrunks">0</div>
+            <div class="label">Troncales / peers</div>
+        </div>
+
+        <div class="card">
+            <div class="number" id="activeCalls">0</div>
+            <div class="label">Llamadas activas</div>
+        </div>
+    </div>
+
+
+    <div class="section">
+
+        <div class="section-title">
+            Teléfonos / Internos
+        </div>
+
+        <div class="table-wrap">
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Interno</th>
+                        <th>IP</th>
+                        <th>Tecnología</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+
+                <tbody id="endpointsBody">
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+    <div class="section">
+
+        <div class="section-title">
+            Troncales
+        </div>
+
+        <div class="table-wrap">
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Host</th>
+                        <th>Tecnología</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+
+                <tbody id="trunksBody">
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+    <div class="section">
+
+        <div class="section-title">
+            Llamadas activas
+        </div>
+
+        <div class="table-wrap">
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Canal</th>
+                        <th>Contexto</th>
+                        <th>Destino</th>
+                        <th>Estado</th>
+                        <th>Aplicación</th>
+                        <th>Datos</th>
+                    </tr>
+                </thead>
+
+                <tbody id="callsBody">
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+function escapeHtml(value) {
+    if (value === null || value === undefined) {
+        return '';
+    }
+
+    return String(value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+}
+
+
+function statusClass(status) {
+
+    status = String(status || '').toUpperCase();
+
+    if (status === 'ONLINE') {
+        return 'online';
+    }
+
+    if (status === 'OFFLINE') {
+        return 'offline';
+    }
+
+    if (status === 'DEGRADED') {
+        return 'degraded';
+    }
+
+    return 'unknown';
+}
+
+
+function statusText(status) {
+
+    status = String(status || '').toUpperCase();
+
+    if (status === 'ONLINE') {
+        return 'ONLINE';
+    }
+
+    if (status === 'OFFLINE') {
+        return 'OFFLINE';
+    }
+
+    if (status === 'DEGRADED') {
+        return 'DEGRADADO';
+    }
+
+    if (status === 'UNMONITORED') {
+        return 'SIN QUALIFY';
+    }
+
+    return 'DESCONOCIDO';
+}
+
+
+function renderEndpoints(items) {
+
+    const body = document.getElementById('endpointsBody');
+
+    document.getElementById('totalEndpoints').textContent =
+        items.length;
+
+    document.getElementById('onlineEndpoints').textContent =
+        items.filter(x => x.online).length;
+
+    if (!items.length) {
+        body.innerHTML =
+            '<tr><td colspan="4" class="empty">No se detectaron teléfonos</td></tr>';
+        return;
+    }
+
+    items.sort(function(a,b) {
+        return String(a.extension).localeCompare(
+            String(b.extension),
+            undefined,
+            {numeric:true}
+        );
+    });
+
+    body.innerHTML = items.map(function(x) {
+
+        return '<tr>' +
+            '<td><strong>' + escapeHtml(x.extension) + '</strong></td>' +
+            '<td>' + escapeHtml(x.ip || '-') + '</td>' +
+            '<td>' + escapeHtml(x.technology || '-') + '</td>' +
+            '<td><span class="status ' +
+                statusClass(x.status) + '">' +
+                statusText(x.status) +
+            '</span></td>' +
+        '</tr>';
+
+    }).join('');
+}
+
+
+function renderTrunks(items) {
+
+    const body = document.getElementById('trunksBody');
+
+    document.getElementById('totalTrunks').textContent =
+        items.length;
+
+    if (!items.length) {
+        body.innerHTML =
+            '<tr><td colspan="4" class="empty">No se detectaron troncales</td></tr>';
+        return;
+    }
+
+    body.innerHTML = items.map(function(x) {
+
+        return '<tr>' +
+            '<td><strong>' + escapeHtml(x.name) + '</strong></td>' +
+            '<td>' + escapeHtml(x.host || '-') + '</td>' +
+            '<td>' + escapeHtml(x.technology || '-') + '</td>' +
+            '<td><span class="status ' +
+                statusClass(x.status) + '">' +
+                statusText(x.status) +
+            '</span></td>' +
+        '</tr>';
+
+    }).join('');
+}
+
+
+function renderCalls(items) {
+
+    const body = document.getElementById('callsBody');
+
+    document.getElementById('activeCalls').textContent =
+        items.length;
+
+    if (!items.length) {
+
+        body.innerHTML =
+            '<tr><td colspan="6" class="empty">' +
+            'No hay llamadas activas' +
+            '</td></tr>';
+
+        return;
+    }
+
+    body.innerHTML = items.map(function(x) {
+
+        return '<tr>' +
+            '<td>' + escapeHtml(x.channel) + '</td>' +
+            '<td>' + escapeHtml(x.context) + '</td>' +
+            '<td>' + escapeHtml(x.extension) + '</td>' +
+            '<td>' + escapeHtml(x.state) + '</td>' +
+            '<td>' + escapeHtml(x.application) + '</td>' +
+            '<td>' + escapeHtml(x.data) + '</td>' +
+        '</tr>';
+
+    }).join('');
+}
+
+
+function updateMonitor() {
+
+    fetch('/api/status?_=' + Date.now(), {
+        cache: 'no-store'
+    })
+    .then(function(response) {
+        return response.json();
+    })
+    .then(function(result) {
+
+        if (!result.ok) {
+            throw new Error(result.error || 'Error');
+        }
+
+        const data = result.data || {};
+
+        renderEndpoints(data.endpoints || []);
+        renderTrunks(data.trunks || []);
+        renderCalls(data.calls || []);
+
+        const now = new Date();
+
+        document.getElementById('lastUpdate').textContent =
+            'Actualizado ' +
+            now.toLocaleTimeString();
+
+    })
+    .catch(function(error) {
+
+        console.error(error);
+
+        document.getElementById('lastUpdate').textContent =
+            'Error de conexión';
+
+    });
+}
+
+
+// Actualización cada segundo
+updateMonitor();
+setInterval(updateMonitor, 1000);
+
+</script>
+
+</body>
+</html>

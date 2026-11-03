@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<gs_provision version="1">
+<mac>{mac}</mac>
+<config version="1">
+<P271>1</P271>
+<P270>{interno}</P270>
+<P35>{interno}</P35>
+<P36>{interno}</P36>
+<P34>{password}</P34>
+<P3>{nombre_mostrar}</P3>
+<P47>{servidor_sip}</P47>
+<P48>{servidor_sip}</P48>
+<P31>1</P31>
+<P32>60</P32>
+<P40>5060</P40>
+
+<!-- NTP: host del perfil Issabel configurado en VoIP Provisioner -->
+<P30>{servidor_sip}</P30>
+<P143>0</P143>
+
+<!-- Zona horaria Argentina (UTC-3), sin que DHCP Option 2 la pise -->
+<P64>ART3</P64>
+<P144>0</P144>
+
+<P1362>es</P1362>
+</config>
+</gs_provision>

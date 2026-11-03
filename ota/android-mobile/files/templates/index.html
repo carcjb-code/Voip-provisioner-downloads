@@ -1,0 +1,3596 @@
+<!-- CAMERA-FIX-VERSION-20260924111622 -->
+<!DOCTYPE html>
+<html lang="es" data-theme="oscuro">
+<head>
+
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>VoIP Provisioner</title>
+    <link rel="manifest" href="/static/manifest.json">
+    <meta name="theme-color" content="#4da6ff">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+    <!-- Iconos para acceso directo desde Chrome/Android -->
+    <link rel="icon" type="image/webp" sizes="256x256" href="/static/icon-256.webp?v=20261026">
+    <link rel="icon" type="image/webp" sizes="256x256" href="/static/icon-256.webp?v=20261026">
+    <link rel="apple-touch-icon" href="/static/icon-256.webp?v=20261026">
+    <script src="/static/html5-qrcode.min.js"></script>
+    <style>
+        :root {
+            --bg-body: #1a1a2e; --text-color: #e0e0e0; --card-bg: #16213e; --border: #2a2a4a;
+            --blue: #4da6ff; --green: #27ae60; --red: #e74c3c; --yellow: #f39c12;
+            --text-muted: #8a8a9e; --hover-row: #1f2d5a; --modal-bg: rgba(0,0,0,0.8);
+            --modal-content-bg: #1a1a2e; --input-bg: #0f1629;
+        }
+        html[data-theme="claro"] {
+            --bg-body: #f0f2f5; --text-color: #1a1a2e; --card-bg: #ffffff; --border: #d0d0d0;
+            --text-muted: #65676b; --hover-row: #f5f6f8; --modal-bg: rgba(0,0,0,0.5);
+            --modal-content-bg: #f0f2f5; --input-bg: #ffffff;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, sans-serif; }
+        body { background-color: var(--bg-body); color: var(--text-color); padding: 15px; transition: all 0.3s; display: flex; justify-content: center; }
+        .container { width: 100%; max-width: 1200px; margin: 0 auto; }
+        .main-header { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 4px 0 10px; margin-bottom: 2px; }
+        .titulo-container { display: flex; flex-direction: column; align-items: flex-start; gap: 0; min-width: 0; }
+        .titulo-principal { font-size: 24px; color: #4da6ff; font-weight: 700; line-height: 1.2; letter-spacing: -.35px; text-align: left; }
+        .menu-return-row { display: none; }
+        @media (max-width: 480px) { .main-header { gap: 8px; } .titulo-principal { font-size: 18px; } .vp-menu-back { padding: 7px 9px; font-size: 12px; } }
+        .vp-menu-back { display: none; align-items: center; justify-content: center; gap: 6px; background: var(--card-bg); color: var(--blue); border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; cursor: pointer; font-size: 13px; font-weight: 600; line-height: 1.25; text-decoration: none; white-space: nowrap; }
+        .vp-menu-back:hover { border-color: var(--blue); color: var(--blue); }
+        .tema-switch { position: relative; display: inline-block; width: 56px; height: 28px; flex-shrink: 0; cursor: pointer; }
+        .tema-switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #4a4a6a; transition: 0.3s; border-radius: 28px; }
+        .slider:before { position: absolute; content: "\1F319"; font-size: 14px; left: 4px; bottom: 4px; transition: 0.3s; background: white; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; }
+        input:checked + .slider { background-color: var(--blue); }
+        input:checked + .slider:before { content: "\2600\FE0F"; transform: translateX(28px); }
+        .server-row { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
+        .server-row select { flex: 1; min-width: 180px; background: var(--card-bg); color: var(--text-color); border: 1px solid var(--border); padding: 8px 12px; border-radius: 6px; outline: none; }
+        .icon-btn { background: var(--card-bg); border: 1px solid var(--border); border-radius: 6px; padding: 6px 10px; cursor: pointer; font-size: 20px; display: inline-flex; align-items: center; justify-content: center; color: var(--text-color); transition: all 0.2s; }
+        .icon-btn:hover { border-color: var(--blue); color: var(--blue); }
+        .panel { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 15px; margin-bottom: 15px; }
+        .panel-title { font-size: 16px; font-weight: 600; margin-bottom: 12px; border-bottom: 1px solid var(--border); padding-bottom: 6px; color: var(--blue); }
+        label { display: block; margin-top: 8px; font-weight: 500; font-size: 14px; }
+        input, select { width: 100%; padding: 10px 12px; margin: 4px 0; border-radius: 6px; border: 1px solid var(--border); background: var(--input-bg); color: var(--text-color); font-size: 15px; }
+        input:focus::placeholder, select:focus::placeholder, textarea:focus::placeholder {
+            opacity: 0 !important; visibility: hidden !important; transition: opacity 0.15s ease, visibility 0.15s ease;
+        }
+        input:focus, select:focus { border-color: var(--blue); outline: none; }
+        .fila { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+        .fila input, .fila select { flex: 1; min-width: 120px; }
+        .fila-ubicaciones { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; width:100%; }
+        .fila-ubicaciones .combo-ubi { min-width:0; }
+        .fila-ubicaciones .combo-ubicacion { min-width:0; }
+        @media (max-width: 760px) { .fila-ubicaciones { grid-template-columns:1fr; } }
+
+        .fila-mac-sn { display:grid; grid-template-columns:minmax(0,1fr) 58px; gap:8px; align-items:stretch; }
+        .mac-sn-fields { display:grid; grid-template-rows:1fr 1fr; gap:8px; min-width:0; }
+        .mac-sn-fields input { margin:0; min-width:0; }
+        .camera-tall { width:58px; height:100%; min-height:88px; padding:8px !important; font-size:25px !important; display:flex; align-items:center; justify-content:center; }
+        @media (max-width:620px) { .fila-mac-sn { grid-template-columns:minmax(0,1fr) 52px; } .camera-tall { width:52px; } }
+        .th-wrap { display:flex; align-items:center; justify-content:center; gap:3px; position:relative; }
+        .th-menu-btn { border:0; background:transparent; color:inherit; padding:1px 3px; font-size:11px; cursor:pointer; opacity:.8; }
+        .th-menu-btn:hover { opacity:1; background:rgba(255,255,255,.15); border-radius:3px; }
+        .col-menu { display:none; position:absolute; top:calc(100% + 4px); right:0; min-width:190px; background:var(--card-bg); color:var(--text-color); border:1px solid var(--border); border-radius:7px; box-shadow:0 8px 20px rgba(0,0,0,.3); z-index:20000; padding:6px; text-align:left; }
+        .col-menu.open { display:block; }
+        .col-menu label { margin:0; padding:6px 8px; display:flex; align-items:center; gap:7px; cursor:pointer; font-size:12px; font-weight:500; }
+        .col-menu label:hover { background:var(--hover-row); border-radius:4px; }
+        .col-menu input { width:auto; margin:0; padding:0; }
+        .col-action { display:block; width:100%; text-align:left; background:transparent; color:var(--blue); border:0; padding:7px 8px; font-size:12px; cursor:pointer; }
+        .col-action:hover { background:var(--hover-row); border-radius:4px; }
+        .edit-field { width:100%; }
+        .edit-dirty { border-color:var(--yellow) !important; box-shadow:0 0 0 1px rgba(243,156,18,.25); }
+        .inline-edit-bar { display:none; margin-top:10px; gap:8px; align-items:center; }
+        .inline-edit-bar.show { display:flex; }
+        .inline-edit-note { color:var(--yellow); font-size:12px; margin-right:auto; }
+        .campos-grid { display: grid; grid-template-columns: 1fr; gap: 8px; }
+        @media (min-width: 768px) { .campos-grid { grid-template-columns: 1fr 1fr; } .campo-ancho { grid-column: span 2; } }
+        button { padding: 12px 16px; border: none; border-radius: 6px; font-weight: 600; font-size: 15px; cursor: pointer; }
+        .btn-primary { background: var(--blue); color: white; width: 100%; }
+        .btn-warning { background: var(--yellow); color: white; width: 100%; }
+        .btn-danger { background: var(--red); color: white; width: 100%; }
+        .btn-small { background: var(--border); color: var(--text-muted); width: auto; font-size: 13px; padding: 6px 12px; }
+        .status { background: var(--input-bg); padding: 8px; border-radius: 5px; text-align: center; margin: 8px 0; font-size: 13px; border: 1px solid var(--border); }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; background: var(--card-bg); font-size: 13px; }
+        th { background: var(--blue); color: white; padding: 8px; font-weight: 600; text-align: left; }
+        td { padding: 8px; text-align: center; border-bottom: 1px solid var(--border); }
+        tr:hover { background: var(--hover-row); }
+        .btn-edit, .btn-del, .btn-expand { padding: 3px 8px; font-size: 13px; border-radius: 4px; color: white; width: auto; border: none; cursor: pointer; }
+        .btn-edit { background: var(--yellow); }
+        .btn-del { background: var(--red); }
+        .btn-expand { background: var(--green); font-weight: bold; }
+        .btn-expand.expanded { background: var(--blue); }
+        .expand-row { display: none; }
+        .expand-row.show { display: table-row; }
+        .expand-content { padding: 10px; text-align: left; font-size: 13px; }
+        .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 8px; margin-top: 5px; }
+        .info-item { background: var(--input-bg); padding: 6px 10px; border-radius: 4px; border: 1px solid var(--border); }
+        .info-item strong { color: var(--blue); font-size: 11px; display: block; margin-bottom: 2px; }
+        .info-item input { font-size: 12px; padding: 4px; margin-top: 2px; }
+        .ip-link { color: var(--blue); text-decoration: none; font-family: monospace; font-weight: 600; padding: 2px 6px; background: rgba(77,166,255,0.1); border-radius: 4px; cursor: pointer; }
+        #busquedaBox { display: flex; gap: 5px; margin-bottom: 10px; }
+        #busquedaBox input { flex: 1; }
+        .pagination-controls { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; gap: 10px; flex-wrap: wrap; }
+        .pagination-controls select, .pagination-controls button { padding: 4px 10px; font-size: 13px; background: var(--card-bg); color: var(--text-color); border: 1px solid var(--border); border-radius: 4px; cursor: pointer; }
+        .go-top { position: fixed; bottom: 20px; right: 20px; background: var(--blue); color: white; width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 24px; opacity: 0; visibility: hidden; transition: opacity 0.3s; z-index: 100; }
+        .go-top.show { opacity: 1; visibility: visible; }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--modal-bg); z-index: 1000; overflow-y: auto; }
+        .modal-content { background: var(--modal-content-bg); margin: 20px auto; padding: 20px; border-radius: 10px; max-width: 500px; border: 1px solid var(--border); }
+        .loading-spinner { display: inline-block; width: 12px; height: 12px; border: 2px solid var(--border); border-top-color: var(--blue); border-radius: 50%; animation: spin 0.8s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .btn-progress-container { position: relative; overflow: hidden; }
+        .btn-progress-bar { position: absolute; top: 0; left: 0; height: 100%; background: rgba(255,255,255,0.3); width: 0%; transition: width 0.3s; pointer-events: none; border-radius: 6px; }
+        .btn-progress-text { position: relative; z-index: 1; }
+        .btn-disabled-overlay { opacity: 0.7; cursor: not-allowed !important; }
+        .mac-invalid { border-color: var(--red) !important; }
+    
+.combo-ubi { position:relative; width:100%; }
+.combo-ubi input { width:100%; padding-right:38px; }
+.combo-ubi .combo-arrow { position:absolute; right:5px; top:50%; transform:translateY(-50%); border:0; background:transparent; cursor:pointer; font-size:18px; color:var(--text-muted); padding:6px; }
+.combo-ubi .combo-menu { display:none; position:absolute; z-index:1000; left:0; right:0; top:calc(100% + 3px); max-height:220px; overflow:auto; background:var(--panel-bg,#fff); border:1px solid var(--border,#ddd); border-radius:6px; box-shadow:0 6px 16px rgba(0,0,0,.15); }
+.combo-ubi.open .combo-menu { display:block; }
+.combo-ubi .combo-option { padding:9px 11px; cursor:pointer; }
+.combo-ubi .combo-option:hover { background:rgba(77,166,255,.12); }
+</style>
+
+
+
+
+<style id="voip-logs-v11-css">
+
+/* ==========================================================
+   VOIP PROVISIONER - LOGS V11
+   ========================================================== */
+
+#modalLogs .voip-logs-modal,
+#modalLogs .modal-content {
+    width: min(1200px, 96vw) !important;
+    max-width: 1200px !important;
+}
+
+#voipLiveLogs {
+    width: 100%;
+}
+
+#voipLiveLogsBody {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* BUSQUEDA + BOTONES ARRIBA */
+.voip-logs-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+#voipLiveLogsFilter {
+    flex: 1 1 420px;
+    min-width: 260px;
+    height: 40px;
+    box-sizing: border-box;
+}
+
+#voipLogsRefresh,
+#voipLogsClear {
+    height: 40px;
+    padding: 0 16px;
+    border-radius: 7px;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+/* FILTROS POR TIPO */
+.voip-logs-types {
+    display: flex;
+    gap: 7px;
+    flex-wrap: wrap;
+    padding: 4px 0 2px 0;
+}
+
+.voip-log-type {
+    border: 1px solid rgba(127,127,127,.35);
+    background: transparent;
+    color: inherit;
+    border-radius: 16px;
+    padding: 6px 12px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: .15s ease;
+}
+
+.voip-log-type:hover {
+    transform: translateY(-1px);
+}
+
+.voip-log-type.active {
+    font-weight: 700;
+    border-color: currentColor;
+}
+
+/* ESTADO */
+#voipLiveLogsStatus {
+    min-height: 20px;
+    font-size: 12px;
+    opacity: .8;
+}
+
+/* VENTANA GRANDE */
+#voipLiveLogsContent {
+    width: 100%;
+    height: 58vh !important;
+    min-height: 420px;
+    max-height: 680px !important;
+    overflow-y: auto !important;
+    overflow-x: hidden;
+    border-radius: 8px;
+}
+
+/* EVENTOS */
+.voip-log-row {
+    display: grid;
+    grid-template-columns: 175px 145px minmax(0, 1fr);
+    gap: 12px;
+    align-items: start;
+    padding: 10px 12px;
+    border-bottom: 1px solid rgba(127,127,127,.15);
+    line-height: 1.35;
+}
+
+.voip-log-row:hover {
+    background: rgba(127,127,127,.06);
+}
+
+.voip-log-time {
+    font-family: monospace;
+    font-size: 12px;
+    opacity: .75;
+    white-space: nowrap;
+}
+
+.voip-log-action {
+    font-weight: 700;
+    font-size: 12px;
+}
+
+.voip-log-detail {
+    min-width: 0;
+    font-size: 13px;
+    overflow-wrap: anywhere;
+}
+
+/* PAGINACION */
+.voip-logs-pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 0 2px;
+}
+
+#voipLogsPrev,
+#voipLogsNext {
+    min-width: 90px;
+    height: 34px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+#voipLogsPrev:disabled,
+#voipLogsNext:disabled {
+    opacity: .4;
+    cursor: default;
+}
+
+#voipLogsPageInfo {
+    min-width: 100px;
+    text-align: center;
+    font-size: 12px;
+    opacity: .8;
+}
+
+/* MENSAJE VACIO */
+.voip-log-empty {
+    padding: 35px 20px;
+    text-align: center;
+    opacity: .7;
+}
+
+/* RESPONSIVE */
+@media (max-width: 800px) {
+    .voip-log-row {
+        grid-template-columns: 1fr;
+        gap: 3px;
+    }
+
+    .voip-log-time {
+        font-size: 11px;
+    }
+
+    #voipLiveLogsContent {
+        height: 60vh !important;
+        min-height: 350px;
+    }
+}
+
+</style>
+
+
+    <!-- Iconos para acceso directo desde Chrome/Android -->
+    <link rel="icon" type="image/webp" sizes="256x256" href="/static/icon-256.webp?v=20261026">
+    <link rel="icon" type="image/webp" sizes="256x256" href="/static/icon-256.webp?v=20261026">
+    <link rel="apple-touch-icon" href="/static/icon-256.webp?v=20261026">
+
+<script id="vp-common-menu-back-script">
+function vpConfigurarBotonMenuPrincipal(){
+  var boton=document.getElementById('btnVolverMenuPrincipal');
+  if(boton && window.VoipProvisionerAndroid &&
+      typeof window.VoipProvisionerAndroid.volverMenuPrincipal==='function'){
+    boton.style.display='inline-flex';
+  }
+}
+function vpVolverMenuPrincipal(){
+  try{
+    if(window.VoipProvisionerAndroid &&
+       typeof window.VoipProvisionerAndroid.volverMenuPrincipal==='function'){
+      window.VoipProvisionerAndroid.volverMenuPrincipal();
+    }
+  }catch(e){console.error('No se pudo volver al menú principal:',e);}
+}
+document.addEventListener('DOMContentLoaded',vpConfigurarBotonMenuPrincipal);
+</script>
+<style id="vp-page-title-unified-v4">
+/* Encabezados unificados */
+.vp-page-title,
+h1.vp-page-title,
+.header h1.vp-page-title,
+.title h1.vp-page-title,
+.titulo-principal.vp-page-title{
+ display:block!important;
+ font-family:"Segoe UI",Arial,sans-serif!important;
+ font-size:24px!important;
+ line-height:1.2!important;
+ font-weight:700!important;
+ letter-spacing:-.35px!important;
+ color:#4da6ff!important;
+ margin:0!important;
+ text-align:left!important;
+ text-transform:none!important;
+}
+.titulo-container{align-items:flex-start!important;text-align:left!important}
+.title .live-dot{display:none!important}
+@media(max-width:560px){
+ .vp-page-title,h1.vp-page-title,.header h1.vp-page-title,.title h1.vp-page-title,.titulo-principal.vp-page-title{font-size:20px!important}
+}
+</style>
+</head>
+<body>
+<div class="container">
+    <div class="main-header">
+        <div class="titulo-container">
+            <div class="titulo-principal vp-page-title" id="tituloPrincipal">VoIP Provisioner</div>
+        </div>
+        <button type="button" id="btnVolverMenuPrincipal" class="vp-menu-back"
+                onclick="vpVolverMenuPrincipal()" title="Volver al menú principal">← Menú principal</button>
+    </div>
+    <div class="server-row">
+        <select id="perfilSelect"><option value="">🖥️ Seleccionar servidor</option></select>
+        <span id="sftpIcon" class="icon-btn" onclick="verificarConexionSFTP()" title="Probar conexión">⚪</span>
+    </div>
+
+    <div class="panel">
+        <div id="seccionNormal">
+            <div class="campos-grid">
+                <div class="fila-ubicaciones campo-ancho tres-columnas-ubicacion">
+                    <div class="combo-ubi" data-campo="edificios"><input type="text" id="edificio" autocomplete="off" placeholder="🏢 Edificio"><button type="button" class="combo-arrow" onclick="toggleCombo('edificios',event)">▾</button><div class="combo-menu" id="menu-edificios"></div></div>
+                    <div class="combo-ubi" data-campo="pisos"><input type="text" id="piso" autocomplete="off" placeholder="🏬 Piso"><button type="button" class="combo-arrow" onclick="toggleCombo('pisos',event)">▾</button><div class="combo-menu" id="menu-pisos"></div></div>
+                    <div class="combo-ubi" data-campo="dependencias"><input type="text" id="dependencia" autocomplete="off" placeholder="⚖️ Dependencia"><button type="button" class="combo-arrow" onclick="toggleCombo('dependencias',event)">▾</button><div class="combo-menu" id="menu-dependencias"></div></div>
+                </div>
+                <div class="fila campo-ancho" style="display:flex; gap:8px; align-items:center;">
+                    <div style="flex:0 0 150px; display:flex; flex-direction:column; gap:4px;">
+                        <label for="tecnologiaSelect" style="font-size:12px; font-weight:600; opacity:.85;">Tecnología</label>
+                        <select id="tecnologiaSelect" style="width:100%; min-height:40px; display:block; visibility:visible; opacity:1;">
+                            <option value="sip">SIP</option>
+                            <option value="pjsip">PJSIP</option>
+                        </select>
+                    </div>
+
+                    <div style="flex:1; display:flex; flex-direction:column; gap:4px;">
+                        <label for="modeloSelect" style="font-size:12px; font-weight:600; opacity:.85;">Modelo de teléfono</label>
+                        <select id="modeloSelect" class="campo-ancho" style="width:100%; min-height:40px; display:block; visibility:visible; opacity:1;">
+                            <option value="" selected disabled>Seleccione modelo de telefono</option>
+                        </select>
+                        <div id="modeloDetectadoMsg" role="status" aria-live="polite" style="min-height:15px; font-size:11px; line-height:1.25; opacity:.9;"></div>
+                    </div>
+                </div>
+                <div class="fila campo-ancho">
+                    <input type="text" id="interno" autocomplete="off" placeholder="🔢 Interno *">
+                    <input type="password" id="password" autocomplete="new-password" placeholder="🔐 Contraseña">
+                </div>
+                <div class="fila-mac-sn campo-ancho">
+                    <div class="mac-sn-fields">
+                        <input type="text" id="mac" autocomplete="off" placeholder="🔖 MAC (12 hex)" maxlength="12">
+                        <input type="text" id="numeroSerie" autocomplete="off" placeholder="🔢 Número de Serie (S/N)">
+                    </div>
+                    <button
+    type="button"
+    id="btnScan"
+    class="icon-btn camera-tall"
+    title="Escanear MAC y S/N"
+    style="cursor:pointer;position:relative;"
+    onclick="(function(){
+        var m=document.getElementById('voipScanModal');
+        if(m){
+            m.style.display='flex';
+            m.style.visibility='visible';
+            m.style.opacity='1';
+            m.style.position='fixed';
+            m.style.inset='0';
+            m.style.zIndex='2147483647';
+        }
+
+        var msg=document.getElementById('voipScanMsg');
+        if(msg){
+            msg.textContent='📷 Preparando cámara...';
+            msg.style.display='block';
+        }
+
+        try{
+            if(typeof window.abrirScannerMAC==='function'){
+                setTimeout(function(){
+                    try{
+                        window.abrirScannerMAC();
+                    }catch(e){
+                        console.error('abrirScannerMAC:',e);
+                    }
+                },200);
+            }
+        }catch(e){
+            console.error('scanner:',e);
+        }
+
+        return false;
+    })();"
+>📷</button>
+                </div>
+            </div>
+        </div>
+
+        <div style="margin-top:12px; display:flex; flex-direction:column; gap:8px;">
+            <button class="btn-primary" id="btnGenerar" disabled onclick="generar()">⚡ Generar Configuración</button>
+            <button class="btn-warning" id="btnSyncFull" disabled onclick="syncFull()">🔄 Sincronizar con Asterisk</button>
+            <button class="btn-small" id="btnRango" disabled onclick="abrirRango()" style="width:100%; padding:10px; font-size:14px;">📦 Carga masiva de internos (rango)</button>
+        </div>
+    </div>
+
+    <div class="panel">
+        <div class="panel-title">📋 Registros</div>
+        <div id="busquedaBox">
+            <input type="text" id="busquedaInput" autocomplete="off" placeholder="Filtrar..." oninput="filtrarTabla()">
+            <button class="btn-small" onclick="document.getElementById('busquedaInput').value=''; filtrarTabla();">✖</button>
+            <button class="btn-small" onclick="exportarExcel()" style="background:var(--blue); color:white;">📤 Excel</button>
+        </div>
+        <div style="overflow-x:auto;">
+            <table>
+                <thead><tr id="tablaHeader">
+                    <th data-col="__select"><input type="checkbox" id="selectAll" onchange="toggleSelectAll()"></th>
+                    <th data-col="interno"><div class="th-wrap"><span>Interno</span><button class="th-menu-btn" onclick="abrirMenuColumna('interno',event)">▾</button><div class="col-menu" id="colmenu-interno"></div></div></th>
+                    <th data-col="ip"><div class="th-wrap"><span>IP</span><button class="th-menu-btn" onclick="abrirMenuColumna('ip',event)">▾</button><div class="col-menu" id="colmenu-ip"></div></div></th>
+                    <th data-col="mac"><div class="th-wrap"><span>MAC</span><button class="th-menu-btn" onclick="abrirMenuColumna('mac',event)">▾</button><div class="col-menu" id="colmenu-mac"></div></div></th>
+                    <th data-col="numero_serie"><div class="th-wrap"><span>S/N</span><button class="th-menu-btn" onclick="abrirMenuColumna('numero_serie',event)">▾</button><div class="col-menu" id="colmenu-numero_serie"></div></div></th>
+                    <th data-col="edificio"><div class="th-wrap"><span>Edificio</span><button class="th-menu-btn" onclick="abrirMenuColumna('edificio',event)">▾</button><div class="col-menu" id="colmenu-edificio"></div></div></th>
+                    <th data-col="piso"><div class="th-wrap"><span>Piso</span><button class="th-menu-btn" onclick="abrirMenuColumna('piso',event)">▾</button><div class="col-menu" id="colmenu-piso"></div></div></th>
+                    <th data-col="dependencia"><div class="th-wrap"><span>Dependencia</span><button class="th-menu-btn" onclick="abrirMenuColumna('dependencia',event)">▾</button><div class="col-menu" id="colmenu-dependencia"></div></div></th>
+                    <th data-col="nombre_mostrar"><div class="th-wrap"><span>Nombre Mostrar</span><button class="th-menu-btn" onclick="abrirMenuColumna('nombre_mostrar',event)">▾</button><div class="col-menu" id="colmenu-nombre_mostrar"></div></div></th>
+                    <th data-col="nombre_saliente"><div class="th-wrap"><span>Nombre Saliente</span><button class="th-menu-btn" onclick="abrirMenuColumna('nombre_saliente',event)">▾</button><div class="col-menu" id="colmenu-nombre_saliente"></div></div></th>
+                    <th data-col="modelo"><div class="th-wrap"><span>Modelo</span><button class="th-menu-btn" onclick="abrirMenuColumna('modelo',event)">▾</button><div class="col-menu" id="colmenu-modelo"></div></div></th>
+                    <th data-col="archivo_tftp"><div class="th-wrap"><span>Archivo TFTP</span><button class="th-menu-btn" onclick="abrirMenuColumna('archivo_tftp',event)">▾</button><div class="col-menu" id="colmenu-archivo_tftp"></div></div></th>
+                </tr></thead>
+                <tbody id="tbody"><tr><td colspan="12" style="text-align:center; padding:20px;">🔌 Seleccione un perfil</td></tr></tbody>
+            </table>
+        </div>
+        <div class="pagination-controls">
+            <select id="rowsPerPage" onchange="cambiarFilasPorPagina()">
+                <option value="10">10</option><option value="20" selected>20</option>
+                <option value="50">50</option><option value="100">100</option>
+            </select>
+            <span class="page-info" id="pageInfo">Página 1</span>
+            <div>
+                <button onclick="cambiarPagina('anterior')">Anterior</button>
+                <button onclick="cambiarPagina('siguiente')">Siguiente</button>
+            </div>
+        </div>
+        <div style="text-align:center; margin-top:10px;">
+            <button id="btnEliminarSeleccionados" class="btn-danger" style="width:auto; display:none; padding:10px 20px; font-size:14px;" onclick="eliminarSeleccionados()">🗑️ Eliminar seleccionados</button>
+        </div>
+    </div>
+    <div class="go-top" id="goTopBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})">⬆️</div>
+</div>
+
+<div id="modalRango" class="modal">
+    <div class="modal-content">
+        <h3 style="color:var(--blue); margin-bottom:6px;">📦 Carga masiva de internos</h3>
+        <div style="font-size:12px; color:var(--text-muted); margin-bottom:12px;">
+            Crea los internos del rango en Asterisk y los agrega al Excel, sin MAC ni teléfono (después se asigna editando cada interno). Los que ya están en la tabla se saltean; los que existen solo en Asterisk se suman a la tabla sin modificarlos. Máximo 200 por vez.
+        </div>
+        <div class="campos-grid">
+            <input type="text" id="rangoDesde" inputmode="numeric" autocomplete="off" placeholder="🔢 Interno desde *">
+            <input type="text" id="rangoHasta" inputmode="numeric" autocomplete="off" placeholder="🔢 Interno hasta *">
+            <select id="rangoTecnologia" class="campo-ancho" style="width:100%; min-height:40px;">
+                <option value="sip">Tecnología: SIP</option>
+                <option value="pjsip">Tecnología: PJSIP</option>
+            </select>
+            <select id="rangoModoPass" class="campo-ancho" style="width:100%; min-height:40px;" onchange="actualizarModoRango()">
+                <option value="pjn">Contraseña SIP: pjn + interno (por defecto)</option>
+                <option value="prefijo">Contraseña SIP: prefijo + interno (ej. Tele1001)</option>
+                <option value="fija">Contraseña SIP: la misma para todos</option>
+            </select>
+            <input type="text" id="rangoPassSip" autocomplete="off" placeholder="🔐 Prefijo (ej. Tele)" class="campo-ancho" style="display:none;" oninput="actualizarModoRango()">
+            <div id="rangoPassEjemplo" class="campo-ancho" style="font-size:12px; color:var(--text-muted);"></div>
+            <div id="rangoUbicacion" class="campo-ancho" style="font-size:12px; color:var(--text-muted);"></div>
+            <input type="password" id="rangoPassAdmin" autocomplete="new-password" placeholder="🔑 Contraseña de administrador *" class="campo-ancho">
+        </div>
+        <div style="display:flex; gap:10px; margin-top:15px;">
+            <button class="btn-primary" id="btnRangoGo" onclick="generarRango()">📦 Crear internos</button>
+            <button class="btn-danger" onclick="cerrarRango()">Cerrar</button>
+        </div>
+    </div>
+</div>
+
+<div id="modalAdminPerfiles" class="modal">
+    <div class="modal-content">
+        <h3 style="color:var(--blue); margin-bottom:15px;">⚙️ Administrar Perfiles</h3>
+        <div id="listaPerfiles" style="max-height:200px; overflow-y:auto; margin-bottom:15px;"></div>
+        <input type="hidden" id="editNombreOriginal">
+        <div class="campos-grid">
+            <input type="text" id="perfNombre" placeholder="Nombre">
+            <input type="text" id="perfHost" placeholder="Host IP">
+            <input type="text" id="perfPuerto" value="22" placeholder="Puerto">
+            <input type="text" id="perfUsuario" placeholder="Usuario SSH">
+            <input type="password" id="perfPassword" placeholder="Contraseña SSH" class="campo-ancho">
+            <input type="text" id="perfRutaRemota" value="/tftpboot" placeholder="Ruta TFTP" class="campo-ancho">
+        </div>
+        <div style="display:flex; gap:10px; margin-top:15px;">
+            <button class="btn-primary" onclick="guardarPerfil()">Guardar</button>
+            <button class="btn-danger" onclick="cerrarAdminPerfiles()">Cerrar</button>
+        </div>
+    </div>
+</div>
+
+<div id="modalLogs" class="modal" aria-hidden="true">
+  <div class="voip-logs-window vp-activity-window" role="dialog" aria-modal="true" aria-labelledby="voipLogsTitle">
+    <div class="voip-logs-header vp-activity-header">
+      <div>
+        <div id="voipLogsTitle" class="voip-logs-title">📋 Registro de actividad</div>
+        <div class="voip-logs-subtitle">Qué pasó, cuándo y cuál fue el resultado</div>
+      </div>
+      <button type="button" class="voip-logs-close" onclick="cerrarLogs()" aria-label="Cerrar">✖</button>
+    </div>
+    <div class="voip-logs-toolbar vp-activity-toolbar">
+      <input id="voipLiveLogsFilter" type="text" autocomplete="off" placeholder="🔎 Buscar por interno, grupo, servidor o actividad...">
+      <button type="button" id="voipLogsRefresh">🔄 Actualizar</button>
+      <button type="button" id="voipLogsClear">🧹 Limpiar registro</button>
+    </div>
+    <div id="voipLogsTypes" class="voip-logs-types vp-activity-filters"></div>
+    <div id="voipLiveLogsStatus" class="voip-logs-status">Cargando actividad...</div>
+    <div id="voipLiveLogsContent" class="voip-logs-content vp-activity-content"></div>
+    <div class="voip-logs-pagination vp-activity-pagination">
+      <button type="button" id="voipLogsPrev">‹ Anterior</button>
+      <span id="voipLogsPageInfo">Página 1 de 1</span>
+      <button type="button" id="voipLogsNext">Siguiente ›</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL ESCÁNER -->
+<div id="voipScanModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,.92); z-index:99999; align-items:center; justify-content:center; padding:10px;">
+  <div style="background:var(--card-bg,#16213e); color:var(--text-color,#fff); width:100%; max-width:560px; border-radius:12px; padding:14px; border:1px solid var(--border,#2a2a4a); max-height:95vh; overflow-y:auto;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; gap:8px;">
+      <b>📷 Escanear MAC / S/N</b>
+      <button type="button" onclick="cerrarScannerMAC()" style="background:#e74c3c; color:#fff; border:none; border-radius:6px; padding:6px 12px; cursor:pointer; font-size:14px;">✖ Cerrar</button>
+    </div>
+    <div style="display:flex; gap:6px; margin-bottom:8px; flex-wrap:wrap; align-items:center;">
+      <select id="voipCameraSelect" onchange="onSelectCamaraChange()" style="flex:1; min-width:0; padding:8px; background:var(--input-bg,#0f1629); color:var(--text-color,#fff); border:1px solid var(--border,#2a2a4a); border-radius:6px; font-size:13px;">
+        <option value="">Cargando cámaras...</option>
+      </select>
+      <button type="button" onclick="cargarCamarasModal()" style="background:var(--blue,#4da6ff); color:#fff; border:none; border-radius:6px; padding:8px 12px; cursor:pointer; font-size:14px;" title="Refrescar cámaras">🔄</button>
+      <button type="button" onclick="cambiarCamaraSiguiente()" style="background:var(--yellow,#f39c12); color:#fff; border:none; border-radius:6px; padding:8px 12px; cursor:pointer; font-size:14px;" title="Siguiente cámara">🔁</button>
+      <button type="button" id="voipBtnTorch" onclick="toggleLinterna()" style="display:none; background:#555; color:#fff; border:none; border-radius:6px; padding:8px 12px; cursor:pointer; font-size:14px;" title="Linterna">🔦</button>
+    </div>
+    <div id="voipScanReaderContainer" style="width:100%; min-height:280px; background:#000; border-radius:8px; overflow:hidden; position:relative;">
+      <div id="voipScanReader"></div>
+    </div>
+    <div id="voipScanMsg" style="margin-top:8px; font-size:13px; min-height:20px; padding:6px; background:var(--input-bg,#0f1629); border-radius:6px; border:1px solid var(--border,#2a2a4a);"></div>
+  </div>
+</div>
+
+<!-- MODAL CFG -->
+<div id="voipCfgModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,.85); z-index:99999; align-items:center; justify-content:center; padding:10px;">
+  <div style="background:var(--card-bg,#16213e); color:var(--text-color,#fff); width:100%; max-width:860px; border-radius:12px; padding:14px; border:1px solid var(--border,#2a2a4a); max-height:95vh;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; gap:8px;">
+      <b id="voipCfgTitulo">📄 CFG</b>
+      <button type="button" onclick="cerrarCfgModal()" style="background:#e74c3c; color:#fff; border:none; border-radius:6px; padding:6px 12px; cursor:pointer;">✖</button>
+    </div>
+    <pre id="voipCfgContent" style="max-height:70vh; overflow:auto; background:#0f1629; color:#e0e0e0; padding:10px; border-radius:6px; white-space:pre-wrap; font-size:11px; border:1px solid #2a2a4a;"></pre>
+  </div>
+</div>
+
+<script>
+let perfilSeleccionado='', escaneando=false, listaPerfilesGlobal=[], configApp={}, todosRegistros=[], todosRegistrosOriginal=[], paginaActual=1, filasPorPagina=20;
+let voipScanner=null, voipScanLast={txt:'',ts:0}, voipLinternaOn=false, voipCamActualIdx=0, voipCamarasLista=[], voipIniciando=false;
+let scanMac=null, scanSn=null;
+
+function aplicarTema(modo, guardar=true) {
+    document.documentElement.setAttribute('data-theme', modo);
+    if (guardar) {
+        try {
+            localStorage.setItem('tema_voip', modo);
+            localStorage.setItem('monitoreo-theme', modo === 'claro' ? 'light' : 'dark');
+        } catch(e) {}
+    }
+}
+function temaInicialAutomatico() {
+    let guardado = null;
+    try {
+        const temaMenu = new URLSearchParams(window.location.search).get('vp_theme');
+        if (temaMenu === 'claro' || temaMenu === 'oscuro') {
+            guardado = temaMenu;
+            localStorage.setItem('tema_voip', temaMenu);
+            localStorage.setItem('monitoreo-theme', temaMenu === 'claro' ? 'light' : 'dark');
+        } else {
+            guardado = localStorage.getItem('tema_voip');
+        }
+    } catch(e) {}
+    const media = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
+    aplicarTema(guardado || (media && media.matches ? 'oscuro' : 'claro'), !!guardado);
+}
+
+function validarMAC(mac) {
+    if (!mac) return false;
+    const limpia = mac.toUpperCase().replace(/[^0-9A-F]/g, '');
+    return limpia.length === 12 && /^[0-9A-F]{12}$/.test(limpia);
+}
+
+document.addEventListener('DOMContentLoaded', ()=>{
+    temaInicialAutomatico();
+    vpConfigurarBotonMenuPrincipal();
+    cargarConfigEmpresa();
+    cargarModelos();
+    cargarPerfiles();
+    aplicarVisibilidadColumnas();
+    const macInput = document.getElementById('mac');
+    if (macInput) {
+        macInput.addEventListener('input', function() {
+            this.value = this.value.toUpperCase().replace(/[^0-9A-F]/g, '').slice(0, 12);
+            if (this.value.length > 0 && this.value.length !== 12) this.classList.add('mac-invalid');
+            else this.classList.remove('mac-invalid');
+        });
+    }
+});
+
+
+async function cargarConfigEmpresa() {
+    try {
+        const resp = await fetch('/api/config', {cache:'no-store'});
+        configApp = await resp.json();
+        // El título de la pantalla se mantiene como "VoIP Provisioner".
+        if (configApp.empresa?.color_primario) {
+            document.documentElement.style.setProperty('--blue', configApp.empresa.color_primario);
+        }
+    } catch(e) { console.error('Error config:', e); }
+}
+
+let ubicacionesActuales = {edificios:[], pisos:[], dependencias:[]};
+
+function campoInput(campo){ return campo==='edificios'?'edificio':campo==='pisos'?'piso':'dependencia'; }
+function campoApi(campo){ return campoInput(campo); } // el backend guarda los catálogos con nombre singular (edificio/piso/dependencia)
+function renderCombo(campo){
+    const menu=document.getElementById('menu-'+campo), input=document.getElementById(campoInput(campo));
+    const q=(input.value||'').toLocaleLowerCase();
+    const vals=(ubicacionesActuales[campo]||[]).filter(v=>String(v).toLocaleLowerCase().includes(q));
+    menu.innerHTML=vals.length?vals.map(v=>`<div class="combo-option" data-value="${String(v).replace(/"/g,'&quot;')}">${escapeHtmlCombo(v)}</div>`).join(''):'<div class="combo-option" style="color:#999">Sin coincidencias</div>';
+    menu.querySelectorAll('.combo-option[data-value]').forEach(el=>el.addEventListener('mousedown',e=>{e.preventDefault(); input.value=el.dataset.value; closeCombos();}));
+}
+function escapeHtmlCombo(v){return String(v).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));}
+function toggleCombo(campo,e){ if(e)e.stopPropagation(); const wrap=document.querySelector(`.combo-ubi[data-campo="${campo}"]`); const was=wrap.classList.contains('open'); closeCombos(); if(!was){renderCombo(campo);wrap.classList.add('open');document.getElementById(campoInput(campo)).focus();}}
+function closeCombos(){document.querySelectorAll('.combo-ubi.open').forEach(x=>x.classList.remove('open'));}
+document.addEventListener('click',e=>{if(!e.target.closest('.combo-ubi'))closeCombos();});
+['edificios','pisos','dependencias'].forEach(c=>{ const i=document.getElementById(campoInput(c)); i.addEventListener('focus',()=>{renderCombo(c);i.parentElement.classList.add('open');}); i.addEventListener('input',()=>renderCombo(c)); i.addEventListener('change',()=>autoGuardarUbicacion(c)); i.addEventListener('blur',()=>setTimeout(()=>autoGuardarUbicacion(c),200)); });
+
+function ordenarUbi(arr){ return [...new Set((arr||[]).map(v=>String(v||'').trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b,undefined,{numeric:true,sensitivity:'base'})); }
+async function cargarUbicacionesIndex(){
+    if(!perfilSeleccionado){ubicacionesActuales={edificios:[],pisos:[],dependencias:[]};['edificios','pisos','dependencias'].forEach(renderCombo);return;}
+    try{
+        const r=await (await fetch('/api/opciones?perfil_nombre='+encodeURIComponent(perfilSeleccionado),{cache:'no-store'})).json();
+        ubicacionesActuales={edificios:ordenarUbi(r.edificio),pisos:ordenarUbi(r.piso),dependencias:ordenarUbi(r.dependencia)};
+        ['edificios','pisos','dependencias'].forEach(renderCombo);
+    }catch(e){console.error('ubicaciones',e);}
+}
+async function autoGuardarUbicacion(campo){
+    if(!perfilSeleccionado)return; const input=document.getElementById(campoInput(campo)), valor=input.value.trim(); if(!valor)return;
+    const existe=(ubicacionesActuales[campo]||[]).some(v=>String(v).toLocaleLowerCase()===valor.toLocaleLowerCase());
+    if(!existe){ ubicacionesActuales[campo]=ordenarUbi([...(ubicacionesActuales[campo]||[]),valor]); renderCombo(campo); }
+    try{ await fetch('/api/opciones',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({perfil_nombre:perfilSeleccionado,campo:campoApi(campo),valor})}); }catch(e){console.error('auto guardar ubicación',e);}
+}
+
+async function cargarPerfiles() {
+    try {
+        const resp = await fetch('/api/perfiles', {cache:'no-store'});
+        const perfiles = await resp.json();
+        listaPerfilesGlobal = perfiles;
+        const s = document.getElementById('perfilSelect');
+        s.innerHTML = '<option value="">🖥️ Seleccionar Servidor</option>';
+        perfiles.forEach(x => {
+            const o = document.createElement('option');
+            o.value = x.nombre;
+            o.textContent = x.nombre + ' (' + x.host + ')';
+            s.appendChild(o);
+        });
+        perfilSeleccionado = '';
+        todosRegistros = [];
+        todosRegistrosOriginal = [];
+        actualizarPaginacion();
+        actualizarEstadoUI(false);
+        document.getElementById('sftpIcon').innerHTML = '⚪';
+    } catch(e) { console.error('Error perfiles:', e); }
+}
+
+function actualizarEstadoUI(c) {
+    const h = perfilSeleccionado !== '';
+    document.getElementById('btnSyncFull').disabled = !(h && c);
+    document.getElementById('btnGenerar').disabled = !(h && c);
+    const _btnRango = document.getElementById('btnRango'); if (_btnRango) _btnRango.disabled = !(h && c);
+}
+
+document.getElementById('modeloSelect').addEventListener('change', function() {
+    if (!perfilSeleccionado || !this.value) return;
+    try { sessionStorage.setItem('voip_modelo_' + perfilSeleccionado, this.value); } catch(e) {}
+});
+
+document.getElementById('perfilSelect').addEventListener('change', function() {
+    perfilSeleccionado = this.value;
+
+    aplicarTecnologiaPerfil();
+
+    cargarUbicacionesIndex();
+    const modelo = document.getElementById('modeloSelect');
+    if (modelo) {
+        let guardado = '';
+        try { guardado = sessionStorage.getItem('voip_modelo_' + perfilSeleccionado) || ''; } catch(e) {}
+        const existe = guardado && Array.from(modelo.options).some(o => o.value === guardado);
+        modelo.value = existe ? guardado : '';
+    }
+    todosRegistros = [];
+    todosRegistrosOriginal = [];
+    actualizarPaginacion();
+    if (!perfilSeleccionado) {
+        actualizarEstadoUI(false);
+        document.getElementById('sftpIcon').innerHTML = '⚪';
+        const modelo = document.getElementById('modeloSelect');
+        if (modelo) modelo.value = '';
+
+        const tecnologia = document.getElementById('tecnologiaSelect');
+        if (tecnologia) tecnologia.value = 'sip';
+
+        return;
+    }
+    verificarConexionSFTP();
+});
+
+function obtenerTecnologiaActiva() {
+    const select = document.getElementById('tecnologiaSelect');
+
+    if (!select) return 'sip';
+
+    const valor = String(select.value || '').toLowerCase();
+
+    return valor === 'pjsip' ? 'pjsip' : 'sip';
+}
+
+function aplicarTecnologiaPerfil() {
+    const select = document.getElementById('tecnologiaSelect');
+
+    if (!select) return;
+
+    if (!perfilSeleccionado) {
+        select.value = 'sip';
+        return;
+    }
+
+    const perfil = listaPerfilesGlobal.find(x => x.nombre === perfilSeleccionado);
+
+    if (!perfil) {
+        select.value = 'sip';
+        return;
+    }
+
+    const tecnologia = String(
+        perfil.tecnologia ||
+        perfil.technology ||
+        'sip'
+    ).toLowerCase();
+
+    select.value = tecnologia === 'pjsip' ? 'pjsip' : 'sip';
+}
+
+function obtenerRutaRemotaActiva() {
+    if (!perfilSeleccionado) return '/tftpboot';
+    const p = listaPerfilesGlobal.find(x => x.nombre === perfilSeleccionado);
+    return p?.ruta_remota || '/tftpboot';
+}
+
+async function verificarConexionSFTP() {
+    const i = document.getElementById('sftpIcon');
+    if (!perfilSeleccionado) { i.innerHTML = '⚪'; return; }
+    i.innerHTML = '🔄';
+    const d = await (await fetch('/api/test_sftp', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({perfil_nombre:perfilSeleccionado})})).json();
+    if (d.status === 'ok') {
+        i.innerHTML = '🟢';
+        actualizarEstadoUI(true);
+        cargarTabla();
+    } else {
+        i.innerHTML = '🔴';
+        actualizarEstadoUI(false);
+    }
+}
+
+const COLUMNAS_TABLA = [
+    {key:'interno', label:'Interno', visible:true},
+    {key:'ip', label:'IP', visible:true},
+    {key:'mac', label:'MAC', visible:false},
+    {key:'numero_serie', label:'S/N', visible:false},
+    {key:'edificio', label:'Edificio', visible:true},
+    {key:'piso', label:'Piso', visible:true},
+    {key:'dependencia', label:'Dependencia', visible:true},
+    {key:'nombre_mostrar', label:'Nombre Mostrar', visible:false},
+    {key:'nombre_saliente', label:'Nombre Saliente', visible:false},
+    {key:'modelo', label:'Modelo', visible:false},
+    {key:'archivo_tftp', label:'Archivo TFTP', visible:true}
+];
+
+function cargarPreferenciasColumnas() {
+    try {
+        const saved = JSON.parse(localStorage.getItem('voip_columnas_tabla') || '{}');
+        COLUMNAS_TABLA.forEach(c => { if (typeof saved[c.key] === 'boolean') c.visible = saved[c.key]; });
+    } catch(e) {}
+}
+function guardarPreferenciasColumnas() {
+    try {
+        const o={}; COLUMNAS_TABLA.forEach(c=>o[c.key]=c.visible);
+        localStorage.setItem('voip_columnas_tabla', JSON.stringify(o));
+    } catch(e) {}
+}
+function cerrarMenusColumnas() {
+    document.querySelectorAll('.col-menu.open').forEach(x=>x.classList.remove('open'));
+}
+function abrirMenuColumna(col, e) {
+    if (e) e.stopPropagation();
+    const menu=document.getElementById('colmenu-'+col);
+    if (!menu) return;
+    cerrarMenusColumnas();
+    const actual=COLUMNAS_TABLA.find(c=>c.key===col);
+    menu.innerHTML =
+        '<div style="font-weight:700;padding:5px 8px 7px;color:var(--text-color)">Mostrar columnas</div>' +
+        COLUMNAS_TABLA.map(c => '<label><input type="checkbox" '+(c.visible?'checked':'')+' '+(c.key==='interno'?'disabled':'')+' onchange="cambiarVisibilidadColumna(\''+c.key+'\',this.checked)"> '+c.label+'</label>').join('') +
+        '<div style="border-top:1px solid var(--border);margin:5px 0"></div>' +
+        '<div style="font-weight:700;padding:5px 8px 4px;color:var(--text-color)">Ordenar '+(actual?.label||'')+'</div>' +
+        '<button type="button" class="col-action" onclick="ordenarPorColumna(\''+col+'\',1);cerrarMenusColumnas()">↑ A → Z / menor → mayor</button>' +
+        '<button type="button" class="col-action" onclick="ordenarPorColumna(\''+col+'\',-1);cerrarMenusColumnas()">↓ Z → A / mayor → menor</button>' +
+        '<button type="button" class="col-action" onclick="mostrarTodasColumnas()">↺ Mostrar todas</button>';
+    menu.classList.add('open');
+}
+function cambiarVisibilidadColumna(key, visible) {
+    if (key==='interno') visible=true;
+    const c=COLUMNAS_TABLA.find(x=>x.key===key); if(c)c.visible=visible;
+    guardarPreferenciasColumnas();
+    aplicarVisibilidadColumnas();
+}
+function mostrarTodasColumnas() {
+    COLUMNAS_TABLA.forEach(c=>c.visible=true);
+    guardarPreferenciasColumnas();
+    aplicarVisibilidadColumnas();
+    cerrarMenusColumnas();
+}
+function aplicarVisibilidadColumnas() {
+    const rows=document.querySelectorAll('#tbody tr');
+    const heads=document.querySelectorAll('#tablaHeader th[data-col]');
+    const allKeys=['__select',...COLUMNAS_TABLA.map(c=>c.key)];
+    heads.forEach(th=>{
+        const k=th.dataset.col;
+        const visible=(k==='__select') || (COLUMNAS_TABLA.find(c=>c.key===k)?.visible);
+        th.style.display=visible?'':'none';
+    });
+    rows.forEach(tr=>{
+        const cells=tr.children;
+        allKeys.forEach((k,i)=>{
+            if(cells[i]) {
+                const visible=(k==='__select') || (COLUMNAS_TABLA.find(c=>c.key===k)?.visible);
+                cells[i].style.display=visible?'':'none';
+            }
+        });
+        if(tr.classList.contains('expand-row')) {
+            const cell=tr.children[0]; if(cell) cell.colSpan=1+COLUMNAS_TABLA.filter(c=>c.visible).length;
+        }
+    });
+}
+document.addEventListener('click',e=>{if(!e.target.closest('.th-wrap')) cerrarMenusColumnas();});
+cargarPreferenciasColumnas();
+
+function esc(v) {
+    return String(v ?? '').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+}
+function valorCampo(r,k) {
+    if(k==='mac') return (r.mac||'').replace(/[:.-]/g,'');
+    return r[k] ?? '';
+}
+
+function renderizarTabla(registros) {
+    const tbody = document.getElementById('tbody');
+    if (!registros || !registros.length) {
+        tbody.innerHTML = '<tr><td colspan="12" style="text-align:center;padding:20px;">📭 Sin registros</td></tr>';
+        actualizarBotonEliminar();
+        aplicarVisibilidadColumnas();
+        return;
+    }
+    tbody.innerHTML = registros.map(r => {
+        if (r._contactoExtra) {
+            const internoExtra = esc(r.interno);
+            const ipExtra = String(r.ip || '');
+            const ipValida = /^\d+\.\d+\.\d+\.\d+$/.test(ipExtra);
+            const ipHtml = ipValida
+                ? '<a href="http://' + esc(ipExtra) +
+                  '" target="_blank" class="ip-link">🌐 ' +
+                  esc(ipExtra) + '</a>'
+                : '<span style="color:var(--text-muted)">-</span>';
+            const macExtra = String(r.mac || '');
+            const macLimpia = macExtra.replace(/[:.-]/g, '');
+            const macValida = /^[0-9a-fA-F]{12}$/.test(macLimpia);
+            const macHtml = macValida ? esc(macLimpia) : '-';
+            const serieHtml = r.numero_serie
+                ? esc(r.numero_serie)
+                : '<span style="color:var(--text-muted)">-</span>';
+
+            return '<tr class="contacto-extra">' +
+                '<td><input type="checkbox" class="select-row" ' +
+                'onchange="actualizarBotonEliminar()" ' +
+                'data-interno="' + internoExtra + '" ' +
+                'data-mac="' + esc(macExtra) + '" ' +
+                'data-contacto-extra="1" ' +
+                (macValida ? '' : 'disabled title="No hay una MAC válida para eliminar este teléfono" ') +
+                '></td>' +
+                '<td>' + internoExtra +
+                ' <small style="display:block;color:var(--text-muted)">↳ Contacto adicional</small></td>' +
+                '<td>' + ipHtml + '</td>' +
+                '<td style="font-family:monospace;font-size:11px;">' + macHtml + '</td>' +
+                '<td style="font-family:monospace;font-size:11px;">' + serieHtml + '</td>' +
+                '<td>' + esc(r.edificio || '-') + '</td>' +
+                '<td>' + esc(r.piso || '-') + '</td>' +
+                '<td>' + esc(r.dependencia || '-') + '</td>' +
+                '<td>' + esc(r.nombre_mostrar || '-') + '</td>' +
+                '<td>' + esc(r.nombre_saliente || '-') + '</td>' +
+                '<td>' + esc(r.modelo || '-') + '</td>' +
+                '<td>' + renderArchivoTftp(r) + '</td>' +
+                '</tr>';
+        }
+
+        const interno=esc(r.interno);
+        const rowKey=String(r._rowKey || ('fila-' +
+            String(r.interno || '').replace(/[^a-zA-Z0-9_-]/g, '_') +
+            '-' + (String(r.mac || '').replace(/[:.-]/g, '') || 'sinmac') +
+            '-' + String(r._ordenExcel === undefined ? 'peer' : r._ordenExcel)
+        )).replace(/[^a-zA-Z0-9_-]/g, '_');
+        const ipDisplay=(r.ip && r.ip.match(/\d+\.\d+\.\d+\.\d+/))
+            ? '<a href="http://' + esc(r.ip) + '" target="_blank" class="ip-link">🌐 ' + esc(r.ip) + '</a>'
+            : '<span style="color:var(--text-muted)">-</span>';
+        const macDisplay=esc((r.mac||'-').replace(/[:.-]/g,''));
+        const snDisplay=r.numero_serie ? esc(r.numero_serie) : '<span style="color:var(--text-muted)">-</span>';
+        const cols = [
+            '<td><input type="checkbox" class="select-row" onchange="actualizarBotonEliminar()" data-interno="'+interno+'" data-mac="'+esc(r.mac||'')+'" data-fila-excel="'+esc(r.fila_excel||'')+'" data-contacto-extra="0"></td>',
+            '<td><button class="btn-expand" id="btn-expand-'+rowKey+'" style="padding:1px 7px;margin-right:4px;" onclick="toggleExpandRow(\''+rowKey+'\')">+</button>'+esc(r.interno)+'</td>',
+            '<td>'+ipDisplay+'</td>',
+            '<td style="font-family:monospace;font-size:11px;">'+macDisplay+'</td>',
+            '<td style="font-family:monospace;font-size:11px;">'+snDisplay+'</td>',
+            '<td>'+esc(r.edificio||'-')+'</td>',
+            '<td>'+esc(r.piso||'-')+'</td>',
+            '<td>'+esc(r.dependencia||'-')+'</td>',
+            '<td>'+esc(r.nombre_mostrar||'-')+'</td>',
+            '<td>'+esc(r.nombre_saliente||'-')+'</td>',
+            '<td>'+esc(r.modelo||'-')+'</td>',
+            '<td>'+renderArchivoTftp(r)+'</td>'
+        ].join('');
+        const editFields = [
+            ['edificio','EDIFICIO',r.edificio],
+            ['piso','PISO',r.piso],
+            ['dependencia','DEPENDENCIA',r.dependencia],
+            ['nombre_mostrar','NOMBRE MOSTRAR',r.nombre_mostrar],
+            ['nombre_saliente','NOMBRE SALIENTE',r.nombre_saliente],
+            ['modelo','MODELO TELEFONO',r.modelo],
+        ].map(([k,l,v]) => '<div class="info-item"><strong>'+l+'</strong><span class="display-val">'+esc(v||'-')+'</span><input type="text" class="edit-field" data-field="'+k+'" data-original="'+esc(v||'')+'" style="display:none;" value="'+esc(v||'')+'"></div>').join('');
+        return '<tr data-interno-row="'+interno+'"'+
+            (r._compartido ? ' style="background:rgba(243,156,18,.12);border-left:3px solid #e0a12f;"' : '')+'>' +
+            cols +
+            '</tr>' +
+            '<tr class="expand-row" id="expand-' + rowKey + '">' +
+                '<td colspan="12"><div class="expand-content">' +
+                    '<div class="info-grid" id="grid-' + rowKey + '">' + editFields + '</div>' +
+                    '<div id="edit-buttons-' + rowKey + '" class="inline-edit-bar">' +
+                        '<span class="inline-edit-note">✏️ Modificando este interno</span>' +
+                        '<button class="btn-primary" style="width:auto;padding:8px 16px;" onclick="guardarInline(\'' + interno + '\', \'' + esc(r.mac || '') + '\', \'' + rowKey + '\')">💾 Guardar</button>' +
+                        '<button class="btn-danger" style="width:auto;padding:8px 16px;" onclick="cancelarInline(\'' + rowKey + '\')">❌ Cancelar</button>' +
+                    '</div>' +
+                '</div></td>' +
+            '</tr>';
+    }).join('');
+    actualizarBotonEliminar();
+    aplicarVisibilidadColumnas();
+}
+
+document.addEventListener('dblclick',e=>{
+    const grid=e.target.closest('.info-grid');
+    if(!grid) return;
+    const m=grid.id.match(/^grid-(.+)$/);
+    if(m) activarEdicionInline(m[1]);
+});
+function actualizarPaginacion() {
+    const tp = Math.ceil(todosRegistros.length / filasPorPagina) || 1;
+    if (paginaActual > tp) paginaActual = tp;
+    renderizarTabla(todosRegistros.slice((paginaActual - 1) * filasPorPagina, paginaActual * filasPorPagina));
+    document.getElementById('pageInfo').textContent = 'Página ' + paginaActual + ' de ' + tp;
+}
+
+function cambiarPagina(d) {
+    const tp = Math.ceil(todosRegistros.length / filasPorPagina) || 1;
+    if (d === 'anterior' && paginaActual > 1) paginaActual--;
+    else if (d === 'siguiente' && paginaActual < tp) paginaActual++;
+    actualizarPaginacion();
+}
+
+function cambiarFilasPorPagina() {
+    filasPorPagina = parseInt(document.getElementById('rowsPerPage').value);
+    paginaActual = 1;
+    actualizarPaginacion();
+}
+
+async function obtenerPeersMonitoreo(perfil) {
+    return new Promise(function(resolve) {
+        if (!perfil) {
+            resolve([]);
+            return;
+        }
+
+        var terminado = false;
+        var fuente = null;
+
+        function finalizar(lista) {
+            if (terminado) return;
+            terminado = true;
+
+            try {
+                if (fuente) fuente.close();
+            } catch (e) {}
+
+            resolve(Array.isArray(lista) ? lista : []);
+        }
+
+        try {
+            fuente = new EventSource(
+                '/api/stream?perfil_nombre=' + encodeURIComponent(perfil)
+            );
+
+            fuente.onmessage = function(evento) {
+                try {
+                    var datos = JSON.parse(evento.data || '{}');
+                    finalizar(Array.isArray(datos.peers) ? datos.peers : []);
+                } catch (e) {
+                    console.warn('Index: respuesta inválida de /api/stream', e);
+                    finalizar([]);
+                }
+            };
+
+            fuente.onerror = function() {
+                /*
+                 * El EventSource puede generar onerror simplemente porque
+                 * lo cerramos después del primer mensaje. Si todavía no
+                 * recibimos datos, dejamos la lista vacía y no bloqueamos
+                 * la carga del index.
+                 */
+                finalizar([]);
+            };
+
+            setTimeout(function() {
+                finalizar([]);
+            }, 8000);
+
+        } catch (e) {
+            console.warn('Index: no se pudo abrir /api/stream', e);
+            finalizar([]);
+        }
+    });
+}
+
+/* === VP INDEX TFTP EDITOR V1 === */
+var vpTftpCache = { perfil: '', fecha: 0, mapa: {} };
+var vpTftpActual = null;
+
+async function obtenerMapaArchivosTftp(perfil, forzar) {
+    if (!perfil) return {};
+    if (!forzar && vpTftpCache.perfil === perfil && (Date.now() - vpTftpCache.fecha) < 30000) return vpTftpCache.mapa;
+    try {
+        var resp = await fetch('/api/provisioner/tftp/list', {
+            method: 'POST', headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({perfil_nombre: perfil}), cache: 'no-store'
+        });
+        var d = await resp.json();
+        if (!resp.ok || d.status !== 'ok') throw new Error(d.message || 'No se pudieron consultar los archivos TFTP');
+        var mapa = {};
+        (d.archivos || []).forEach(function(f) {
+            var mac = String(f.mac || '').replace(/[^0-9a-f]/gi, '').toLowerCase();
+            if (mac) { if (!mapa[mac]) mapa[mac] = []; mapa[mac].push(f); }
+        });
+        vpTftpCache = {perfil: perfil, fecha: Date.now(), mapa: mapa};
+        return mapa;
+    } catch (e) {
+        console.warn('No se pudieron cargar archivos TFTP:', e);
+        vpTftpCache = {perfil: perfil, fecha: Date.now(), mapa: {}};
+        return {};
+    }
+}
+
+function renderArchivoTftp(fila) {
+    var archivos = Array.isArray(fila._vp_tftp_archivos) ? fila._vp_tftp_archivos : [];
+    if (!archivos.length) return '<span style="color:var(--text-muted,#888)" title="No se encontró un archivo por MAC en TFTP">Sin archivo</span>';
+    return archivos.map(function(f) {
+        return '<a href="#" class="ip-link vp-tftp-link" data-tftp-name="' + esc(f.nombre) + '" title="Abrir archivo; doble clic en el contenido para editar" onclick="abrirArchivoTftp(event,this)">📄 ' + esc(f.nombre) + '</a>';
+    }).join('<br>');
+}
+
+async function abrirArchivoTftp(evento, enlace) {
+    if (evento) evento.preventDefault();
+    var nombre = enlace && enlace.getAttribute ? enlace.getAttribute('data-tftp-name') : '';
+    if (!nombre || !perfilSeleccionado) return;
+    var modal = document.getElementById('vpTftpOverlay');
+    var area = document.getElementById('vpTftpContenido');
+    modal.style.display = 'flex';
+    document.getElementById('vpTftpTitulo').textContent = nombre;
+    document.getElementById('vpTftpEstado').textContent = 'Leyendo archivo remoto…';
+    document.getElementById('vpTftpEstado').style.color = 'var(--text-color,#333)';
+    area.value = ''; area.readOnly = true;
+    document.getElementById('vpTftpEditar').style.display = '';
+    document.getElementById('vpTftpGuardar').style.display = 'none';
+    document.getElementById('vpTftpCancelarEdicion').style.display = 'none';
+    vpTftpActual = null;
+    try {
+        var resp = await fetch('/api/provisioner/tftp/read', {
+            method: 'POST', headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({perfil_nombre: perfilSeleccionado, nombre: nombre}), cache: 'no-store'
+        });
+        var d = await resp.json();
+        if (!resp.ok || d.status !== 'ok') throw new Error(d.message || 'No se pudo leer el archivo');
+        vpTftpActual = {perfil: perfilSeleccionado, nombre: d.nombre, sha256: d.sha256, original: d.contenido};
+        area.value = d.contenido || '';
+        document.getElementById('vpTftpEstado').textContent = 'Solo lectura. Doble clic en el contenido para editar. Tamaño: ' + (d.tamano || 0) + ' bytes. Ruta: ' + (d.ruta || '/tftpboot');
+    } catch (e) {
+        document.getElementById('vpTftpEstado').textContent = 'Error: ' + e.message;
+        document.getElementById('vpTftpEstado').style.color = '#c0392b';
+    }
+}
+
+function editarArchivoTftp() {
+    if (!vpTftpActual) return;
+    var area = document.getElementById('vpTftpContenido');
+    area.readOnly = false; area.focus();
+    document.getElementById('vpTftpEditar').style.display = 'none';
+    document.getElementById('vpTftpGuardar').style.display = '';
+    document.getElementById('vpTftpCancelarEdicion').style.display = '';
+    document.getElementById('vpTftpEstado').textContent = 'Modo edición. Al guardar se creará un respaldo y se verificará que el archivo no haya cambiado.';
+}
+
+function cancelarEdicionArchivoTftp() {
+    if (!vpTftpActual) return;
+    var area = document.getElementById('vpTftpContenido');
+    area.value = vpTftpActual.original; area.readOnly = true;
+    document.getElementById('vpTftpEditar').style.display = '';
+    document.getElementById('vpTftpGuardar').style.display = 'none';
+    document.getElementById('vpTftpCancelarEdicion').style.display = 'none';
+    document.getElementById('vpTftpEstado').textContent = 'Edición cancelada. El archivo sigue en solo lectura.';
+}
+
+function cerrarArchivoTftp() {
+    var area = document.getElementById('vpTftpContenido');
+    if (vpTftpActual && !area.readOnly && area.value !== vpTftpActual.original) {
+        var estado = document.getElementById('vpTftpEstado');
+        estado.style.color = '#c0392b';
+        estado.textContent = 'Hay cambios sin guardar. Guardá el archivo o cancelá la edición antes de cerrar.';
+        return;
+    }
+    document.getElementById('vpTftpOverlay').style.display = 'none';
+    vpTftpActual = null;
+}
+
+async function guardarArchivoTftp() {
+    if (!vpTftpActual) return;
+    var area = document.getElementById('vpTftpContenido');
+    var password = await pedirPassword('Confirmá la contraseña de administrador para guardar el archivo TFTP');
+    if (!password) return;
+    var boton = document.getElementById('vpTftpGuardar');
+    boton.disabled = true;
+    document.getElementById('vpTftpEstado').textContent = 'Guardando y creando respaldo…';
+    try {
+        var resp = await fetch('/api/provisioner/tftp/write', {
+            method: 'POST', headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({perfil_nombre: vpTftpActual.perfil, nombre: vpTftpActual.nombre,
+                contenido: area.value, sha256: vpTftpActual.sha256, admin_password: password})
+        });
+        var d = await resp.json();
+        if (!resp.ok || d.status !== 'ok') throw new Error(d.message || 'No se pudo guardar el archivo');
+        vpTftpActual.sha256 = d.sha256; vpTftpActual.original = area.value;
+        area.readOnly = true;
+        document.getElementById('vpTftpEditar').style.display = '';
+        document.getElementById('vpTftpGuardar').style.display = 'none';
+        document.getElementById('vpTftpCancelarEdicion').style.display = 'none';
+        document.getElementById('vpTftpEstado').style.color = '#14804a';
+        document.getElementById('vpTftpEstado').textContent = 'Guardado correctamente. Respaldo: ' + d.backup;
+        vpTftpCache.fecha = 0;
+        await cargarTabla();
+    } catch (e) {
+        document.getElementById('vpTftpEstado').style.color = '#c0392b';
+        document.getElementById('vpTftpEstado').textContent = 'No se guardó: ' + e.message;
+    } finally { boton.disabled = false; }
+}
+/* === FIN VP INDEX TFTP EDITOR V1 === */
+
+
+async function cargarTabla() {
+    if (!perfilSeleccionado) {
+        todosRegistros = [];
+        todosRegistrosOriginal = [];
+        actualizarPaginacion();
+        return;
+    }
+
+    try {
+        /*
+         * 1) Datos administrativos del Excel.
+         */
+        var respuestaExcel = await fetch(
+            '/api/tabla?perfil_nombre=' + encodeURIComponent(perfilSeleccionado)
+        );
+
+        var r = await respuestaExcel.json();
+
+        if (!Array.isArray(r)) {
+            r = [];
+        }
+
+        /*
+         * Compatibilidad con modelos que puedan venir con nombres
+         * diferentes desde el backend.
+         */
+        r.forEach(function(x) {
+            if (!x.modelo) {
+                x.modelo = x.modelo_telefono || x['Modelo Telefono'] || '';
+            }
+        });
+
+        /*
+         * 2) Agrupar contactos por interno sin perder las IP.
+         */
+        var excelPorInterno = {};
+
+        r.forEach(function(x, idx) {
+            var interno = String(x.interno || '').trim();
+            if (!interno) return;
+
+            var mac = String(x.mac || '').replace(/[:.-]/g, '').toLowerCase();
+            x._ordenExcel = idx;
+            x._rowKey = 'fila-' +
+                interno.replace(/[^a-zA-Z0-9_-]/g, '_') + '-' +
+                (mac || 'sinmac') + '-' + idx;
+
+            if (!excelPorInterno[interno]) {
+                excelPorInterno[interno] = [];
+            }
+            excelPorInterno[interno].push(x);
+        });
+
+        Object.keys(excelPorInterno).forEach(function(interno) {
+            var filas = excelPorInterno[interno];
+            if (filas.length > 1) {
+                filas.forEach(function(fila) {
+                    fila._compartido = true;
+                });
+            }
+        });
+
+        /*
+         * Contactos reales de Issabel (misma fuente que Monitoreo: /api/stream).
+         */
+        var peers = await obtenerPeersMonitoreo(perfilSeleccionado);
+
+        var peersPorInterno = {};
+
+        peers.forEach(function(p) {
+            var interno = String(p.nombre || '').trim();
+            if (!interno) return;
+
+            if (!peersPorInterno[interno]) {
+                peersPorInterno[interno] = [];
+            }
+
+            var lista = peersPorInterno[interno];
+            var ip = String(p.ip || '').trim();
+
+            // Evitar duplicar el mismo contacto/IP.
+            var repetido = lista.some(function(existente) {
+                return String(existente.ip || '').trim() === ip;
+            });
+
+            if (!repetido) {
+                lista.push(p);
+            }
+        });
+
+        function aplicarPeerEnFila(fila, peer) {
+            if (
+                peer.ip !== undefined &&
+                peer.ip !== null &&
+                String(peer.ip).trim() !== ''
+            ) {
+                fila.ip = String(peer.ip).trim();
+            }
+
+            fila.estado_issabel = peer.status || '';
+            fila.en_llamada = !!peer.en_llamada;
+            fila.latencia = peer.latencia || '';
+            fila.tecnologia_issabel = peer.tecnologia || '';
+        }
+
+        Object.keys(peersPorInterno).forEach(function(interno) {
+            var lista = peersPorInterno[interno];
+            var filas = excelPorInterno[interno] || [];
+            var usados = {};
+
+            if (filas.length) {
+                // Primero conservar la asociación si la IP coincide.
+                filas.forEach(function(fila) {
+                    var ipActual = String(fila.ip || '').trim();
+
+                    var idx = -1;
+
+                    if (ipActual && ipActual !== '-') {
+                        idx = lista.findIndex(function(p, i) {
+                            return !usados[i] &&
+                                String(p.ip || '').trim() === ipActual;
+                        });
+                    }
+
+                    // Si no coincide, asignar un contacto aún no usado.
+                    if (idx < 0) {
+                        idx = lista.findIndex(function(p, i) {
+                            return !usados[i];
+                        });
+                    }
+
+                    // Si hay más filas administrativas que contactos,
+                    // conservar la mejor coincidencia disponible.
+                    if (idx < 0 && ipActual) {
+                        idx = lista.findIndex(function(p) {
+                            return String(p.ip || '').trim() === ipActual;
+                        });
+                    }
+
+                    if (idx < 0 && lista.length) {
+                        idx = 0;
+                    }
+
+                    if (idx >= 0) {
+                        aplicarPeerEnFila(fila, lista[idx]);
+                        usados[idx] = true;
+                    }
+                });
+            } else {
+                // Interno de Issabel que todavía no existe en el Excel.
+                // Mantener el comportamiento anterior para la primera fila.
+                lista.forEach(function(p, idx) {
+                    if (idx > 0) return;
+
+                    var fila = {
+                        edificio: '',
+                        piso: '',
+                        dependencia: '',
+                        nombre_mostrar: '',
+                        nombre_saliente: '',
+                        interno: interno,
+                        mac: '',
+                        ip: p.ip || '',
+                        numero_serie: '',
+                        modelo: '',
+                        estado_issabel: p.status || '',
+                        en_llamada: !!p.en_llamada,
+                        latencia: p.latencia || '',
+                        tecnologia_issabel: p.tecnologia || ''
+                    };
+
+                    r.push(fila);
+                    usados[idx] = true;
+                });
+            }
+
+            // VP_NOMBRES_COMPARTIDOS_V1
+            // Los contactos adicionales heredan los nombres del interno,
+            // sin inventar MAC, serie, modelo ni controles de edicion.
+            var filaNombreCompartido = filas.length ? filas[0] :
+                r.find(function(x) {
+                    return String(x.interno || '').trim() === interno;
+                }) || null;
+
+            lista.forEach(function(p, idx) {
+                if (usados[idx]) return;
+
+                r.push({
+                    edificio: '',
+                    piso: '',
+                    dependencia: '',
+                    nombre_mostrar: filaNombreCompartido ? (filaNombreCompartido.nombre_mostrar || '') : '',
+                    nombre_saliente: filaNombreCompartido ? (filaNombreCompartido.nombre_saliente || '') : '',
+                    interno: interno,
+                    mac: '',
+                    ip: p.ip || '',
+                    numero_serie: '',
+                    modelo: '',
+                    estado_issabel: p.status || '',
+                    en_llamada: !!p.en_llamada,
+                    latencia: p.latencia || '',
+                    tecnologia_issabel: p.tecnologia || '',
+                    _contactoExtra: true
+                });
+
+                usados[idx] = true;
+            });
+        });
+
+        /*
+         * Orden numérico por interno, igual que antes.
+         */
+        r.sort(function(a, b) {
+            var diferencia =
+                (parseInt(a.interno) || 0) -
+                (parseInt(b.interno) || 0);
+
+            if (diferencia) return diferencia;
+
+            if (a._ordenExcel !== undefined && b._ordenExcel !== undefined &&
+                !a._contactoExtra && !b._contactoExtra &&
+                a._ordenExcel !== b._ordenExcel) {
+                return a._ordenExcel - b._ordenExcel;
+            }
+
+            return String(a.ip || '').localeCompare(
+                String(b.ip || ''),
+                undefined,
+                {numeric: true}
+            );
+        });
+
+        var _vpMapaTftp = await obtenerMapaArchivosTftp(perfilSeleccionado, false);
+        r.forEach(function(fila) {
+            var _vpMacTftp = String(fila.mac || '').replace(/[^0-9a-f]/gi, '').toLowerCase();
+            fila._vp_tftp_archivos = _vpMacTftp && _vpMapaTftp[_vpMacTftp] ? _vpMapaTftp[_vpMacTftp] : [];
+            fila.archivo_tftp = fila._vp_tftp_archivos.map(function(f) { return f.nombre; }).join(' ');
+        });
+
+        todosRegistrosOriginal = r.slice();
+        todosRegistros = r.slice();
+        paginaActual = 1;
+
+        actualizarPaginacion();
+
+    } catch (e) {
+        console.error('Error cargando tabla de internos:', e);
+
+        todosRegistrosOriginal = [];
+        todosRegistros = [];
+        paginaActual = 1;
+
+        actualizarPaginacion();
+    }
+}
+
+function filtrarTabla() {
+    const f = document.getElementById('busquedaInput').value.trim().toLocaleLowerCase();
+    if (!f) {
+        todosRegistros=[...todosRegistrosOriginal];
+    } else {
+        const tokens=f.split(/\s+/).filter(Boolean);
+        todosRegistros=todosRegistrosOriginal.filter(r=>{
+            const texto=Object.keys(r).map(k=>String(r[k]??'')).join(' ').toLocaleLowerCase();
+            return tokens.every(t=>texto.includes(t));
+        });
+    }
+    paginaActual=1;
+    actualizarPaginacion();
+}
+
+let ordenTabla={campo:'',dir:1};
+function ordenarPorColumna(campo,dir){
+    ordenTabla={campo,dir};
+    todosRegistros.sort((a,b)=>{
+        const av=String(a[campo]??'').toLocaleLowerCase(), bv=String(b[campo]??'').toLocaleLowerCase();
+        const an=parseFloat(av), bn=parseFloat(bv);
+        if(!Number.isNaN(an)&&!Number.isNaN(bn)) return (an-bn)*dir;
+        return av.localeCompare(bv,undefined,{numeric:true,sensitivity:'base'})*dir;
+    });
+    paginaActual=1; actualizarPaginacion();
+}
+function toggleSelectAll() {
+    document.querySelectorAll('.select-row').forEach(x => x.checked = document.getElementById('selectAll').checked);
+    actualizarBotonEliminar();
+}
+
+function actualizarBotonEliminar() {
+    const btn = document.getElementById('btnEliminarSeleccionados');
+    if (!btn) return;
+    const checks = document.querySelectorAll('.select-row:checked');
+    btn.style.display = checks.length > 0 ? 'inline-block' : 'none';
+}
+
+function toggleExpandRow(rowKey) {
+    const row = document.getElementById('expand-' + rowKey);
+    if (!row) return;
+    const abrir = !row.classList.contains('show');
+    row.classList.toggle('show', abrir);
+    const btn=document.getElementById('btn-expand-'+CSS.escape(rowKey));
+    if(btn){ btn.textContent=abrir?'−':'+'; btn.classList.toggle('expanded',abrir); }
+}
+function activarEdicionInline(rowKey) {
+    const row = document.getElementById('expand-' + rowKey);
+    if (row && !row.classList.contains('show')) toggleExpandRow(rowKey);
+    const grid = document.getElementById('grid-' + rowKey);
+    if (!grid) return;
+    grid.querySelectorAll('.display-val').forEach(el => el.style.display='none');
+    grid.querySelectorAll('.edit-field').forEach(el => {
+        el.style.display='block';
+        el.addEventListener('input',()=>el.classList.add('edit-dirty'),{once:false});
+    });
+    const buttons=document.getElementById('edit-buttons-'+rowKey);
+    if(buttons) buttons.classList.add('show');
+}
+function cancelarInline(rowKey) {
+    const grid=document.getElementById('grid-'+rowKey);
+    if(grid) {
+        grid.querySelectorAll('.display-val').forEach(el=>el.style.display='block');
+        grid.querySelectorAll('.edit-field').forEach(el=>{el.style.display='none';el.classList.remove('edit-dirty');});
+    }
+    const buttons=document.getElementById('edit-buttons-'+rowKey);
+    if(buttons) buttons.classList.remove('show');
+}
+/* ===== Modal de contraseña oculta con ojo ===== */
+function pedirPassword(titulo) {
+    return new Promise(function(resolve) {
+        if (!document.getElementById('pwModalStyle')) {
+            var st = document.createElement('style');
+            st.id = 'pwModalStyle';
+            st.textContent =
+                '.pw-overlay{position:fixed;inset:0;background:var(--modal-bg,rgba(0,0,0,.8));z-index:2147483647;display:flex;align-items:center;justify-content:center;padding:16px}' +
+                '.pw-box{background:var(--modal-content-bg,#1a1a2e);color:var(--text-color,#e0e0e0);border:1px solid var(--border,#2a2a4a);border-radius:10px;padding:20px;width:100%;max-width:360px;box-shadow:0 10px 30px rgba(0,0,0,.5)}' +
+                '.pw-box h3{margin:0 0 14px;font-size:16px}' +
+                '.pw-wrap{position:relative}' +
+                '.pw-wrap input{width:100%;box-sizing:border-box;padding:10px 42px 10px 12px;border:1px solid var(--border,#2a2a4a);border-radius:6px;background:var(--input-bg,#0f1629);color:var(--text-color,#e0e0e0);font-size:15px}' +
+                '.pw-eye{position:absolute;right:4px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:18px;padding:6px 8px;color:var(--text-color,#e0e0e0);width:auto}' +
+                '.pw-actions{display:flex;gap:8px;margin-top:14px}' +
+                '.pw-actions button{flex:1;padding:10px;border:none;border-radius:6px;cursor:pointer;font-size:14px;width:auto}' +
+                '.pw-ok{background:var(--blue,#4da6ff);color:#fff}' +
+                '.pw-cancel{background:var(--border,#2a2a4a);color:var(--text-color,#e0e0e0)}';
+            document.head.appendChild(st);
+        }
+        var ov = document.createElement('div');
+        ov.className = 'pw-overlay';
+        ov.innerHTML =
+            '<div class="pw-box" role="dialog" aria-modal="true">' +
+            '<h3></h3>' +
+            '<div class="pw-wrap">' +
+            '<input type="password" autocomplete="new-password" autocapitalize="off" spellcheck="false" placeholder="Contraseña">' +
+            '<button type="button" class="pw-eye" title="Mostrar/ocultar contraseña" aria-label="Mostrar u ocultar contraseña">👁️</button>' +
+            '</div>' +
+            '<div class="pw-actions">' +
+            '<button type="button" class="pw-cancel">Cancelar</button>' +
+            '<button type="button" class="pw-ok">Aceptar</button>' +
+            '</div></div>';
+        ov.querySelector('h3').textContent = titulo || '🔐 Contraseña';
+        document.body.appendChild(ov);
+        var inp = ov.querySelector('input');
+        var eye = ov.querySelector('.pw-eye');
+        function cerrar(valor) {
+            document.removeEventListener('keydown', onKey, true);
+            ov.remove();
+            resolve(valor);
+        }
+        function onKey(e) {
+            if (e.key === 'Escape') { e.preventDefault(); cerrar(null); }
+            else if (e.key === 'Enter') { e.preventDefault(); cerrar(inp.value); }
+        }
+        document.addEventListener('keydown', onKey, true);
+        eye.addEventListener('click', function() {
+            var visible = inp.type === 'text';
+            inp.type = visible ? 'password' : 'text';
+            eye.textContent = visible ? '👁️' : '🙈';
+            inp.focus();
+        });
+        ov.querySelector('.pw-ok').addEventListener('click', function() { cerrar(inp.value); });
+        ov.querySelector('.pw-cancel').addEventListener('click', function() { cerrar(null); });
+        setTimeout(function() { inp.focus(); }, 0);
+    });
+}
+
+async function guardarInline(interno, macOriginal, rowKey) {
+    rowKey = rowKey || interno;
+    const grid=document.getElementById('grid-'+rowKey);
+    if(!grid) return;
+    const valores={};
+    grid.querySelectorAll('.edit-field').forEach(input=>valores[input.dataset.field]=input.value.trim());
+    if(valores.mac && !validarMAC(valores.mac)) return alert('❌ MAC inválida: debe tener exactamente 12 caracteres hexadecimales');
+    const pwd=await pedirPassword('🔐 Contraseña de administrador');
+    if(pwd===null) return;
+    if(!pwd) return alert('⚠️ Debés ingresar la contraseña de administrador.');
+    const btn=document.querySelector('#edit-buttons-'+CSS.escape(rowKey)+' .btn-primary');
+    const textoOriginal='💾 Guardar';
+    if(btn){btn.disabled=true;btn.innerHTML='<span class="btn-progress-text">⏳ Verificando...</span>';}
+    const datos={
+        password:pwd,
+        interno_original:interno,
+        mac_original:macOriginal||'',
+        nuevo_interno:valores.interno||interno,
+        nuevo_edificio:valores.edificio||'',
+        nuevo_piso:valores.piso||'',
+        nueva_dependencia:valores.dependencia||'',
+        nuevo_nombre_mostrar:valores.nombre_mostrar||'',
+        nuevo_nombre_saliente:valores.nombre_saliente||'',
+        actualizar_nombre_mostrar: (function(){var el=grid.querySelector('[data-field="nombre_mostrar"]');return !!el && String(valores.nombre_mostrar||'') !== String(el.getAttribute('data-original')||'');})(),
+        actualizar_nombre_saliente: (function(){var el=grid.querySelector('[data-field="nombre_saliente"]');return !!el && String(valores.nombre_saliente||'') !== String(el.getAttribute('data-original')||'');})(),
+        nuevo_modelo:valores.modelo||'',
+        nueva_mac:macOriginal||'',
+        nuevo_ip:(todosRegistrosOriginal.find(function(x){
+            return String(x.interno)===String(interno) &&
+                String(x.mac||'').replace(/[:.-]/g,'').toLowerCase()===
+                String(macOriginal||'').replace(/[:.-]/g,'').toLowerCase();
+        }) || {}).ip || '',
+        nuevo_numero_serie:(todosRegistrosOriginal.find(function(x){
+            return String(x.interno)===String(interno) &&
+                String(x.mac||'').replace(/[:.-]/g,'').toLowerCase()===
+                String(macOriginal||'').replace(/[:.-]/g,'').toLowerCase();
+        }) || {}).numero_serie || '',
+        perfil_nombre:perfilSeleccionado,
+        ruta_remota:obtenerRutaRemotaActiva()
+    };
+    try{
+        const controller=new AbortController();
+        const timeout=setTimeout(()=>controller.abort(),30000);
+        const resp=await fetch('/api/editar',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(datos),signal:controller.signal});
+        clearTimeout(timeout);
+        const raw=await resp.text();
+        let data;
+        try{data=JSON.parse(raw);}catch(_){throw new Error('El servidor no devolvió JSON (HTTP '+resp.status+').');}
+        if(data.status!=='ok'){
+            alert(data.message || '❌ No se pudo guardar el interno.');
+            if(btn){btn.disabled=false;btn.innerHTML=textoOriginal;}
+            return;
+        }
+        if(data.tarea_id){
+            ejecutarConProgreso(data.tarea_id,btn,textoOriginal,(exito)=>{if(exito){cargarTabla();}});
+        }else{
+            alert(data.message||'✅ Cambios guardados.');
+            if(btn){btn.disabled=false;btn.innerHTML=textoOriginal;}
+            cargarTabla();
+        }
+    }catch(e){
+        alert(e.name==='AbortError'?'⏱️ El servidor no respondió a tiempo. Verificá la conexión.':'❌ '+e.message);
+        if(btn){btn.disabled=false;btn.innerHTML=textoOriginal;}
+    }
+}
+
+async function cargarModelos() {
+    const select = document.getElementById('modeloSelect');
+    if (!select) return;
+    try {
+        const m = await (await fetch('/api/modelos', {cache:'no-store'})).json();
+        select.innerHTML = '<option value="" selected disabled>Seleccione modelo de telefono</option>' +
+            m.map(x => '<option value="' + esc(x) + '">' + esc(x) + '</option>').join('');
+        select.value = '';
+    } catch(e) {
+        select.innerHTML = '<option value="" selected disabled>No se pudieron cargar los modelos</option>';
+    }
+}
+
+// ============== ESCÁNER ==============
+function setScanMsg(msg, color) {
+    const el = document.getElementById('voipScanMsg');
+    if (!el) return;
+    el.textContent = msg;
+    el.style.color = color || '#4da6ff';
+}
+
+async function consultarModeloPorMAC(mac) {
+    const aviso = document.getElementById('modeloDetectadoMsg');
+    const selector = document.getElementById('modeloSelect');
+    if (!mac || !selector) return;
+    if (aviso) {
+        aviso.textContent = 'Consultando fabricante y modelo del teléfono…';
+        aviso.style.color = 'var(--text-color,#777)';
+    }
+    try {
+        const url = '/api/modelo_por_mac?mac=' + encodeURIComponent(mac) +
+            '&perfil_nombre=' + encodeURIComponent(perfilSeleccionado || '');
+        const resp = await fetch(url, {cache: 'no-store'});
+        const data = await resp.json();
+        if (!resp.ok || data.status !== 'ok') {
+            if (aviso) aviso.textContent = 'No se pudo confirmar el modelo; seleccioná la plantilla manualmente.';
+            return;
+        }
+        if (data.plantilla) {
+            const option = Array.from(selector.options).find(function(o) {
+                return o.value === data.plantilla;
+            });
+            if (option) {
+                selector.value = data.plantilla;
+                if (aviso) {
+                    aviso.textContent = 'Modelo confirmado: ' + data.modelo + '. Plantilla seleccionada.';
+                    aviso.style.color = '#229954';
+                }
+                return;
+            }
+            if (aviso) {
+                aviso.textContent = 'Detectado ' + data.modelo + ', pero esa plantilla está eliminada. Revisá Configuraciones.';
+                aviso.style.color = '#b9770e';
+            }
+            return;
+        }
+        if (aviso) {
+            aviso.textContent = data.marca
+                ? 'Marca por MAC: ' + data.marca + '. No se puede deducir el modelo exacto; confirmá la plantilla.'
+                : 'No se pudo identificar el modelo exacto por MAC; seleccioná la plantilla manualmente.';
+            aviso.style.color = '#b9770e';
+        }
+    } catch (e) {
+        if (aviso) {
+            aviso.textContent = 'No se pudo consultar el modelo. Podés elegirlo manualmente.';
+            aviso.style.color = '#b9770e';
+        }
+    }
+}
+
+function normalizarMAC12(txt) {
+    if (!txt) return null;
+    const s = String(txt).trim().toLowerCase();
+    const pref = s.match(/mac[^0-9a-f]*([0-9a-f]{12})(?![0-9a-f])/);
+    if (pref && pref[1]) return pref[1];
+    const sep = s.match(/([0-9a-f]{2}(?::[0-9a-f]{2}){5})|([0-9a-f]{2}(?:-[0-9a-f]{2}){5})|([0-9a-f]{4}\.[0-9a-f]{4}\.[0-9a-f]{4})/);
+    if (sep) {
+        const mac = sep[0].replace(/[^0-9a-f]/g, '');
+        if (mac.length === 12) return mac;
+    }
+    const seqs = s.match(/[0-9a-f]+/g) || [];
+    for (let i = 0; i < seqs.length; i++) {
+        if (seqs[i].length === 12) return seqs[i];
+    }
+    return null;
+}
+
+function extraerSN(txt) {
+    if (!txt) return '';
+    const s = String(txt).trim();
+    const m = s.match(/(?:s\/?n|serial|serie|service\s*tag)[\s:#=]*([A-Za-z0-9\-_.]+)/i);
+    if (m && m[1]) return m[1].toUpperCase();
+    return '';
+}
+
+window.cargarCamarasModal = async function() {
+    // Solo LISTA cámaras. Ya NO abre/cierra la cámara (eso causaba NotReadableError en Android).
+    const select = document.getElementById('voipCameraSelect');
+    if (!select) return;
+    try {
+        if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) throw new Error('sin enumerateDevices');
+        const todas = (await navigator.mediaDevices.enumerateDevices()).filter(function(d) { return d.kind === 'videoinput'; });
+        const noFront = todas.filter(function(d) { return !/front|frontal|user|selfie|delantera/i.test(d.label || ''); });
+        const cams = noFront.length ? noFront : todas;
+        voipCamarasLista = cams;
+        select.innerHTML = '';
+        if (!cams.length) { select.innerHTML = '<option value="">Cámara trasera (auto)</option>'; return; }
+        cams.forEach(function(d, i) {
+            const o = document.createElement('option');
+            o.value = d.deviceId || '';
+            o.textContent = (i + 1) + '. ' + (d.label || ('Cámara ' + (i + 1)));
+            select.appendChild(o);
+        });
+    } catch (e) {
+        select.innerHTML = '<option value="">Cámara trasera (auto)</option>';
+    }
+};
+
+window.onSelectCamaraChange = async function() {
+    const select = document.getElementById('voipCameraSelect');
+
+    if (!select) return;
+
+    const idx = select.selectedIndex;
+
+    if (idx >= 0 && idx < voipCamarasLista.length) {
+        voipCamActualIdx = idx;
+
+        setScanMsg(
+            '🔄 Cambiando cámara...',
+            '#f39c12'
+        );
+
+        await iniciarScannerMAC(
+            voipCamarasLista[idx].deviceId, true
+        );
+    } else {
+        await iniciarScannerMAC('');
+    }
+};
+
+window.cambiarCamaraSiguiente = async function() {
+    if (voipCamarasLista.length === 0) {
+        await cargarCamarasModal();
+        return;
+    }
+
+    if (voipCamarasLista.length === 1) {
+        setScanMsg(
+            '⚠️ Solo hay una cámara',
+            '#f39c12'
+        );
+        return;
+    }
+
+    voipCamActualIdx =
+        (voipCamActualIdx + 1) %
+        voipCamarasLista.length;
+
+    const select =
+        document.getElementById('voipCameraSelect');
+
+    if (select) {
+        select.selectedIndex = voipCamActualIdx;
+    }
+
+    await iniciarScannerMAC(
+        voipCamarasLista[voipCamActualIdx].deviceId, true
+    );
+};
+
+window.toggleLinterna = async function() {
+    try {
+        const video =
+            document.querySelector(
+                '#voipScanReaderContainer video'
+            );
+
+        if (!video || !video.srcObject) {
+            return;
+        }
+
+        const tracks =
+            video.srcObject.getVideoTracks();
+
+        if (!tracks || !tracks.length) {
+            return;
+        }
+
+        const track = tracks[0];
+
+        const caps =
+            track.getCapabilities ?
+            track.getCapabilities() :
+            {};
+
+        if (!caps.torch) {
+            setScanMsg(
+                '⚠️ Esta cámara no tiene linterna',
+                '#f39c12'
+            );
+            return;
+        }
+
+        voipLinternaOn = !voipLinternaOn;
+
+        await track.applyConstraints({
+            advanced: [
+                {
+                    torch: voipLinternaOn
+                }
+            ]
+        });
+
+        const btn =
+            document.getElementById('voipBtnTorch');
+
+        if (btn) {
+            btn.style.background =
+                voipLinternaOn ? '#f39c12' : '#555';
+
+            btn.textContent =
+                voipLinternaOn ? '🔦 ON' : '🔦';
+        }
+
+    } catch(e) {
+        setScanMsg(
+            '⚠️ No se pudo cambiar la linterna',
+            '#f39c12'
+        );
+    }
+};
+
+window.abrirScannerMAC = function() {
+    /*
+     * IMPORTANTE:
+     * El modal se muestra PRIMERO.
+     * La solicitud de cámara se ejecuta después de que
+     * el navegador haya tenido oportunidad de pintar el modal.
+     */
+
+    const modal = document.getElementById('voipScanModal');
+
+    if (!modal) {
+        console.error('No existe #voipScanModal');
+        alert('No se encontró la ventana del escáner.');
+        return;
+    }
+
+    scanMac = null;
+    scanSn = null;
+    voipLinternaOn = false;
+
+    /*
+     * Mostrar inmediatamente.
+     */
+    modal.style.display = 'flex';
+    modal.style.visibility = 'visible';
+    modal.style.opacity = '1';
+
+    /*
+     * Limpiar lector anterior sin iniciar todavía la cámara.
+     */
+    const container =
+        document.getElementById('voipScanReaderContainer');
+
+    if (container) {
+        const reader =
+            document.getElementById('voipScanReader');
+
+        if (reader) {
+            reader.innerHTML = '';
+        }
+
+        container.style.display = 'block';
+        container.style.visibility = 'visible';
+    }
+
+    /*
+     * Mostrar mensaje sin depender de que la cámara
+     * ya esté disponible.
+     */
+    const msg = document.getElementById('voipScanMsg');
+
+    if (msg) {
+        msg.textContent = '📷 Preparando cámara...';
+        msg.style.color = '#4da6ff';
+    }
+
+    /*
+     * MUY IMPORTANTE:
+     * dejamos terminar el evento de click y permitimos
+     * que Chrome pinte el modal antes de pedir permisos.
+     */
+    setTimeout(function() {
+
+        try {
+            if (typeof setScanMsg === 'function') {
+                setScanMsg(
+                    '📷 Cargando cámaras...',
+                    '#4da6ff'
+                );
+            }
+        } catch (e) {}
+
+        cargarCamarasModal()
+            .then(function() {
+
+                const select =
+                    document.getElementById('voipCameraSelect');
+
+                const deviceId =
+                    select ? select.value : '';
+
+                /*
+                 * Otro ciclo para que el video se cree
+                 * después de que el modal ya sea visible.
+                 */
+                setTimeout(function() {
+                    iniciarScannerMAC(deviceId);
+                }, 100);
+
+            })
+            .catch(function(e) {
+
+                console.error(
+                    'Error cargando cámaras:',
+                    e
+                );
+
+                try {
+                    if (typeof setScanMsg === 'function') {
+                        setScanMsg(
+                            '❌ ' +
+                            (e && e.message ?
+                                e.message :
+                                'Error al acceder a la cámara'),
+                            '#e74c3c'
+                        );
+                    }
+                } catch (x) {}
+            });
+
+    }, 150);
+};;
+
+window.cerrarScannerMAC = async function() {
+    if (window._nativeScanner) {
+        try {
+            window._nativeScanner.stop();
+        } catch(e) {}
+
+        window._nativeScanner = null;
+    }
+
+    if (voipScanner) {
+        try {
+            await voipScanner.stop();
+        } catch(e) {}
+
+        try {
+            voipScanner.clear();
+        } catch(e) {}
+
+        voipScanner = null;
+    }
+
+    voipLinternaOn = false;
+
+    const modal =
+        document.getElementById('voipScanModal');
+
+    if (modal) {
+        modal.style.display = 'none';
+    }
+
+    const btnT =
+        document.getElementById('voipBtnTorch');
+
+    if (btnT) {
+        btnT.style.background = '#555';
+        btnT.textContent = '🔦';
+        btnT.style.display = 'none';
+    }
+};
+
+function recrearDivLector() {
+    const container =
+        document.getElementById(
+            'voipScanReaderContainer'
+        );
+
+    if (!container) return;
+
+    const viejo =
+        document.getElementById('voipScanReader');
+
+    if (viejo) {
+        viejo.remove();
+    }
+
+    const nuevo =
+        document.createElement('div');
+
+    nuevo.id = 'voipScanReader';
+
+    container.appendChild(nuevo);
+}
+
+function onVoipScan(text) {
+    const now = Date.now();
+    // Con BarcodeDetector nativo, throttle más agresivo (ya es muy rápido)
+    const throttle = window._nativeScanner ? 1500 : 3000;
+    if (text === voipScanLast.txt && now - voipScanLast.ts < throttle) return;
+    voipScanLast = {txt: text, ts: now};
+    const mac = normalizarMAC12(text);
+    const sn = extraerSN(text);
+    let detecto = false;
+    const macInput = document.getElementById('mac');
+    const snInput = document.getElementById('numeroSerie');
+    if (mac && validarMAC(mac) && scanMac !== mac) {
+        scanMac = mac;
+        if (macInput) { macInput.value = mac; macInput.dispatchEvent(new Event('input', {bubbles:true})); }
+        consultarModeloPorMAC(mac);
+        detecto = true;
+    }
+    if (sn && scanSn !== sn) {
+        const clean = sn.replace(/[^0-9A-F]/g, '');
+        if (clean.length !== 12 && sn.length >= 3) {
+            scanSn = sn;
+            if (snInput) snInput.value = sn;
+            detecto = true;
+        }
+    } else if (!mac && !sn) {
+        const limpio = String(text || '').trim();
+        if (limpio.length >= 4 && limpio.length !== 12 && scanSn !== limpio.toUpperCase()) {
+            scanSn = limpio.toUpperCase();
+            if (snInput) snInput.value = scanSn;
+            detecto = true;
+        }
+    }
+    if (detecto) {
+        try { const a = new (window.AudioContext || window.webkitAudioContext)(); const o = a.createOscillator(); const g = a.createGain(); o.connect(g); g.connect(a.destination); o.frequency.value = 880; g.gain.value = 0.3; o.start(); g.gain.exponentialRampToValueAtTime(0.00001, a.currentTime + 0.3); o.stop(a.currentTime + 0.3); } catch(e){}
+        if (navigator.vibrate) navigator.vibrate(150);
+        if (scanMac && scanSn) {
+            setScanMsg('✅ MAC: ' + scanMac + ' | S/N: ' + scanSn + ' — Cerrando...', '#27ae60');
+            setTimeout(cerrarScannerMAC, 1000);
+        } else if (scanMac && !scanSn) {
+            setScanMsg('✅ MAC: ' + scanMac + ' — Ahora escaneá el S/N', '#f39c12');
+        } else if (!scanMac && scanSn) {
+            setScanMsg('✅ S/N: ' + scanSn + ' — Ahora escaneá la MAC', '#f39c12');
+        }
+    }
+}
+
+async function iniciarScannerMAC(deviceId, forzado) {
+    if (voipIniciando) return;
+    voipIniciando = true;
+    try {
+        if (window._nativeScanner) { try { window._nativeScanner.stop(); } catch (e) {} window._nativeScanner = null; }
+        if (voipScanner) { try { await voipScanner.stop(); } catch (e) {} try { voipScanner.clear(); } catch (e) {} voipScanner = null; }
+
+        const container = document.getElementById('voipScanReaderContainer');
+        if (!container) throw new Error('No existe voipScanReaderContainer');
+        container.style.display = 'block'; container.style.visibility = 'visible'; container.style.background = '#000';
+        const oldReader = document.getElementById('voipScanReader');
+        if (oldReader) oldReader.style.display = 'none';
+
+        let video = document.getElementById('voipNativeVideo');
+        if (!video) {
+            video = document.createElement('video');
+            video.id = 'voipNativeVideo';
+            video.autoplay = true; video.playsInline = true; video.muted = true;
+            video.setAttribute('playsinline', ''); video.setAttribute('autoplay', ''); video.setAttribute('muted', '');
+            video.style.cssText = 'width:100%;height:auto;min-height:280px;max-height:65vh;object-fit:cover;background:#000;display:block;';
+            container.appendChild(video);
+        }
+        video.style.display = 'block';
+        container.style.overflow = 'hidden'; container.style.touchAction = 'manipulation';
+        window._voipZoom = 1; window._voipDigital = 1;
+        video.style.transformOrigin = 'center center'; video.style.transform = 'none';
+
+        if (!window.isSecureContext || !navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+            throw new Error('La cámara solo funciona por HTTPS (https://IP:8080). Abrí la página con https:// y aceptá el certificado.');
+        }
+
+        setScanMsg('📷 Solicitando cámara...', '#4da6ff');
+
+        // Priorizar resolución alta para que las MAC y etiquetas S/N pequeñas
+        // se vean nítidas. Los intentos inferiores permiten cámaras sin modo 4K.
+        const intentos = [];
+        if (forzado && deviceId) {
+            intentos.push({ video: { deviceId: { exact: deviceId }, width: { ideal: 3840 }, height: { ideal: 2160 }, frameRate: { ideal: 30 } } });
+            intentos.push({ video: { deviceId: { exact: deviceId }, width: { ideal: 1920 }, height: { ideal: 1080 }, frameRate: { ideal: 30 } } });
+            intentos.push({ video: { deviceId: { exact: deviceId } } });
+        }
+        intentos.push({ video: { facingMode: { ideal: 'environment' }, width: { ideal: 3840 }, height: { ideal: 2160 }, frameRate: { ideal: 30 } } });
+        intentos.push({ video: { facingMode: { ideal: 'environment' }, width: { ideal: 1920 }, height: { ideal: 1080 }, frameRate: { ideal: 30 } } });
+        intentos.push({ video: { facingMode: { ideal: 'environment' }, width: { ideal: 1280 }, height: { ideal: 720 } } });
+        intentos.push({ video: true });
+        let stream = null, ultimoError = null;
+        for (let i = 0; i < intentos.length && !stream; i++) {
+            try {
+                stream = await navigator.mediaDevices.getUserMedia(Object.assign({ audio: false }, intentos[i]));
+            } catch (e) {
+                ultimoError = e;
+                console.warn('CAMARA intento', i, e);
+                if (e && (e.name === 'NotAllowedError' || e.name === 'SecurityError')) break;
+                if (e && e.name === 'NotReadableError') await new Promise(function(r) { setTimeout(r, 700); });
+            }
+        }
+        if (!stream) throw ultimoError || new Error('No se obtuvo stream de cámara');
+
+        // Reintentar la mejor resolución que admita esta cámara y activar foco
+        // continuo cuando WebView lo expone. Si no se admite, conserva el stream.
+        try {
+            const trackCalidad = stream.getVideoTracks()[0];
+            const capsCalidad = trackCalidad && trackCalidad.getCapabilities
+                ? trackCalidad.getCapabilities() : {};
+            const maxW = capsCalidad.width && Number(capsCalidad.width.max)
+                ? Number(capsCalidad.width.max) : 3840;
+            const maxH = capsCalidad.height && Number(capsCalidad.height.max)
+                ? Number(capsCalidad.height.max) : 2160;
+            const widthObjetivo = Math.max(1280, Math.min(3840, maxW));
+            const heightObjetivo = Math.max(720, Math.min(2160, maxH));
+            try {
+                await trackCalidad.applyConstraints({
+                    width: { ideal: widthObjetivo },
+                    height: { ideal: heightObjetivo },
+                    frameRate: { ideal: 30 }
+                });
+            } catch (resolucionError) {
+                try {
+                    await trackCalidad.applyConstraints({
+                        width: { ideal: 1920 }, height: { ideal: 1080 },
+                        frameRate: { ideal: 30 }
+                    });
+                } catch (fallbackResolucionError) {}
+            }
+            try {
+                const modosFoco = capsCalidad.focusMode || [];
+                if (Array.isArray(modosFoco) && modosFoco.indexOf('continuous') >= 0) {
+                    await trackCalidad.applyConstraints({ advanced: [{ focusMode: 'continuous' }] });
+                }
+            } catch (focoError) { /* el fabricante puede no exponer autofoco en WebView */ }
+        } catch (calidadError) {
+            console.warn('No se pudo ajustar resolución/foco de cámara:', calidadError);
+        }
+
+        let activo = true;
+        window._nativeScanner = {
+            stream: stream,
+            stop: function() {
+                activo = false;
+                try { stream.getTracks().forEach(function(t) { try { t.stop(); } catch (e) {} }); } catch (e) {}
+                try { video.srcObject = null; } catch (e) {}
+            }
+        };
+
+        video.muted = true;
+        video.srcObject = stream;
+        await new Promise(function(resolve, reject) {
+            const to = setTimeout(function() { reject(new Error('La cámara se abrió pero no entregó video')); }, 8000);
+            const ok = function() { clearTimeout(to); resolve(); };
+            if (video.readyState >= 1) ok(); else video.onloadedmetadata = ok;
+        });
+        try { await video.play(); } catch (e) {}
+
+        // Refrescar lista (ahora con nombres) y marcar la cámara en uso
+        try {
+            const st = stream.getVideoTracks()[0].getSettings();
+            await cargarCamarasModal();
+            const idx = voipCamarasLista.findIndex(function(d) { return d.deviceId === st.deviceId; });
+            if (idx >= 0) {
+                voipCamActualIdx = idx;
+                const sel = document.getElementById('voipCameraSelect');
+                if (sel) sel.selectedIndex = idx;
+            }
+        } catch (e) {}
+
+        // Linterna
+        try {
+            const caps = stream.getVideoTracks()[0].getCapabilities ? stream.getVideoTracks()[0].getCapabilities() : {};
+            const bt = document.getElementById('voipBtnTorch');
+            if (bt) bt.style.display = caps.torch ? 'inline-block' : 'none';
+        } catch (e) {}
+
+        // Decodificador: BarcodeDetector nativo o, si no existe, Html5Qrcode.scanFile sobre frames
+        let detector = null, h5 = null, canvas = null;
+        if ('BarcodeDetector' in window) {
+            try { detector = new BarcodeDetector({ formats: ['qr_code', 'code_128', 'code_39', 'ean_13', 'ean_8', 'upc_a', 'itf'] }); }
+            catch (e) { try { detector = new BarcodeDetector(); } catch (e2) {} }
+        }
+        if (!detector && window.Html5Qrcode) {
+            try {
+                let tmp = document.getElementById('voipScanTmp');
+                if (!tmp) { tmp = document.createElement('div'); tmp.id = 'voipScanTmp'; tmp.style.display = 'none'; document.body.appendChild(tmp); }
+                h5 = new Html5Qrcode('voipScanTmp', false);
+                canvas = document.createElement('canvas');
+            } catch (e) { h5 = null; }
+        }
+
+        if (!detector && !h5) {
+            setScanMsg('📷 Cámara activa, pero este navegador no tiene lector de códigos. Cargá la MAC a mano.', '#f39c12');
+        } else {
+            const resolucionCamara = video.videoWidth && video.videoHeight ? video.videoWidth + '×' + video.videoHeight : 'resolución automática';
+            setScanMsg('📷 Cámara activa (' + resolucionCamara + ') — enfocá el código en el centro', '#27ae60');
+            const loop = async function() {
+                if (!activo) return;
+                if (video.readyState >= 2 && video.videoWidth > 0) {
+                    try {
+                        if (detector) {
+                            let src = video; const dz = window._voipDigital || 1;
+                            if (dz > 1) {
+                                canvas = canvas || document.createElement('canvas');
+                                const w = video.videoWidth / dz, hh = video.videoHeight / dz;
+                                canvas.width = w; canvas.height = hh;
+                                canvas.getContext('2d').drawImage(video, (video.videoWidth - w) / 2, (video.videoHeight - hh) / 2, w, hh, 0, 0, w, hh);
+                                src = canvas;
+                            }
+                            const res = await detector.detect(src);
+                            res.forEach(function(r) { if (r.rawValue) onVoipScan(r.rawValue); });
+                        } else {
+                            // Mantener el stream en alta resolución para ver/enfocar mejor,
+                            // pero limitar el frame que procesa el decodificador para no demorar.
+                            const escalaScan = Math.min(1, 2048 / Math.max(video.videoWidth, video.videoHeight));
+                            canvas.width = Math.max(1, Math.round(video.videoWidth * escalaScan));
+                            canvas.height = Math.max(1, Math.round(video.videoHeight * escalaScan));
+                            const ctxScan = canvas.getContext('2d');
+                            ctxScan.imageSmoothingEnabled = true;
+                            ctxScan.imageSmoothingQuality = 'high';
+                            ctxScan.drawImage(video, 0, 0, canvas.width, canvas.height);
+                            const blob = await new Promise(function(res) { canvas.toBlob(res, 'image/jpeg', 0.92); });
+                            if (blob) {
+                                const txt = await h5.scanFile(new File([blob], 'f.jpg', { type: 'image/jpeg' }), false);
+                                if (txt) onVoipScan(txt);
+                            }
+                        }
+                    } catch (e) { /* sin código en este frame */ }
+                }
+                if (activo) setTimeout(loop, detector ? 250 : 600);
+            };
+            loop();
+        }
+    } catch (e) {
+        console.error('ERROR CAMARA:', e);
+        let m = (e && e.message) ? e.message : String(e);
+        if (e && e.name === 'NotAllowedError') m = 'Permiso de cámara denegado. Tocá el candado 🔒 junto a la URL → Permisos → Cámara → Permitir, y recargá.';
+        else if (e && e.name === 'NotFoundError') m = 'No se encontró ninguna cámara.';
+        else if (e && e.name === 'NotReadableError') m = 'La cámara está en uso por otra app o pestaña. Cerrala y reintentá.';
+        setScanMsg('❌ ' + m, '#e74c3c');
+        if (window._nativeScanner) { try { window._nativeScanner.stop(); } catch (x) {} window._nativeScanner = null; }
+    } finally {
+        voipIniciando = false;
+    }
+}
+
+// ---- Zoom con doble clic / doble toque sobre la cámara ----
+window._voipZoom = 1; window._voipDigital = 1;
+window._voipToggleZoom = async function() {
+    const sc = window._nativeScanner;
+    if (!sc || !sc.stream) return;
+    const track = sc.stream.getVideoTracks()[0];
+    const video = document.getElementById('voipNativeVideo');
+    if (!track || !video) return;
+    let caps = {};
+    try { caps = track.getCapabilities ? track.getCapabilities() : {}; } catch (e) {}
+    const niveles = [1, 2, 3];
+    const next = niveles[(niveles.indexOf(window._voipZoom) + 1) % niveles.length];
+    if (caps.zoom) {
+        const z = Math.min(Math.max(next, caps.zoom.min || 1), caps.zoom.max || next);
+        try {
+            await track.applyConstraints({ advanced: [{ zoom: z }] });
+            window._voipZoom = next; window._voipDigital = 1; video.style.transform = 'none';
+            setScanMsg('🔍 Zoom ' + z + 'x (doble toque para cambiar)', '#4da6ff');
+            return;
+        } catch (e) { console.warn('zoom óptico falló, uso digital', e); }
+    }
+    window._voipZoom = next; window._voipDigital = next;
+    video.style.transform = next > 1 ? 'scale(' + next + ')' : 'none';
+    setScanMsg('🔍 Zoom ' + next + 'x (doble toque para cambiar)', '#4da6ff');
+};
+(function() {
+    let last = 0;
+    document.addEventListener('pointerup', function(e) {
+        const c = document.getElementById('voipScanReaderContainer');
+        if (!c || !c.contains(e.target)) return;
+        const n = Date.now();
+        if (n - last < 350) { last = 0; window._voipToggleZoom(); } else { last = n; }
+    });
+})();
+
+// ============== CFG ==============
+window.verCfgInterno = async function(interno, mac) {
+    const modal = document.getElementById('voipCfgModal');
+    const content = document.getElementById('voipCfgContent');
+    const titulo = document.getElementById('voipCfgTitulo');
+    if (!modal || !content) return;
+    modal.style.display = 'flex';
+    content.textContent = 'Cargando...';
+    titulo.textContent = '📄 CFG';
+    if (!perfilSeleccionado) { content.textContent = 'Selecciona un perfil primero'; return; }
+    try {
+        const url = '/api/interno_cfg?perfil_nombre=' + encodeURIComponent(perfilSeleccionado) +
+                    '&interno=' + encodeURIComponent(interno || '') +
+                    '&mac=' + encodeURIComponent(mac || '');
+        const resp = await fetch(url);
+        const d = await resp.json();
+        if (d.status === 'ok') {
+            titulo.textContent = '📄 ' + (d.mac || '') + ' | ' + (d.modelo || '') + ' | ' + (d.archivo || '');
+            content.textContent = d.contenido || 'Archivo vacío';
+        } else {
+            titulo.textContent = '📄 CFG no encontrado';
+            content.textContent = d.message || 'No se encontró el CFG';
+        }
+    } catch(e) {
+        content.textContent = 'Error: ' + e.message;
+    }
+};
+
+window.cerrarCfgModal = function() {
+    const modal = document.getElementById('voipCfgModal');
+    if (modal) modal.style.display = 'none';
+};
+
+function agregarBotonesCfg() {
+    const tbody = document.getElementById('tbody');
+    if (!tbody) return;
+    const rows = tbody.querySelectorAll('tr');
+    Array.prototype.forEach.call(rows, function(tr) {
+        if (!tr || tr.classList.contains('expand-row') || tr.getAttribute('data-cfg-bound')) return;
+        const chk = tr.querySelector('.select-row');
+        const cells = tr.querySelectorAll('td');
+        if (!chk || !cells.length) return;
+        const btnCell = cells[cells.length - 1];
+        if (!btnCell) return;
+        const b = document.createElement('button');
+        b.className = 'btn-small';
+        b.textContent = '📄';
+        b.title = 'Ver CFG del interno';
+        b.style.marginRight = '4px';
+        b.onclick = function() {
+            window.verCfgInterno(chk.getAttribute('data-interno') || '', chk.getAttribute('data-mac') || '');
+        };
+        btnCell.insertBefore(b, btnCell.firstChild);
+        tr.setAttribute('data-cfg-bound', '1');
+    });
+}
+
+// ============== ACCIONES ==============
+async function ejecutarConProgreso(tareaId, boton, textoOriginal, callback) {
+    const pollInterval = setInterval(async () => {
+        try {
+            const resp = await fetch('/api/progreso/' + tareaId);
+            const data = await resp.json();
+            if (data.status === 'ok' && data.progreso) {
+                const p = data.progreso;
+                if (boton) boton.innerHTML = '<span class="btn-progress-bar" style="width:' + p.porcentaje + '%"></span><span class="btn-progress-text">' + p.mensaje + ' (' + p.porcentaje + '%)</span>';
+                if (p.estado === 'completado') {
+                    clearInterval(pollInterval);
+                    if (boton) { boton.innerHTML = '<span class="btn-progress-text">✅ ' + p.mensaje + '</span>'; boton.classList.remove('btn-disabled-overlay'); boton.disabled = false; }
+                    setTimeout(() => {
+                        fetch('/api/progreso/limpiar/' + tareaId, {method:'POST'});
+                        if (boton) boton.innerHTML = '<span class="btn-progress-text">' + textoOriginal + '</span>';
+                    }, 3000);
+                    if (callback) callback(true, p);
+                } else if (p.estado === 'error') {
+                    clearInterval(pollInterval);
+                                        const detalleCompleto = String(p.mensaje || 'El servidor no devolvió detalles.');
+                    try {
+                        window.alert('❌ Falló la sincronización con Asterisk.\n\n' + detalleCompleto);
+                    } catch (avisoError) {
+                        console.error('No se pudo mostrar el detalle de sincronización:', detalleCompleto);
+                    }
+                    if (boton) {
+                        boton.title = detalleCompleto;
+                        boton.innerHTML = '<span class="btn-progress-text">❌ Error al sincronizar (ver aviso)</span>';
+                        boton.classList.remove('btn-disabled-overlay');
+                        boton.disabled = false;
+                    }
+                    setTimeout(() => {
+                        fetch('/api/progreso/limpiar/' + tareaId, {method:'POST'});
+                        if (boton) boton.innerHTML = '<span class="btn-progress-text">' + textoOriginal + '</span>';
+                    }, 5000);
+                    if (callback) callback(false, p);
+                }
+            }
+        } catch(e) {}
+    }, 500);
+}
+
+
+/* ============================================================
+ * PASSWORD EXISTENTE EN ISSABEL
+ *
+ * La contraseña nunca se recibe desde el backend.
+ * El backend solamente informa:
+ *   existe
+ *   tecnologia
+ *   tiene_password
+ *
+ * Si el usuario acepta reutilizarla, solamente enviamos:
+ *   usar_password_issabel: true
+ *
+ * El servidor vuelve a consultar la contraseña directamente
+ * antes de crear el interno.
+ * ============================================================ */
+
+window.usarPasswordIssabel = false;
+window.tecnologiaIssabelDetectada = '';
+
+let timerConsultaInternoIssabel = null;
+let ultimaConsultaInternoIssabel = '';
+
+function limpiarEstadoPasswordIssabel() {
+    window.usarPasswordIssabel = false;
+    window.tecnologiaIssabelDetectada = '';
+    window.macsInternoExistente = [];
+}
+
+async function consultarInternoIssabel() {
+    if (!perfilSeleccionado) return;
+
+    const internoEl = document.getElementById('interno');
+    if (!internoEl) return;
+
+    const interno = internoEl.value.trim();
+
+    if (!interno) {
+        limpiarEstadoPasswordIssabel();
+        return;
+    }
+
+    const clave = perfilSeleccionado + '|' + interno;
+
+    // Misma consulta ya hecha: conservar el estado (no borrarlo).
+    if (clave === ultimaConsultaInternoIssabel) return;
+
+    limpiarEstadoPasswordIssabel();
+
+    ultimaConsultaInternoIssabel = clave;
+
+    try {
+        const resp = await fetch('/api/interno_issabel', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                perfil_nombre: perfilSeleccionado,
+                interno: interno
+            })
+        });
+
+        const data = await resp.json();
+
+        /*
+         * Si mientras consultabamos el usuario cambio el interno,
+         * ignoramos el resultado viejo.
+         */
+        if (document.getElementById('interno').value.trim() !== interno) {
+            return;
+        }
+
+        if (data.status !== 'ok' || !data.existe) {
+            return;
+        }
+
+        window.tecnologiaIssabelDetectada = data.tecnologia || '';
+        window.macsInternoExistente = Array.isArray(data.macs) ? data.macs : [];
+
+        /*
+         * Si existe pero no tiene password, no preguntamos nada.
+         */
+        if (!data.tiene_password) {
+            return;
+        }
+
+        let tecnologiaTexto = data.tecnologia === 'pjsip'
+            ? 'PJSIP'
+            : 'SIP';
+
+        const usar = confirm(
+            '⚠️ El interno ' + interno +
+            ' ya existe en Issabel como ' + tecnologiaTexto + '.\n\n' +
+            '¿Querés usar la contraseña que ya está guardada en Issabel?\n\n' +
+            'La contraseña no será enviada al navegador.'
+        );
+
+        if (usar) {
+            window.usarPasswordIssabel = true;
+
+            /*
+             * Si existe en Issabel, hacemos que el selector visual
+             * acompañe la tecnologia real detectada.
+             */
+            const tecnologiaSelect =
+                document.getElementById('tecnologiaSelect');
+
+            if (tecnologiaSelect &&
+                (data.tecnologia === 'sip' ||
+                 data.tecnologia === 'pjsip')) {
+
+                tecnologiaSelect.value = data.tecnologia;
+
+                if (typeof actualizarTecnologiaUI === 'function') {
+                    try {
+                        actualizarTecnologiaUI();
+                    } catch (e) {}
+                }
+            }
+
+            const pass = document.getElementById('password');
+
+            if (pass) {
+                /*
+                 * No ponemos la contraseña real.
+                 */
+                pass.value = '';
+                pass.placeholder =
+                    '🔐 Se usará la contraseña guardada en Issabel';
+            }
+
+            alert(
+                '✓ Se utilizará la contraseña existente en Issabel.\n' +
+                'La contraseña no se mostrará ni viajará al navegador.'
+            );
+
+        } else {
+            window.usarPasswordIssabel = false;
+
+            const pass = document.getElementById('password');
+
+            if (pass) {
+                pass.placeholder = '🔐 Contraseña';
+                pass.focus();
+            }
+        }
+
+    } catch (e) {
+        /*
+         * No mostramos errores molestos durante la escritura.
+         * La creación normal sigue funcionando.
+         */
+        console.warn(
+            'No se pudo consultar el interno en Issabel:',
+            e
+        );
+    }
+}
+
+function programarConsultaInternoIssabel() {
+    clearTimeout(timerConsultaInternoIssabel);
+
+    ultimaConsultaInternoIssabel = '';
+
+    limpiarEstadoPasswordIssabel();
+
+    timerConsultaInternoIssabel = setTimeout(
+        consultarInternoIssabel,
+        450
+    );
+}
+
+/* ============================================================
+ * Activar consulta al salir del campo y al cambiarlo.
+ * ============================================================ */
+(function instalarConsultaInternoIssabel() {
+
+    function instalar() {
+        const internoEl = document.getElementById('interno');
+
+        if (!internoEl) {
+            setTimeout(instalar, 500);
+            return;
+        }
+
+        internoEl.addEventListener(
+            'blur',
+            consultarInternoIssabel
+        );
+
+        internoEl.addEventListener(
+            'change',
+            consultarInternoIssabel
+        );
+
+        internoEl.addEventListener(
+            'input',
+            programarConsultaInternoIssabel
+        );
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', instalar);
+    } else {
+        instalar();
+    }
+})();
+
+
+function formatearMac(m) {
+    return String(m || '').toUpperCase().replace(/(.{2})(?=.)/g, '$1:');
+}
+
+async function generar() {
+    if (!perfilSeleccionado) return;
+    const i = document.getElementById('interno').value.trim();
+    if (!i) { alert('⚠️ Falta interno'); return; }
+    const mac = document.getElementById('mac').value.trim();
+    if (mac && !validarMAC(mac)) { alert('❌ MAC inválida: 12 caracteres hex'); return; }
+
+    // Interno PJSIP que ya tiene otro telefono: avisar antes de agregar el paralelo.
+    // Se consulta de nuevo AL PRESIONAR GENERAR (ya con la MAC cargada), asi no
+    // depende del estado guardado al salir del campo interno.
+    try {
+        const rInfo = await fetch('/api/interno_issabel', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({perfil_nombre: perfilSeleccionado, interno: i})
+        });
+        const info = await rInfo.json();
+        const macsPrevias = Array.isArray(info.macs) ? info.macs : [];
+        const macNorm = mac.replace(/[^0-9a-fA-F]/g, '').toLowerCase();
+        if (info.status === 'ok' && info.existe && info.tecnologia === 'pjsip' &&
+            macNorm && macsPrevias.length && macsPrevias.indexOf(macNorm) === -1) {
+            if (macsPrevias.length >= 2) {
+                alert('❌ El interno ' + i + ' ya tiene 2 teléfonos asignados (máximo).\nElegí otro número de interno.');
+                document.getElementById('interno').focus();
+                return;
+            }
+            const seguir = confirm(
+                '⚠️ El interno ' + i + ' ya tiene un teléfono asignado:\n   • ' +
+                macsPrevias.map(formatearMac).join('\n   • ') + '\n\n' +
+                'Aceptar  → agregar este equipo como SEGUNDO teléfono con el mismo interno (paralelo). ' +
+                'El teléfono original no se modifica y se usa la contraseña ya existente.\n\n' +
+                'Cancelar → volver y elegir otro número de interno.'
+            );
+            if (!seguir) {
+                document.getElementById('interno').focus();
+                return;
+            }
+        }
+    } catch (e) {
+        console.warn('No se pudo consultar el interno antes de generar:', e);
+    }
+    const btn = document.getElementById('btnGenerar');
+    const textoOriginal = '⚡ Generar Configuración';
+    btn.disabled = true;
+    btn.classList.add('btn-disabled-overlay', 'btn-progress-container');
+    btn.innerHTML = '<span class="btn-progress-bar"></span><span class="btn-progress-text">⏳ Iniciando...</span>';
+    const d = {
+        edificio: document.getElementById('edificio').value,
+        piso: document.getElementById('piso').value,
+        dependencia: document.getElementById('dependencia').value,
+        interno: i, mac: mac,
+        numero_serie: document.getElementById('numeroSerie').value.trim(),
+        password: document.getElementById('password').value,
+        usar_password_issabel: !!window.usarPasswordIssabel,
+        perfil_nombre: perfilSeleccionado,
+        ruta_remota: obtenerRutaRemotaActiva(),
+        modelo: document.getElementById('modeloSelect').value,
+        tecnologia: obtenerTecnologiaActiva()
+    };
+    try {
+        const resp = await fetch('/api/generar', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(d)});
+        const text = await resp.text();
+        let data;
+        try { data = JSON.parse(text); } catch(e) {
+            alert('❌ Error del servidor (no devolvió JSON):\n\n' + text.substring(0, 500));
+            btn.innerHTML = '<span class="btn-progress-text">❌ Error</span>';
+            btn.classList.remove('btn-disabled-overlay'); btn.disabled = false;
+            setTimeout(() => { btn.innerHTML = '<span class="btn-progress-text">' + textoOriginal + '</span>'; }, 5000);
+            return;
+        }
+        if (data.status === 'ok' && data.tarea_id) {
+            window['tarea_start_' + data.tarea_id] = Date.now();
+            ejecutarConProgreso(data.tarea_id, btn, textoOriginal, (exito) => { if (exito) { cargarTabla(); limpiarCampos(); } });
+        } else {
+            btn.innerHTML = '<span class="btn-progress-text">❌ ' + (data.message || 'Error') + '</span>';
+            btn.classList.remove('btn-disabled-overlay'); btn.disabled = false;
+            setTimeout(() => { btn.innerHTML = '<span class="btn-progress-text">' + textoOriginal + '</span>'; }, 5000);
+        }
+    } catch(e) {
+        btn.innerHTML = '<span class="btn-progress-text">❌ ' + e.message + '</span>';
+        btn.classList.remove('btn-disabled-overlay'); btn.disabled = false;
+        setTimeout(() => { btn.innerHTML = '<span class="btn-progress-text">' + textoOriginal + '</span>'; }, 5000);
+    }
+}
+
+function abrirRango() {
+    if (!perfilSeleccionado) return;
+    const u = ['edificio', 'piso', 'dependencia'].map(id => (document.getElementById(id).value || '').trim());
+    document.getElementById('rangoUbicacion').textContent = u.some(x => x)
+        ? ('Ubicación: 🏢 ' + (u[0] || '—') + ' · 🏬 ' + (u[1] || '—') + ' · ⚖️ ' + (u[2] || '—'))
+        : 'Sin ubicación (completá Edificio / Piso / Dependencia en el formulario antes de abrir esta ventana).';
+    ['rangoDesde', 'rangoHasta', 'rangoPassSip', 'rangoPassAdmin'].forEach(id => { document.getElementById(id).value = ''; });
+    document.getElementById('rangoTecnologia').value = obtenerTecnologiaActiva();
+    document.getElementById('rangoModoPass').value = 'pjn';
+    actualizarModoRango();
+    document.getElementById('modalRango').style.display = 'block';
+}
+
+function actualizarModoRango() {
+    const modo = document.getElementById('rangoModoPass').value;
+    const inp = document.getElementById('rangoPassSip');
+    const ej = document.getElementById('rangoPassEjemplo');
+    inp.style.display = (modo === 'pjn') ? 'none' : 'block';
+    inp.placeholder = (modo === 'prefijo') ? '🔐 Prefijo (ej. Tele)' : '🔐 Contraseña igual para todos';
+    if (modo === 'pjn') ej.textContent = 'Ejemplo: pjn1001';
+    else if (modo === 'prefijo') ej.textContent = 'Ejemplo: ' + (inp.value.trim() || 'Tele') + '1001';
+    else ej.textContent = '';
+}
+
+function cerrarRango() { document.getElementById('modalRango').style.display = 'none'; }
+
+async function generarRango() {
+    if (!perfilSeleccionado) return;
+    const desde = document.getElementById('rangoDesde').value.trim();
+    const hasta = document.getElementById('rangoHasta').value.trim();
+    const passAdmin = document.getElementById('rangoPassAdmin').value;
+    if (!/^[0-9]{1,10}$/.test(desde) || !/^[0-9]{1,10}$/.test(hasta)) { alert('⚠️ Desde y hasta deben ser números'); return; }
+    const cant = parseInt(hasta, 10) - parseInt(desde, 10) + 1;
+    if (cant < 1) { alert('⚠️ "Hasta" debe ser mayor o igual a "Desde"'); return; }
+    if (cant > 200) { alert('⚠️ Máximo 200 internos por vez (pediste ' + cant + ')'); return; }
+    const modoPass = document.getElementById('rangoModoPass').value;
+    const textoPass = document.getElementById('rangoPassSip').value.trim();
+    if (modoPass !== 'pjn' && !/^[A-Za-z0-9_.@#%+=:-]{1,40}$/.test(textoPass)) {
+        alert('⚠️ Contraseña SIP: 1 a 40 caracteres (letras, números y _ . @ # % + = : -)'); return;
+    }
+    if (!passAdmin) { alert('⚠️ Falta la contraseña de administrador'); return; }
+    const tecno = document.getElementById('rangoTecnologia').value;
+    const ejPass = modoPass === 'prefijo' ? textoPass + desde : (modoPass === 'fija' ? textoPass : 'pjn' + desde);
+    if (!confirm('¿Crear ' + cant + ' internos (' + desde + ' a ' + hasta + ') como ' + tecno.toUpperCase() + ' en ' + perfilSeleccionado + '?\nContraseña de ejemplo (' + desde + '): ' + ejPass)) return;
+
+    const btn = document.getElementById('btnRangoGo');
+    const textoOriginal = '📦 Crear internos';
+    btn.disabled = true;
+    btn.classList.add('btn-disabled-overlay', 'btn-progress-container');
+    btn.innerHTML = '<span class="btn-progress-bar"></span><span class="btn-progress-text">⏳ Iniciando...</span>';
+    const d = {
+        desde: desde, hasta: hasta,
+        modo_password: modoPass,
+        password_sip: textoPass,
+        tecnologia: tecno,
+        password_admin: passAdmin,
+        edificio: document.getElementById('edificio').value,
+        piso: document.getElementById('piso').value,
+        dependencia: document.getElementById('dependencia').value,
+        perfil_nombre: perfilSeleccionado,
+        ruta_remota: obtenerRutaRemotaActiva()
+    };
+    const restaurar = () => {
+        btn.disabled = false;
+        btn.classList.remove('btn-disabled-overlay', 'btn-progress-container');
+        btn.innerHTML = textoOriginal;
+    };
+    try {
+        const resp = await fetch('/api/generar_rango', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(d)});
+        const raw = await resp.text();
+        let data;
+        try { data = JSON.parse(raw); } catch (_) { throw new Error('Respuesta inválida del servidor (' + resp.status + ').'); }
+        if (data.status === 'ok' && data.tarea_id) {
+            window['tarea_start_' + data.tarea_id] = Date.now();
+            ejecutarConProgreso(data.tarea_id, btn, textoOriginal, (exito) => {
+                if (exito) { cargarTabla(); setTimeout(cerrarRango, 2500); }
+            });
+        } else {
+            alert(data.message || '❌ No se pudo iniciar la carga masiva.');
+            restaurar();
+        }
+    } catch (e) {
+        alert('❌ ' + e.message);
+        restaurar();
+    }
+}
+
+async function syncFull() {
+    if (!perfilSeleccionado) return;
+    const btn = document.getElementById('btnSyncFull');
+    const textoOriginal = '🔄 Sincronizar con Asterisk';
+    btn.disabled = true;
+    btn.classList.add('btn-disabled-overlay', 'btn-progress-container');
+    btn.innerHTML = '<span class="btn-progress-bar"></span><span class="btn-progress-text">⏳ Iniciando...</span>';
+    try {
+        const resp = await fetch('/api/sync_full', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({perfil_nombre:perfilSeleccionado, ruta_remota:obtenerRutaRemotaActiva()})});
+        const data = await resp.json();
+        if (data.status === 'ok' && data.tarea_id) {
+            window['tarea_start_' + data.tarea_id] = Date.now();
+            ejecutarConProgreso(data.tarea_id, btn, textoOriginal, (exito) => { if (exito) cargarTabla(); });
+        } else {
+            btn.innerHTML = '<span class="btn-progress-text">❌ ' + (data.message || 'Error') + '</span>';
+            btn.classList.remove('btn-disabled-overlay'); btn.disabled = false;
+            setTimeout(() => { btn.innerHTML = '<span class="btn-progress-text">' + textoOriginal + '</span>'; }, 5000);
+        }
+    } catch(e) {
+        btn.innerHTML = '<span class="btn-progress-text">❌ ' + e.message + '</span>';
+        btn.classList.remove('btn-disabled-overlay'); btn.disabled = false;
+        setTimeout(() => { btn.innerHTML = '<span class="btn-progress-text">' + textoOriginal + '</span>'; }, 5000);
+    }
+}
+
+async function eliminarSeleccionados() {
+    const checks = document.querySelectorAll('.select-row:checked');
+    if (!checks.length) return;
+
+    const seleccionados = Array.from(checks);
+    const adicionales = seleccionados.filter(
+        c => c.dataset.contactoExtra === '1'
+    );
+
+    if (adicionales.length) {
+        if (adicionales.length !== seleccionados.length) {
+            alert('Seleccioná teléfonos adicionales o internos principales por separado.');
+            return;
+        }
+        if (adicionales.length > 1) {
+            alert('Por seguridad, eliminá un teléfono adicional por vez.');
+            return;
+        }
+
+        const c = adicionales[0];
+        const mac = String(c.dataset.mac || '').replace(/[:.-]/g, '');
+        if (!/^[0-9a-fA-F]{12}$/.test(mac)) {
+            alert('No se puede eliminar el teléfono adicional: la MAC no es válida.');
+            return;
+        }
+
+        await eliminarRegistro(c.dataset.interno, mac, true);
+        return;
+    }
+
+    // Las filas paralelas guardadas en el Excel pueden seleccionarse juntas.
+    // /api/eliminar_varios valida cada fila exacta y conserva Asterisk si queda
+    // algún otro teléfono del mismo interno fuera de la selección.
+
+    if (!confirm('¿Eliminar ' + checks.length + ' registros?')) return;
+    const p = await pedirPassword('🔐 Contraseña');
+    if (!p) return;
+    const btn = document.getElementById('btnEliminarSeleccionados');
+    const textoOriginal = '🗑️ Eliminar seleccionados';
+    btn.disabled = true;
+    btn.classList.add('btn-disabled-overlay', 'btn-progress-container');
+    btn.innerHTML = '<span class="btn-progress-bar"></span><span class="btn-progress-text">⏳ Iniciando...</span>';
+    const regs = Array.from(checks).map(c => ({
+        interno: c.dataset.interno,
+        mac: c.dataset.mac,
+        fila_excel: c.dataset.filaExcel || ''
+    }));
+    try {
+        const resp = await fetch('/api/eliminar_varios', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({password:p, registros:regs, perfil_nombre:perfilSeleccionado, ruta_remota:obtenerRutaRemotaActiva()})});
+        const raw = await resp.text();
+        let data; try { data = JSON.parse(raw); } catch (_) { throw new Error('Respuesta inválida del servidor (' + resp.status + ').'); }
+        if (data.status === 'ok' && data.tarea_id) {
+            window['tarea_start_' + data.tarea_id] = Date.now();
+            ejecutarConProgreso(data.tarea_id, btn, textoOriginal, (exito) => { if (exito) cargarTabla(); });
+        } else {
+            alert(data.message || '❌ No se pudo eliminar.');
+            btn.disabled = false; btn.classList.remove('btn-disabled-overlay','btn-progress-container'); btn.innerHTML = textoOriginal;
+        }
+    } catch(e) {
+        alert(e.name === 'AbortError' ? '⏱️ El servidor no respondió a tiempo.' : '❌ ' + e.message);
+        btn.disabled = false; btn.classList.remove('btn-disabled-overlay','btn-progress-container'); btn.innerHTML = textoOriginal;
+    }
+}
+
+async function eliminarRegistro(i, m, esAdicional) {
+    if (!confirm(esAdicional
+        ? '¿Eliminar solamente el teléfono adicional de ' + i + '? El interno y los demás teléfonos se conservarán.'
+        : '¿Eliminar ' + i + '?')) return;
+    const p = await pedirPassword('🔐 Contraseña');
+    if (!p) return;
+    try {
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 10000);
+        const resp = await fetch('/api/eliminar', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({password:p, interno:i, mac:m?m.replace(/[:.-]/g,''):'', perfil_nombre:perfilSeleccionado, ruta_remota:obtenerRutaRemotaActiva() }), signal: controller.signal});
+        clearTimeout(timeout);
+        const raw = await resp.text();
+        let data;
+        try { data = JSON.parse(raw); } catch (_) { throw new Error('El servidor devolvió una respuesta inválida (' + resp.status + ').'); }
+        if (data.status === 'ok' && data.tarea_id) {
+            const pollInterval = setInterval(async () => {
+                try {
+                    const pollResp = await fetch('/api/progreso/' + data.tarea_id);
+                    const pollData = await pollResp.json();
+                    if (pollData.status === 'ok' && pollData.progreso && ['completado','error'].includes(pollData.progreso.estado)) {
+                        clearInterval(pollInterval); cargarTabla();
+                        if (pollData.progreso.estado === 'error') alert('❌ ' + (pollData.progreso.mensaje || 'No se pudo eliminar el interno.'));
+                    }
+                } catch(e) { clearInterval(pollInterval); alert('❌ No se pudo consultar el progreso de la eliminación.'); }
+            }, 500);
+        } else alert(data.message || '❌ No se pudo eliminar el interno.');
+    } catch(e) { alert(e.name === 'AbortError' ? '⏱️ El servidor no respondió a tiempo. Verificá la conexión.' : '❌ ' + e.message); }
+}
+
+function limpiarCampos() {
+    ['interno','mac','password','edificio','piso','dependencia','numeroSerie'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = '';
+    });
+    const macInput = document.getElementById('mac');
+    if (macInput) macInput.classList.remove('mac-invalid');
+}
+
+async function exportarExcel() {
+      if (!perfilSeleccionado) {
+          alert('Seleccioná primero un servidor para descargar su Excel.');
+          return;
+      }
+      try {
+          // Android WebView no descarga de forma fiable un blob con un enlace temporal.
+          // Usar el puente nativo para abrir el selector de ubicación del dispositivo.
+          const puenteAndroid = window.VoipProvisionerAndroid;
+          if (puenteAndroid && typeof puenteAndroid.exportarExcel === 'function') {
+              puenteAndroid.exportarExcel(String(perfilSeleccionado));
+              return;
+          }
+          // En Windows y navegadores normales se mantiene la descarga web estándar.
+          const resp = await fetch('/api/exportar_excel?perfil_nombre=' + encodeURIComponent(perfilSeleccionado), {cache:'no-store'});
+          if (!resp.ok) {
+              let mensaje = 'No se pudo generar el Excel del perfil seleccionado.';
+              try { const d = await resp.json(); if (d && d.message) mensaje = d.message; } catch(e) {}
+              alert(mensaje);
+              return;
+          }
+          const b = await resp.blob();
+          const url = URL.createObjectURL(b);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = 'Registro_' + perfilSeleccionado + '.xlsx';
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+          setTimeout(() => URL.revokeObjectURL(url), 3000);
+      } catch(e) {
+          alert('Error de conexion al generar el Excel: ' + e.message);
+      }
+}
+
+async function abrirAdminPerfiles() {
+    document.getElementById('modalAdminPerfiles').style.display = 'block';
+    const p = await (await fetch('/api/perfiles')).json();
+    document.getElementById('listaPerfiles').innerHTML = p.map(x => '<div style="padding:8px; margin:5px 0; background:var(--input-bg); border-radius:5px; display:flex; justify-content:space-between; align-items:center;"><div><b>' + x.nombre + '</b><br><small>' + x.usuario + '@' + x.host + ':' + x.puerto + '</small></div><div><button class="btn-edit" onclick="editarPerfil(\'' + x.nombre + '\')">✏️</button> <button class="btn-del" onclick="eliminarPerfil(\'' + x.nombre + '\')">🗑️</button></div></div>').join('');
+}
+
+function cerrarAdminPerfiles() { document.getElementById('modalAdminPerfiles').style.display = 'none'; cargarPerfiles(); }
+
+async function guardarPerfil() {
+    const d = {
+        nombre_original: document.getElementById('editNombreOriginal').value,
+        nombre: document.getElementById('perfNombre').value,
+        host: document.getElementById('perfHost').value,
+        puerto: document.getElementById('perfPuerto').value,
+        usuario: document.getElementById('perfUsuario').value,
+        password: document.getElementById('perfPassword').value,
+        ruta_remota: document.getElementById('perfRutaRemota').value
+    };
+    if (!d.nombre || !d.host || !d.usuario) return alert('Campos obligatorios');
+    const r = await (await fetch(d.nombre_original ? '/api/perfiles/editar' : '/api/perfiles/agregar', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(d)})).json();
+    alert(r.status === 'ok' ? 'Guardado' : 'Error');
+    if (r.status === 'ok') { ['editNombreOriginal','perfNombre','perfHost','perfUsuario','perfPassword'].forEach(id => document.getElementById(id).value = ''); cerrarAdminPerfiles(); }
+}
+
+async function editarPerfil(n) {
+    const p = await (await fetch('/api/perfiles')).json();
+    const x = p.find(x => x.nombre === n);
+    if (!x) return;
+    document.getElementById('editNombreOriginal').value = n;
+    document.getElementById('perfNombre').value = x.nombre;
+    document.getElementById('perfHost').value = x.host;
+    document.getElementById('perfPuerto').value = x.puerto;
+    document.getElementById('perfUsuario').value = x.usuario;
+    document.getElementById('perfPassword').value = '';
+    document.getElementById('perfRutaRemota').value = x.ruta_remota || '/tftpboot';
+}
+
+async function eliminarPerfil(n) {
+    if (!confirm('¿Eliminar ' + n + '?')) return;
+    await fetch('/api/perfiles/eliminar', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({nombre:n})});
+    abrirAdminPerfiles();
+}
+
+window.addEventListener('scroll', () => document.getElementById('goTopBtn').classList.toggle('show', window.scrollY > 300));
+
+// Auto-recargar config cuando se vuelve de /admin
+window.addEventListener('focus', () => cargarConfigEmpresa());
+document.addEventListener('visibilitychange', () => { if (!document.hidden) cargarConfigEmpresa(); });
+
+// Observar cambios en tabla para agregar botones CFG
+const tbodyObs = document.getElementById('tbody');
+if (tbodyObs && window.MutationObserver) {
+    
+}
+
+
+
+console.log('SCANNER BUTTON INIT');
+
+(function() {
+
+    function conectarBotonScanner() {
+
+        var btn = document.getElementById('btnScan');
+
+        if (!btn) {
+            console.error('SCANNER: btnScan NO encontrado');
+            return;
+        }
+
+        console.log('SCANNER: btnScan encontrado');
+
+        btn.onclick = function(e) {
+
+            e.preventDefault();
+            e.stopPropagation();
+
+            console.log('SCANNER: CLICK RECIBIDO');
+
+            var modal = document.getElementById('voipScanModal');
+
+            if (!modal) {
+                alert('ERROR: no existe voipScanModal');
+                return false;
+            }
+
+            console.log('SCANNER: mostrando modal');
+
+            modal.style.setProperty('display', 'flex', 'important');
+            modal.style.setProperty('visibility', 'visible', 'important');
+            modal.style.setProperty('opacity', '1', 'important');
+            modal.style.setProperty('position', 'fixed', 'important');
+            modal.style.setProperty('inset', '0', 'important');
+            modal.style.setProperty('z-index', '2147483647', 'important');
+
+            /*
+             * PRUEBA VISUAL:
+             * primero mostramos la ventana.
+             * la cámara se inicia después.
+             */
+
+            var msg = document.getElementById('voipScanMsg');
+
+            if (msg) {
+                msg.textContent = '📷 Preparando cámara...';
+                msg.style.color = '#4da6ff';
+            }
+
+            setTimeout(function() {
+
+                try {
+
+                    if (typeof window.abrirScannerMAC === 'function') {
+
+                        console.log('SCANNER: ejecutando abrirScannerMAC');
+
+                        window.abrirScannerMAC();
+
+                    } else {
+
+                        console.error(
+                            'SCANNER: abrirScannerMAC NO existe'
+                        );
+
+                        if (msg) {
+                            msg.textContent =
+                                '❌ Función del escáner no disponible';
+                            msg.style.color = '#e74c3c';
+                        }
+
+                    }
+
+                } catch(err) {
+
+                    console.error(
+                        'SCANNER ERROR:',
+                        err
+                    );
+
+                    if (msg) {
+                        msg.textContent =
+                            '❌ ' + (err.message || err);
+                        msg.style.color = '#e74c3c';
+                    }
+
+                }
+
+            }, 300);
+
+            return false;
+        };
+
+        console.log('SCANNER: evento conectado');
+    }
+
+    if (document.readyState === 'loading') {
+
+        document.addEventListener(
+            'DOMContentLoaded',
+            conectarBotonScanner
+        );
+
+    } else {
+
+        conectarBotonScanner();
+
+    }
+
+})();
+
+console.log('✅ VoIP Provisioner listo');
+</script>
+<div id="status" style="display:none;"></div>
+
+
+
+
+
+
+
+<style id="voip-logs-clean-css">
+#modalLogs.voip-logs-open { display:flex !important; align-items:center; justify-content:center; padding:20px; }
+#modalLogs .voip-logs-window {
+    width:min(1500px,95vw); height:min(92vh,1100px); max-width:1500px; max-height:92vh;
+    display:flex; flex-direction:column; min-height:0; overflow:hidden;
+    background:var(--card-bg); color:var(--text-color); border:1px solid var(--border);
+    border-radius:12px; box-shadow:0 14px 45px rgba(0,0,0,.45);
+}
+#modalLogs .voip-logs-header { flex:0 0 auto; display:flex; justify-content:space-between; align-items:center; gap:12px; padding:14px 16px; border-bottom:1px solid var(--border); }
+#modalLogs .voip-logs-title { color:var(--blue); font-size:18px; font-weight:700; }
+#modalLogs .voip-logs-subtitle { color:var(--text-muted); font-size:12px; margin-top:2px; }
+#modalLogs .voip-logs-close { border:0; background:var(--red); color:white; border-radius:6px; padding:8px 12px; cursor:pointer; }
+#modalLogs .voip-logs-toolbar { flex:0 0 auto; display:flex; gap:8px; align-items:center; padding:10px 12px 6px; }
+#modalLogs .voip-logs-toolbar input { flex:1; min-width:0; margin:0; }
+#modalLogs .voip-logs-types { flex:0 0 auto; display:flex; flex-wrap:wrap; gap:6px; padding:6px 12px; max-height:92px; overflow:auto; }
+.voip-log-type { border:1px solid var(--border); background:var(--input-bg); color:var(--text-color); border-radius:999px; padding:5px 9px; font-size:12px; cursor:pointer; }
+.voip-log-type.active { background:var(--blue); color:#fff; border-color:var(--blue); }
+#modalLogs .voip-logs-status { flex:0 0 auto; margin:2px 12px 8px; padding:7px 9px; background:var(--input-bg); border:1px solid var(--border); border-radius:5px; color:var(--text-muted); font-size:12px; }
+#modalLogs .voip-logs-content { flex:1 1 auto; min-height:0; overflow:auto; padding:0 12px 10px; }
+.voip-log-row { display:grid; grid-template-columns:175px 120px minmax(0,1fr); gap:10px; padding:9px 10px; border-bottom:1px solid var(--border); font-size:12px; align-items:start; }
+.voip-log-time { color:var(--text-muted); white-space:nowrap; font-family:monospace; }
+.voip-log-action { color:var(--blue); font-weight:700; }
+.voip-log-detail { overflow-wrap:anywhere; line-height:1.4; }
+.voip-log-empty { padding:30px 10px; text-align:center; color:var(--text-muted); }
+#modalLogs .voip-logs-pagination { flex:0 0 auto; display:flex; align-items:center; justify-content:center; gap:10px; padding:8px 12px 12px; border-top:1px solid var(--border); }
+#voipLogsPageInfo { color:var(--text-muted); font-size:12px; min-width:110px; text-align:center; }
+@media (max-width:760px) {
+    #modalLogs .voip-logs-window { width:96vw; height:94vh; max-height:94vh; }
+    .voip-log-row { grid-template-columns:1fr; gap:3px; }
+    #modalLogs .voip-logs-toolbar { flex-wrap:wrap; }
+    #modalLogs .voip-logs-toolbar input { flex-basis:100%; }
+}
+</style>
+
+<script id="vp-activity-v2-js">
+(function () {
+  'use strict';
+  var state = {logs: [], filtered: [], page: 1, perPage: 15, search: '', category: '', timer: null, loading: false, error: ''};
+  var filters = [
+    {key:'',label:'Todas'}, {key:'internos',label:'Internos'},
+    {key:'telefonos',label:'Teléfonos'}, {key:'grupos',label:'Grupos de captura'},
+    {key:'servidores',label:'Servidores'}, {key:'respaldos',label:'Copias de seguridad'},
+    {key:'sistema',label:'Sistema'}, {key:'avisos',label:'Avisos y errores'}
+  ];
+  function el(id){return document.getElementById(id);}
+  function str(v){return v === undefined || v === null ? '' : String(v);}
+  function esc(v){return str(v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+  function category(log){
+    var c = str(log.categoria || log.category || log.tipo).toLowerCase();
+    var map = {create:'telefonos',edit:'internos',delete:'internos',sync:'sistema',error:'avisos',warning:'avisos'};
+    c = map[c] || c;
+    if(filters.some(function(f){return f.key === c;}) && c) return c;
+    var t = (str(log.accion)+' '+str(log.detalles)+' '+str(log.tecnico)).toLowerCase();
+    if(/error|exception|fallo|failed|warning|advertencia/.test(t)) return 'avisos';
+    if(/grupo de captura|grupo-captura|grupo /.test(t)) return 'grupos';
+    if(/backup|copia de seguridad|resguard|restaur/.test(t)) return 'respaldos';
+    if(/servidor|perfil|sftp|conexión ssh/.test(t)) return 'servidores';
+    if(/teléfono|telefono|plantilla|fabricante|cfg|mac/.test(t)) return 'telefonos';
+    if(/interno|desvío|desvio|rango|excel/.test(t)) return 'internos';
+    return 'sistema';
+  }
+  function status(log){
+    var s = str(log.estado || log.status).toLowerCase();
+    if(['error','failed','fallo'].indexOf(s)>=0) return 'error';
+    if(['warning','advertencia','busy'].indexOf(s)>=0) return 'warning';
+    if(['proceso','process','started','iniciando','en_curso'].indexOf(s)>=0) return 'proceso';
+    if(['success','ok','completo','completado'].indexOf(s)>=0) return 'success';
+    return 'info';
+  }
+  function statusLabel(s){return {success:'Completado',error:'Revisar',warning:'Aviso',proceso:'En curso',info:'Registrado'}[s]||'Registrado';}
+  function icon(log){
+    var s=status(log); if(s==='error')return '❌'; if(s==='warning')return '⚠️'; if(s==='proceso')return '⏳'; if(s==='success')return '✅';
+    return {internos:'☎️',telefonos:'📱',grupos:'👥',servidores:'🖥️',respaldos:'💾',sistema:'⚙️',avisos:'⚠️'}[category(log)]||'📌';
+  }
+  function dateText(v){var d=new Date(v); if(isNaN(d.getTime()))return str(v)||'Fecha no disponible'; try{return d.toLocaleString('es-AR',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit',second:'2-digit'});}catch(e){return str(v);}}
+  function metadata(log){var a=[]; if(log.interno)a.push('Interno '+str(log.interno)); if(log.grupo)a.push('Grupo '+str(log.grupo)); if(log.perfil)a.push(str(log.perfil)); if(log.cantidad)a.push(str(log.cantidad)+' registros'); return a;}
+  function renderFilters(){
+    var box=el('voipLogsTypes'); if(!box)return;
+    box.innerHTML=filters.map(function(f){var active=state.category===f.key?' active':'';var n=f.key?state.logs.filter(function(l){return category(l)===f.key;}).length:state.logs.length;return '<button type="button" class="vp-activity-filter'+active+'" data-category="'+esc(f.key)+'">'+esc(f.label)+'<span>'+n+'</span></button>';}).join('');
+    box.querySelectorAll('[data-category]').forEach(function(b){b.addEventListener('click',function(){state.category=b.getAttribute('data-category')||'';state.page=1;render();});});
+  }
+  function renderRow(log){
+    var s=status(log), title=str(log.accion||'Actividad del sistema'), summary=str(log.detalles||'Se registró una actividad.'), tech=str(log.tecnico||''), meta=metadata(log);
+    var f=filters.find(function(x){return x.key===category(log);});
+    var technical=tech&&tech!==summary?'<details class="vp-activity-technical"><summary>Ver detalles técnicos</summary><pre>'+esc(tech)+'</pre></details>':'';
+    return '<article class="vp-activity-card vp-status-'+s+'"><div class="vp-activity-icon">'+icon(log)+'</div><div class="vp-activity-main"><div class="vp-activity-top"><div class="vp-activity-title">'+esc(title)+'</div><time class="vp-activity-time">'+esc(dateText(log.timestamp||log.fecha))+'</time></div><div class="vp-activity-summary">'+esc(summary)+'</div><div class="vp-activity-meta"><span>'+esc(f?f.label:'Sistema')+'</span>'+meta.map(function(x){return '<span>'+esc(x)+'</span>';}).join('')+'<span class="vp-activity-result vp-status-'+s+'">'+statusLabel(s)+'</span></div>'+technical+'</div></article>';
+  }
+  function render(){
+    var q=state.search.toLocaleLowerCase().trim();
+    state.filtered=state.logs.filter(function(l){if(state.category&&category(l)!==state.category)return false;if(!q)return true;var t=[l.accion,l.detalles,l.tecnico,l.perfil,l.interno,l.grupo,category(l)].map(str).join(' ').toLocaleLowerCase();return q.split(/\s+/).filter(Boolean).every(function(x){return t.indexOf(x)>=0;});});
+    var pages=Math.max(1,Math.ceil(state.filtered.length/state.perPage)); if(state.page>pages)state.page=pages;
+    var rows=state.filtered.slice((state.page-1)*state.perPage,state.page*state.perPage), content=el('voipLiveLogsContent');
+    if(content){if(state.error)content.innerHTML='<div class="vp-activity-empty">⚠️ '+esc(state.error)+'</div>';else if(rows.length)content.innerHTML=rows.map(renderRow).join('');else content.innerHTML='<div class="vp-activity-empty">📭 '+(state.logs.length?'No hay actividades que coincidan con la búsqueda.':'Todavía no hay actividades para mostrar.')+'</div>';}
+    var info=el('voipLogsPageInfo');if(info)info.textContent='Página '+state.page+' de '+pages;
+    var prev=el('voipLogsPrev'),next=el('voipLogsNext');if(prev)prev.disabled=state.page<=1;if(next)next.disabled=state.page>=pages;
+    var statusEl=el('voipLiveLogsStatus');if(statusEl)statusEl.textContent=(state.loading?'Actualizando… · ':'')+state.filtered.length+' actividades encontradas';
+    renderFilters();
+  }
+  async function cargarLogs(){
+    if(state.loading)return;state.loading=true;state.error='';render();
+    try{var r=await fetch('/api/logs/audit?limit=150&t='+Date.now(),{cache:'no-store',headers:{'Cache-Control':'no-cache'}});if(!r.ok)throw new Error('HTTP '+r.status);var d=await r.json();state.logs=Array.isArray(d.logs)?d.logs.slice():[];state.logs.sort(function(a,b){return new Date(b.timestamp||b.fecha||0)-new Date(a.timestamp||a.fecha||0);});}
+    catch(e){state.error='No se pudo consultar el registro. Comprobá la conexión y volvé a actualizar.';}
+    finally{state.loading=false;render();}
+  }
+  function abrirLogs(){var m=el('modalLogs');if(!m)return;m.classList.add('voip-logs-open');m.setAttribute('aria-hidden','false');state.page=1;cargarLogs();if(state.timer)clearInterval(state.timer);state.timer=setInterval(cargarLogs,5000);setTimeout(function(){var f=el('voipLiveLogsFilter');if(f)f.focus();},60);}
+  function cerrarLogs(){var m=el('modalLogs');if(!m)return;m.classList.remove('voip-logs-open');m.setAttribute('aria-hidden','true');if(state.timer){clearInterval(state.timer);state.timer=null;}}
+  async function limpiarLogs(){
+    var password=await pedirPassword('🔐 Contraseña Admin');if(password===null)return;if(!password){alert('Ingresá la contraseña de administración.');return;}if(!confirm('¿Querés limpiar el historial anterior? Esta acción no se puede deshacer.'))return;
+    var b=el('voipLogsClear'),original=b?b.innerHTML:'';
+    try{if(b){b.disabled=true;b.innerHTML='⏳ Limpiando...';}var r=await fetch('/api/clear_logs',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:password}),cache:'no-store'});var d=await r.json().catch(function(){return {};});if(!r.ok||d.status!=='ok')throw new Error(d.message||d.error||('HTTP '+r.status));state.logs=[];state.filtered=[];state.page=1;state.error='';render();alert('✅ El historial anterior fue limpiado.');await cargarLogs();}
+    catch(e){alert('No se pudo limpiar el registro: '+e.message);}finally{if(b){b.disabled=false;b.innerHTML=original;}}
+  }
+  el('voipLiveLogsFilter').addEventListener('input',function(e){state.search=e.target.value||'';state.page=1;render();});
+  el('voipLogsRefresh').addEventListener('click',cargarLogs);el('voipLogsClear').addEventListener('click',limpiarLogs);
+  el('voipLogsPrev').addEventListener('click',function(){if(state.page>1){state.page--;render();}});
+  el('voipLogsNext').addEventListener('click',function(){var n=Math.max(1,Math.ceil(state.filtered.length/state.perPage));if(state.page<n){state.page++;render();}});
+  el('modalLogs').addEventListener('click',function(e){if(e.target===e.currentTarget)cerrarLogs();});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&el('modalLogs').classList.contains('voip-logs-open'))cerrarLogs();});
+  window.abrirLogs=abrirLogs;window.cerrarLogs=cerrarLogs;window.cargarLogs=cargarLogs;
+})();
+</script>
+
+
+
+
+<script>
+/* ============================================================
+   VOIP PROVISIONER - PWA
+   ============================================================ */
+
+if ("serviceWorker" in navigator) {
+
+    window.addEventListener("load", function() {
+
+        navigator.serviceWorker.register("/static/sw.js")
+            .then(function(registration) {
+
+                console.log(
+                    "VoIP Provisioner PWA registrada:",
+                    registration.scope
+                );
+
+            })
+            .catch(function(error) {
+
+                console.error(
+                    "Error registrando PWA:",
+                    error
+                );
+
+            });
+
+    });
+
+}
+</script>
+
+
+<script>
+(function () {
+
+    function conectarScanner() {
+
+        var btn = document.getElementById('btnScan');
+        var modal = document.getElementById('voipScanModal');
+
+        if (!btn || !modal) {
+            console.error('VOIP SCANNER: elementos no encontrados');
+            return;
+        }
+
+        /*
+         * Eliminamos cualquier handler anterior
+         * y dejamos UNO SOLO.
+         */
+        btn.onclick = function (e) {
+
+            if (e) {
+                e.preventDefault();
+                e.stopImmediatePropagation();
+            }
+
+            console.log('VOIP SCANNER: CLICK');
+
+            /*
+             * ABRIR MODAL INMEDIATAMENTE
+             */
+            modal.style.display = 'flex';
+            modal.style.visibility = 'visible';
+            modal.style.opacity = '1';
+
+            var msg = document.getElementById('voipScanMsg');
+
+            if (msg) {
+                msg.textContent = '📷 Preparando cámara...';
+                msg.style.color = '#4da6ff';
+            }
+
+            /*
+             * Ejecutamos el scanner después de pintar
+             * el modal.
+             */
+            setTimeout(function () {
+
+                try {
+
+                    if (typeof cargarCamarasModal !== 'function') {
+                        console.error(
+                            'VOIP SCANNER: cargarCamarasModal no existe'
+                        );
+
+                        if (msg) {
+                            msg.textContent =
+                                '❌ Scanner no disponible';
+                            msg.style.color = '#e74c3c';
+                        }
+
+                        return;
+                    }
+
+                    cargarCamarasModal()
+                        .then(function () {
+
+                            var select =
+                                document.getElementById(
+                                    'voipCameraSelect'
+                                );
+
+                            if (
+                                typeof iniciarScannerMAC ===
+                                'function'
+                            ) {
+
+                                iniciarScannerMAC(
+                                    select ? select.value : ''
+                                );
+
+                            } else {
+
+                                console.error(
+                                    'VOIP SCANNER: iniciarScannerMAC no existe'
+                                );
+
+                                if (msg) {
+                                    msg.textContent =
+                                        '❌ Función de cámara no disponible';
+                                    msg.style.color =
+                                        '#e74c3c';
+                                }
+                            }
+
+                        })
+                        .catch(function (err) {
+
+                            console.error(
+                                'VOIP SCANNER CAMERA:',
+                                err
+                            );
+
+                            if (msg) {
+                                msg.textContent =
+                                    '❌ ' +
+                                    (
+                                        err.message ||
+                                        'Error al acceder a la cámara'
+                                    );
+                                msg.style.color =
+                                    '#e74c3c';
+                            }
+
+                        });
+
+                } catch (err) {
+
+                    console.error(
+                        'VOIP SCANNER:',
+                        err
+                    );
+
+                    if (msg) {
+                        msg.textContent =
+                            '❌ ' +
+                            (
+                                err.message ||
+                                'Error del scanner'
+                            );
+                        msg.style.color = '#e74c3c';
+                    }
+
+                }
+
+            }, 150);
+
+        };
+
+        console.log(
+            'VOIP SCANNER: botón conectado'
+        );
+    }
+
+    if (document.readyState === 'loading') {
+
+        document.addEventListener(
+            'DOMContentLoaded',
+            conectarScanner
+        );
+
+    } else {
+
+        conectarScanner();
+
+    }
+
+})();
+</script>
+
+<script>['voipScanModal','voipCfgModal'].forEach(function(id){var m=document.getElementById(id);if(m&&m.parentNode!==document.body)document.body.appendChild(m);});</script>
+<style id="vp-activity-v2-style">
+#modalLogs.voip-logs-open{display:flex!important;align-items:center;justify-content:center;padding:12px;box-sizing:border-box}
+#modalLogs .vp-activity-window{display:flex;flex-direction:column;width:min(1100px,98vw);height:min(850px,94vh);max-height:94vh;min-height:0;overflow:hidden;border-radius:14px;background:var(--card-bg,#fff)}
+#modalLogs .vp-activity-header{flex:0 0 auto;padding:15px 18px}
+#modalLogs .vp-activity-toolbar{display:flex;align-items:center;gap:8px;padding:10px 14px 8px;flex:0 0 auto}
+#modalLogs .vp-activity-toolbar input{flex:1 1 280px;min-width:100px;margin:0}
+#modalLogs .vp-activity-toolbar button{flex:0 0 auto;min-height:38px}
+#modalLogs .vp-activity-filters{display:flex;flex-wrap:wrap;gap:7px;max-height:100px;overflow:auto;padding:7px 14px 10px;flex:0 0 auto}
+#modalLogs .vp-activity-filter{display:inline-flex;align-items:center;gap:7px;padding:6px 10px;border:1px solid var(--border,#d9dee8);border-radius:999px;background:var(--input-bg,#f6f8fb);color:var(--text-color,#253044);font-size:12px;cursor:pointer}
+#modalLogs .vp-activity-filter span{opacity:.75;font-size:11px}
+#modalLogs .vp-activity-filter.active{background:var(--blue,#1769aa);color:#fff;border-color:var(--blue,#1769aa)}
+#modalLogs #voipLiveLogsStatus{margin:0 14px 8px;flex:0 0 auto}
+#modalLogs .vp-activity-content{flex:1 1 auto;min-height:0;overflow-y:auto;padding:0 14px 12px}
+#modalLogs .vp-activity-card{display:flex;gap:12px;align-items:flex-start;padding:13px;margin:0 0 9px;border:1px solid var(--border,#e1e6ee);border-radius:10px;background:var(--card-bg,#fff)}
+#modalLogs .vp-activity-icon{display:flex;align-items:center;justify-content:center;flex:0 0 36px;width:36px;height:36px;font-size:18px;border-radius:9px;background:var(--input-bg,#f2f5f9)}
+#modalLogs .vp-activity-main{flex:1 1 auto;min-width:0}
+#modalLogs .vp-activity-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+#modalLogs .vp-activity-title{font-size:14px;font-weight:700;line-height:1.4;color:var(--text-color,#202b3c)}
+#modalLogs .vp-activity-time{flex:0 0 auto;white-space:nowrap;color:var(--text-muted,#697586);font-size:11px}
+#modalLogs .vp-activity-summary{margin-top:4px;font-size:13px;line-height:1.45;color:var(--text-color,#313e50);overflow-wrap:anywhere}
+#modalLogs .vp-activity-meta{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:9px}
+#modalLogs .vp-activity-meta>span{padding:3px 7px;border-radius:5px;background:var(--input-bg,#f3f5f8);color:var(--text-muted,#586476);font-size:11px}
+#modalLogs .vp-activity-meta .vp-activity-result{margin-left:auto;font-weight:700}
+#modalLogs .vp-activity-result.vp-status-success{color:#167548;background:#e7f6ed}
+#modalLogs .vp-activity-result.vp-status-error{color:#b42332;background:#ffeaec}
+#modalLogs .vp-activity-result.vp-status-warning{color:#8a5a00;background:#fff3d6}
+#modalLogs .vp-activity-result.vp-status-proceso{color:#215d9c;background:#e9f2ff}
+#modalLogs .vp-activity-technical{margin-top:9px;font-size:12px;color:var(--text-muted,#586476)}
+#modalLogs .vp-activity-technical summary{cursor:pointer;user-select:none}
+#modalLogs .vp-activity-technical pre{white-space:pre-wrap;overflow-wrap:anywhere;padding:10px;border-radius:6px;background:var(--input-bg,#f3f5f8);margin:7px 0 0;font-size:11px;line-height:1.4}
+#modalLogs .vp-activity-empty{text-align:center;padding:45px 15px;color:var(--text-muted,#697586);font-size:14px}
+#modalLogs .vp-activity-pagination{flex:0 0 auto;padding:9px 14px 13px}
+@media(max-width:700px){ #modalLogs.voip-logs-open{padding:4px}#modalLogs .vp-activity-window{width:100%;height:96vh;max-height:96vh}#modalLogs .vp-activity-toolbar{flex-wrap:wrap}#modalLogs .vp-activity-toolbar input{flex-basis:100%}#modalLogs .vp-activity-toolbar button{flex:1 1 auto}#modalLogs .vp-activity-top{flex-direction:column;gap:4px}#modalLogs .vp-activity-time{white-space:normal}#modalLogs .vp-activity-meta .vp-activity-result{margin-left:0}}
+</style>
+
+<style id="vp-camera-behind-activity-fix">
+/* Las ventanas deben quedar por encima de los botones flotantes del Index. */
+#btnScan { z-index: 1 !important; }
+#modalLogs { z-index: 1000000 !important; }
+/* Si el escaner o el visor CFG se abren, deben conservar su funcionamiento normal. */
+#voipScanModal, #voipCfgModal { z-index: 1100000 !important; }
+</style>
+
+<!-- === VP INDEX TFTP EDITOR V1 === -->
+<style id="vpTftpModalStyle">
+#vpTftpOverlay{position:fixed;inset:0;z-index:2147483000;background:rgba(0,0,0,.72);display:none;align-items:center;justify-content:center;padding:16px;box-sizing:border-box}
+#vpTftpBox{width:min(1100px,98vw);height:min(88vh,900px);display:flex;flex-direction:column;background:var(--card-bg,#fff);color:var(--text-color,#222);border:1px solid var(--border,#ccc);border-radius:12px;box-shadow:0 18px 50px rgba(0,0,0,.42);padding:16px;box-sizing:border-box;gap:10px}
+#vpTftpHeader{display:flex;align-items:center;gap:10px;justify-content:space-between}
+#vpTftpTitulo{font-size:16px;font-weight:700;overflow-wrap:anywhere}
+#vpTftpContenido{display:block;flex:1;min-height:180px;width:100%;box-sizing:border-box;resize:vertical;font:13px/1.45 monospace;white-space:pre;background:var(--input-bg,#f7f7f7);color:var(--text-color,#222);border:1px solid var(--border,#bbb);border-radius:8px;padding:12px;tab-size:4}
+#vpTftpEstado{font-size:12px;overflow-wrap:anywhere;min-height:18px}
+#vpTftpBotones{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}
+#vpTftpBotones button{width:auto;padding:9px 14px;cursor:pointer}
+@media(max-width:600px){ #vpTftpBox{height:94vh;padding:10px}#vpTftpBotones button{flex:1}}
+</style>
+<div id="vpTftpOverlay" role="dialog" aria-modal="true" aria-labelledby="vpTftpTitulo" onclick="if(event.target===this)cerrarArchivoTftp()">
+  <div id="vpTftpBox">
+    <div id="vpTftpHeader"><div><div style="font-size:12px;color:var(--text-muted,#777)">Archivo de aprovisionamiento TFTP</div><div id="vpTftpTitulo">Archivo</div></div><button type="button" class="btn-small" onclick="cerrarArchivoTftp()" aria-label="Cerrar">✖ Cerrar</button></div>
+    <div style="font-size:12px;color:var(--text-muted,#777)">Vista previa: solo lectura. Para editar, hacé doble clic sobre el contenido o presioná Editar.</div>
+    <textarea id="vpTftpContenido" spellcheck="false" readonly ondblclick="editarArchivoTftp()"></textarea>
+    <div id="vpTftpEstado" role="status">Seleccioná un archivo desde la columna Archivo TFTP.</div>
+    <div id="vpTftpBotones"><button type="button" id="vpTftpEditar" class="btn-primary" onclick="editarArchivoTftp()">✏️ Editar</button><button type="button" id="vpTftpCancelarEdicion" class="btn-small" style="display:none" onclick="cancelarEdicionArchivoTftp()">Cancelar edición</button><button type="button" id="vpTftpGuardar" class="btn-primary" style="display:none" onclick="guardarArchivoTftp()">💾 Guardar archivo</button></div>
+  </div>
+</div>
+<!-- === FIN VP INDEX TFTP EDITOR V1 === -->
+
+</body>
+</html>

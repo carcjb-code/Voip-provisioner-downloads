@@ -1,0 +1,5262 @@
+{
+  "schema_version": 1,
+  "platform": "android-mobile",
+  "source_commit": "6af78d9413b9c54a1e355649e017f07da0bb88bf",
+  "updated_at": "2026-11-03T00:41:30.167951+00:00",
+  "files": [
+    {
+      "path": "app/ami_client.py",
+      "sha256": "d371adfac5a3b6665f6e25eba9f5033e8bfe0151fbeefa528c123805c39585f6",
+      "size": 4935
+    },
+    {
+      "path": "app/asterisk.py",
+      "sha256": "a55cb551abb0c3622f11d8aed7bbdf8cff25a86ccb9176d84fbde7fcfb2a53b9",
+      "size": 82983
+    },
+    {
+      "path": "app/audit_logger.py",
+      "sha256": "b11ac3a2f99876487b583249f83d64f35fec577576b4dc95ee3a9f8c32893c5c",
+      "size": 9468
+    },
+    {
+      "path": "app/backup.py",
+      "sha256": "ccc65c37a734af32d8067aa0913b638c13e043dc17ad0273eeb65c2f30ed5c50",
+      "size": 24797
+    },
+    {
+      "path": "app/config.py",
+      "sha256": "27d775488f072a53013780bb58751e7d5ef849c2092c1f411483e04058204d17",
+      "size": 10841
+    },
+    {
+      "path": "app/database.py",
+      "sha256": "323e842890db0e6b442924594dc6a68f860e764839c3fbd3388808a263a131cf",
+      "size": 3134
+    },
+    {
+      "path": "app/excel_utils.py",
+      "sha256": "16a5f203afbc420268bb0fcf5785cffdde7a6fe9ff93193705762a9c98c0de53",
+      "size": 2730
+    },
+    {
+      "path": "app/issabel_local.py",
+      "sha256": "a594f0abc9879b150c693cc4e5b1d57c1898bd1df317af25ae014402ae65d06d",
+      "size": 1295
+    },
+    {
+      "path": "app/mac_vendor_db.py",
+      "sha256": "79696897c3d8a2280718e8b48b408ed1b6b4be246b28aa4fe4c229f3b0e2b796",
+      "size": 15485
+    },
+    {
+      "path": "app/monitor.py",
+      "sha256": "4ff485acb40d0883ea2245fcdeb2d184f2779094ee7cf12ba3471d627b49a1b3",
+      "size": 58634
+    },
+    {
+      "path": "app/monitor_cache.py",
+      "sha256": "e90d03f7068106f69b8976ebfad9d4a2ac076daaa0562aaf24260feae55a5709",
+      "size": 2326
+    },
+    {
+      "path": "app/ota_updater.py",
+      "sha256": "506f145a3415d2bbba97e0b22a5ebd88dfc2ce7c622dc9fa1129743d9cf3eaf1",
+      "size": 19047
+    },
+    {
+      "path": "app/progress.py",
+      "sha256": "0eddb61eb6e1bd9e785a751dd3c1b1ce2acbb8836fc4d34feb1bbb2dbbba6295",
+      "size": 2726
+    },
+    {
+      "path": "app/routes.py",
+      "sha256": "3bbe61928a767495c1fb8a5f7845f4cf7c0967298b9e87b9ec5b8bdbae5a0741",
+      "size": 627641
+    },
+    {
+      "path": "app/ssh_client.py",
+      "sha256": "9da450fd4ee2eb0479c0781af0a63baa07540a62e343bbd52537a05022c11bc8",
+      "size": 1583
+    },
+    {
+      "path": "app/tftp_diagnostic.py",
+      "sha256": "f039923713db3cc1d0da7220b764fa323849bd610204367bcb015a15acdddb50",
+      "size": 14230
+    },
+    {
+      "path": "data/plantillas/Denwa DW-320G.cfg",
+      "sha256": "1415bf987901a3fd45819ccb2b2a5b6c0a61e3d952df290596f610fe1c6f9dd4",
+      "size": 48102
+    },
+    {
+      "path": "data/plantillas/Fanvil V61G.cfg",
+      "sha256": "5e5a981bab4f3e29bc873f51096bde20bec2fa589bdbdebb1972f7dec5aff543",
+      "size": 35256
+    },
+    {
+      "path": "data/plantillas/GrandstreamGXP1628.xml",
+      "sha256": "e2dcb2638357e1b9e1b1513d3486f99ec1b00cf16f028ccb6eead03567d248e8",
+      "size": 587
+    },
+    {
+      "path": "static/Icono-telefono.png",
+      "sha256": "d75ebc8a1952b4013be1d0bb04d2b393fdb9c52b1f30da589462616fee39e0c7",
+      "size": 12079
+    },
+    {
+      "path": "static/html5-qrcode.min.js",
+      "sha256": "660b12437b1d747e3e68b8be0685c08cb728140110ad213f167b14b66f8b1d8e",
+      "size": 375364
+    },
+    {
+      "path": "static/icon-192.png",
+      "sha256": "624b1616cc524f7eb97315a6bc0722ee9fb60ac4e63b080a8708825312832ce7",
+      "size": 18272
+    },
+    {
+      "path": "static/icon-192.webp",
+      "sha256": "eeb46514c9f860e8716b21e5f7222d7a0bab66d9dad7571f94f0b84919b2c556",
+      "size": 7570
+    },
+    {
+      "path": "static/icon-256.webp",
+      "sha256": "eeb46514c9f860e8716b21e5f7222d7a0bab66d9dad7571f94f0b84919b2c556",
+      "size": 7570
+    },
+    {
+      "path": "static/icon-512.png",
+      "sha256": "d9345bc6f7b9bc2199c54cab6d7a42ff65525038fb9a7daff44a3ab405e67b92",
+      "size": 45082
+    },
+    {
+      "path": "static/icon-softphone-celesteyblanco.png",
+      "sha256": "05bad900dce95a2ee300e789791aea87081614e93f9ec34ad22078ed250189de",
+      "size": 565427
+    },
+    {
+      "path": "static/icono.ico",
+      "sha256": "308f061294709bb61dd6144ceae0fd2b5381b786a42c0ae711ba7af17385e85f",
+      "size": 16958
+    },
+    {
+      "path": "static/icono.png",
+      "sha256": "5fe95e29eb8b2b16ff4e45eba3b1b8645696ae0c7bbe99d0c09c19303b589bc3",
+      "size": 4368
+    },
+    {
+      "path": "static/icons/icon-192.png",
+      "sha256": "4fe8b370ea787c19c801bad2a29629dc6ffb1d3e26e1723c073a9133424b9002",
+      "size": 506
+    },
+    {
+      "path": "static/icons/icon-512.png",
+      "sha256": "1e601d87278892cf34e3a27b1a4feafae46a4f6f852adea57596db558be8a7d5",
+      "size": 1906
+    },
+    {
+      "path": "static/quagga.min.js",
+      "sha256": "67e746dcd7558c03b413aceb27208ffd7249e6b910f533da09240c657ee55d72",
+      "size": 128580
+    },
+    {
+      "path": "static/sip-0.20.0.min.js",
+      "sha256": "e15bf1ecd4218ead26e81a8a11c088d89b6cd4efdb6eedb7401b7928ecd1ba09",
+      "size": 248
+    },
+    {
+      "path": "static/sw.js",
+      "sha256": "51606d7d2a9243ed48461231080d942c58711705f7f2cd1d0115ea5728e1cd47",
+      "size": 165
+    },
+    {
+      "path": "static/wallpaper.png",
+      "sha256": "e5f99c596a57ac7c1e7368fed7ceee39c6df7883cc5e6fc660f845bac3a4e1a9",
+      "size": 194597
+    },
+    {
+      "path": "templates/admin.html",
+      "sha256": "291f9ca55163dd98e2a8d6faa3df17caddc7a20f399140e8b6e96f0b31fd0bbd",
+      "size": 115892
+    },
+    {
+      "path": "templates/dashboard.html",
+      "sha256": "2d1c1ecdab4c5067051bc036bd87bc32539edfdff881b81c4357dc2fa4d713d7",
+      "size": 9341
+    },
+    {
+      "path": "templates/explorer.html",
+      "sha256": "7ad4f3f231649164da53ac07d52dde0531f534bc0847fb99439c5a20be41969d",
+      "size": 21422
+    },
+    {
+      "path": "templates/index.html",
+      "sha256": "24c1ee0a593025e03f8183013a58975cc29745a7cb313cf9b5e32e559443e316",
+      "size": 171143
+    },
+    {
+      "path": "templates/monitoreo.html",
+      "sha256": "7f814ce5c68b1244cff8130e3a9518a4721dc2bce50ea8d9776c35bed2429d97",
+      "size": 364353
+    },
+    {
+      "path": "templates/softphone.html",
+      "sha256": "852cf492cfbb6f8ea53e4777cad75ba66ff62c28004e5872eb1ce26ef6801d17",
+      "size": 27024
+    },
+    {
+      "path": "templates/terminal.html",
+      "sha256": "5f5f680f00d037f9f34a82290af287aa9fba3dc43568efc7ef7afd5270b55d21",
+      "size": 17190
+    }
+  ],
+  "removed_paths": [],
+  "history": [
+    {
+      "source_commit": "b4755eda2769d02753c9d544f5e4be8756e34dcc",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".gitignore",
+        "VoIP_Provisioner.spec",
+        "app.py",
+        "app/__init__.py",
+        "cambiar_ip.sh",
+        "compilador.bat",
+        "fix_sync.sh",
+        "icono.ico",
+        "instalador.iss",
+        "main.py",
+        "plantillas/Fanvil V61G.cfg",
+        "plantillas/Fanvil_V61G.cfg",
+        "plantillas/Grandstream_GXP1628.cfg",
+        "plantillas/Grandstream_GXP1628.xml",
+        "plantillasfanvil.cfg",
+        "revertir_ip.sh",
+        "static/manifest-monitoreo.json",
+        "static/manifest-softphone.json",
+        "static/manifest.json",
+        "templates/icon-softphone-celesteyblanco.png",
+        "wsgi.py"
+      ]
+    },
+    {
+      "source_commit": "2c538065b245096bb0fec9a866bf3fe76e3bbb7a",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/asterisk.py.bak.20260820085047",
+        "app/backup.py.bak.20260821091918",
+        "app/monitor.py.bak-20260903_102635",
+        "app/routes.py.bak",
+        "app/routes.py.bak.20260819155637",
+        "app/routes.py.bak.20260820091353",
+        "app/routes.py.bak.20260820171451",
+        "app/routes.py.bak.20260821091207",
+        "app/routes.py.bak.20260821095521",
+        "app/routes.py.bak.20260821095707",
+        "app/routes.py.bak_20260821_220724",
+        "app/routes.py.bak_20260821_220841",
+        "app/routes.py.bak_20260824_162915",
+        "app/routes.py.bak_antes_reparar_20260821_234548",
+        "app/routes.py.bak_before_gs_xml_20260824_093704",
+        "app/routes.py.bak_delete_20260824_084457",
+        "app/routes.py.bak_delete_20260824_084510",
+        "app/routes.py.bak_delete_final_20260824_092804",
+        "app/routes.py.bak_delete_v2_20260824_084647",
+        "app/routes.py.bak_delete_v4_20260824_092907",
+        "app/routes.py.bak_eliminar_varios_xml_20260824_101658",
+        "app/routes.py.bak_fix_mac_delete_20260824_100637",
+        "app/routes.py.bak_grandstream_20260821_165429",
+        "app/routes.py.bak_gs_delete_20260824_090956",
+        "app/routes.py.bak_gs_real_20260824_100259",
+        "app/routes.py.bak_modelo_excel_20260821_173636",
+        "app/routes.py.bak_modelo_grandstream_20260821_173106",
+        "app/routes.py.bak_row_fix_20260824_105535",
+        "app/routes.py.bak_row_fix_20260824_105733",
+        "app/routes.py.bak_sftp_20260821_233518",
+        "app/routes.py.bak_sftp_6_20260822_001623",
+        "app/routes.py.bak_sftp_v2_20260821_233856",
+        "app/routes.py.bak_xml_delete_20260824_093249",
+        "backup-antes-github-v1-20260904_094700/admin.html",
+        "backup-antes-github-v1-20260904_094700/routes.py",
+        "backup-antes-github-v2-20260904_095150/admin.html",
+        "backup-antes-github-v2-20260904_095150/routes.py",
+        "backup_logs_20260902_161424/index.html",
+        "backup_logs_20260902_161424/progress.py",
+        "backup_logs_20260902_161424/ssh_client.py",
+        "backup_logs_endpoint_20260902_161545/routes.py",
+        "backups/fix_logs_20260902_162905/index.html",
+        "backups/fix_logs_20260902_162905/routes.py",
+        "backups/fix_logs_definitivo_v6_20260902_164825/index.html",
+        "backups/fix_logs_es_v5_20260902_164519/index.html",
+        "backups/fix_logs_frontend_v3_20260902_163231/index.html",
+        "backups/fix_logs_v2_20260902_162958/index.html",
+        "backups/fix_logs_v2_20260902_162958/routes.py",
+        "backups/fix_logs_v4_20260902_163603/index.html",
+        "backups/fix_logs_v7_20260902_165201/index.html",
+        "backups/fix_logs_v8_20260902_165603/index.html",
+        "backups/fix_logs_v9_20260902_170137/index.html",
+        "build/VoIP_Provisioner/Analysis-00.toc",
+        "build/VoIP_Provisioner/EXE-00.toc",
+        "build/VoIP_Provisioner/PKG-00.toc",
+        "build/VoIP_Provisioner/PYZ-00.pyz",
+        "build/VoIP_Provisioner/PYZ-00.toc",
+        "build/VoIP_Provisioner/VoIP_Provisioner.pkg",
+        "build/VoIP_Provisioner/base_library.zip",
+        "build/VoIP_Provisioner/warn-VoIP_Provisioner.txt",
+        "build/VoIP_Provisioner/xref-VoIP_Provisioner.html",
+        "ca-key.pem",
+        "cert.pem",
+        "certs/ca-key.pem",
+        "certs/cert.pem",
+        "certs/key.pem",
+        "cfg000b82fcdcec.xml",
+        "config.json",
+        "core/monitor.py",
+        "data/Registro_1012840.xlsx",
+        "data/Registro_101295.xlsx",
+        "data/Registro_127001.xlsx",
+        "data/Registro_503290.xlsx",
+        "data/Registro_Prueba issabel.xlsx",
+        "data/config.json",
+        "data/configs/0c383e64818f.cfg",
+        "data/configs/cfg000b82fb2169.xml",
+        "data/configs/cfg000b82fcdcec.xml",
+        "data/perfiles.json",
+        "data/provisioner.db",
+        "data/sftp_servers.json",
+        "data/ubicaciones_perfiles.json",
+        "database.db",
+        "dist/VoIP_Provisioner.exe",
+        "fix_terminal.sh",
+        "installer_output/VoIP_Provisioner_Setup_2.0.exe",
+        "key.pem",
+        "localhost.crt",
+        "logs/audit.json",
+        "perfiles.json",
+        "plink.exe",
+        "provisioner.db",
+        "provisioner.db.bak",
+        "psftp.exe",
+        "sftp_profiles.json",
+        "sftp_servers.json",
+        "templates/admin.html.bak",
+        "templates/admin.html.bak_20260821_220724",
+        "templates/admin.html.bak_20260821_220841",
+        "templates/admin.html.bak_antes_menu"
+      ]
+    },
+    {
+      "source_commit": "a2e8dcbba8c7b66ba990d9cfe7f48cf465a30079",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "02e39d223095ee6427ad0cc6fa21c33970acc694",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github_sync_state.json"
+      ]
+    },
+    {
+      "source_commit": "fcd7e40f9d4754fd8aa5f09cbe28913bf7477e74",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github_sync_state.json"
+      ]
+    },
+    {
+      "source_commit": "771d79b4a601260f22da501f84b2fc89f167cad1",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github_sync_state.json"
+      ]
+    },
+    {
+      "source_commit": "f5f4875938a5f7ffb5899c5ad392eef96c5f4f19",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github_sync_state.json"
+      ]
+    },
+    {
+      "source_commit": "cf41cbbab6added173f0db7d49d18918352f5106",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github_sync_state.json"
+      ]
+    },
+    {
+      "source_commit": "7037a22773df7f05a573f18924562a3997b2a1ce",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github_sync_state.json"
+      ]
+    },
+    {
+      "source_commit": "ef1da6fe9347202ce22d3a1a5abc092a13026156",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github_sync_state.json"
+      ]
+    },
+    {
+      "source_commit": "ff027bd202cfdfc5cd52adef7e8b0d921e573d3a",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github_sync_state.json",
+        "app/routes.py.bak",
+        "provisioner.db.bak",
+        "templates/admin.html.bak",
+        "templates/index.html.bak"
+      ]
+    },
+    {
+      "source_commit": "d78c2233948afe0c5686008285325fcd5ba05c1d",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github_sync_state.json",
+        "app/asterisk.py.bak.20260820085047",
+        "app/backup.py.bak.20260821091918",
+        "app/routes.py.bak.20260819155637",
+        "app/routes.py.bak.20260820091353",
+        "app/routes.py.bak.20260820171451",
+        "app/routes.py.bak.20260821091207",
+        "app/routes.py.bak.20260821095521",
+        "app/routes.py.bak.20260821095707"
+      ]
+    },
+    {
+      "source_commit": "e13039638521d40219f1eaa0684055d28ae7e654",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github_sync_state.json"
+      ]
+    },
+    {
+      "source_commit": "816c5a36de0d3ea8bc069e9bacd7d7a6ef90f1e5",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/monitor.py.bak-20260903_102635",
+        "app/routes.py.bak_20260821_220724",
+        "app/routes.py.bak_20260821_220841",
+        "app/routes.py.bak_20260824_162915",
+        "app/routes.py.bak_antes_reparar_20260821_234548",
+        "app/routes.py.bak_before_gs_xml_20260824_093704",
+        "app/routes.py.bak_delete_20260824_084457",
+        "app/routes.py.bak_delete_20260824_084510",
+        "app/routes.py.bak_delete_final_20260824_092804",
+        "app/routes.py.bak_delete_v2_20260824_084647",
+        "app/routes.py.bak_delete_v4_20260824_092907",
+        "app/routes.py.bak_eliminar_varios_xml_20260824_101658",
+        "app/routes.py.bak_fix_mac_delete_20260824_100637",
+        "app/routes.py.bak_grandstream_20260821_165429",
+        "app/routes.py.bak_gs_delete_20260824_090956",
+        "app/routes.py.bak_gs_real_20260824_100259",
+        "app/routes.py.bak_modelo_excel_20260821_173636",
+        "app/routes.py.bak_modelo_grandstream_20260821_173106",
+        "app/routes.py.bak_row_fix_20260824_105535",
+        "app/routes.py.bak_row_fix_20260824_105733",
+        "app/routes.py.bak_sftp_20260821_233518",
+        "app/routes.py.bak_sftp_6_20260822_001623",
+        "app/routes.py.bak_sftp_v2_20260821_233856",
+        "app/routes.py.bak_xml_delete_20260824_093249",
+        "templates/admin.html.bak_20260821_220724",
+        "templates/admin.html.bak_20260821_220841",
+        "templates/admin.html.bak_antes_menu",
+        "templates/admin.html.bak_sftp_3_20260821_235353",
+        "templates/admin.html.bak_sftp_3b_20260821_235720",
+        "templates/admin.html.bak_sftp_v2_20260821_233856",
+        "templates/admin.html.bak_visual",
+        "templates/explorer.html.bak_20260821_235125",
+        "templates/explorer.html.bak_sftp_4_20260822_000232",
+        "templates/explorer.html.bak_sftp_5_20260822_000957",
+        "templates/explorer.html.bak_sftp_6_20260822_001623",
+        "templates/index.html.bak_20260824_162915",
+        "templates/index.html.bak_col",
+        "templates/index.html.bak_orden"
+      ]
+    },
+    {
+      "source_commit": "79a2a55c18e17b1ed5a9b07105bf957bd205b72a",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "backup-antes-github-v1-20260904_094700/admin.html",
+        "backup-antes-github-v1-20260904_094700/routes.py",
+        "backup-antes-github-v2-20260904_095150/admin.html",
+        "backup-antes-github-v2-20260904_095150/routes.py",
+        "backup_logs_20260902_161424/index.html",
+        "backup_logs_20260902_161424/progress.py",
+        "backup_logs_20260902_161424/ssh_client.py",
+        "backup_logs_endpoint_20260902_161545/routes.py",
+        "backups/fix_logs_20260902_162905/index.html",
+        "backups/fix_logs_20260902_162905/routes.py",
+        "backups/fix_logs_definitivo_v6_20260902_164825/index.html",
+        "backups/fix_logs_es_v5_20260902_164519/index.html",
+        "backups/fix_logs_frontend_v3_20260902_163231/index.html",
+        "backups/fix_logs_v2_20260902_162958/index.html",
+        "backups/fix_logs_v2_20260902_162958/routes.py",
+        "backups/fix_logs_v4_20260902_163603/index.html",
+        "backups/fix_logs_v7_20260902_165201/index.html",
+        "backups/fix_logs_v8_20260902_165603/index.html",
+        "backups/fix_logs_v9_20260902_170137/index.html"
+      ]
+    },
+    {
+      "source_commit": "7dbd41987e434e671880bc88b2bcc6774c2a257d",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github_sync_state.json"
+      ]
+    },
+    {
+      "source_commit": "95453e4611add9a4c4fe5513372a094a765c6083",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "54c0700467de565ce459da6a19a5694bc3c86b28",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "7bfd63b0b766ccf0d69b7d300a0248c1d8998eb1",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github_sync_state.json",
+        "data/Registro_101295.xlsx",
+        "data/ubicaciones_perfiles.json"
+      ]
+    },
+    {
+      "source_commit": "011fa30d88f2b15fe2691facac86f8dd9f58a9ad",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github_sync_state.json",
+        "app/monitor.py.bak.20260904_150812",
+        "app/monitor.py.bak.20260904_151145"
+      ]
+    },
+    {
+      "source_commit": "3a4c6ca987647f94a504465db47fc0159c88a08d",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github_sync_state.json"
+      ]
+    },
+    {
+      "source_commit": "629226324a0b8b7b8fd95926b9f338ccebaf03f5",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github_sync_state.json",
+        "app/monitor.py.bak_ooh323_20260904_171914",
+        "app/monitor.py.bak_ooh323_regex_20260904_172250",
+        "app/routes.py.bak_cdr_ruta_20260904_165022",
+        "app/routes.py.bak_cdr_ruta_v2_20260904_165200",
+        "app/routes.py.bak_cdr_ruta_v3_20260904_170007",
+        "app/routes.py.bak_cdr_ruta_v4_20260904_170206",
+        "app/routes.py.bak_ruta_20260904_163213",
+        "app/routes.py.bak_ruta_tuple_20260904_171550",
+        "templates/monitoreo.html.bak_cdr_click_20260904_165641",
+        "templates/monitoreo.html.bak_cdr_ruta_20260904_165022",
+        "templates/monitoreo.html.bak_cdr_ruta_v2_20260904_165200",
+        "templates/monitoreo.html.bak_cdr_ruta_v3_20260904_170006",
+        "templates/monitoreo.html.bak_ruta_20260904_163213",
+        "templates/monitoreo.html.bak_ruta_fix_20260904_171021",
+        "templates/monitoreo.html.bak_ruta_perfil_20260904_170732"
+      ]
+    },
+    {
+      "source_commit": "e96c9f2b369eccb06fb3a8b5bc56e56d3c859978",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github_sync_state.json",
+        "templates/monitoreo.html.bak_mobile_20260904_173047"
+      ]
+    },
+    {
+      "source_commit": "d38889cbe1f2b3dc5a4a08a37254b9ff1a5095ec",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github_sync_state.json",
+        "app/asterisk.py.bak_final_20260907_092239",
+        "app/asterisk.py.bak_todo_20260907_091654",
+        "app/monitor.py.bak_cdr_paginacion_20260907_143045",
+        "app/monitor.py.bak_colgar_20260907_113548",
+        "app/monitor.py.bak_colores_20260907_125337",
+        "app/monitor.py.bak_endpoint_colgar_20260907_113801",
+        "app/monitor.py.bak_final_20260907_092239",
+        "app/monitor.py.bak_live_dup_20260907_102049",
+        "app/monitor.py.bak_llamadas_20260907_093215",
+        "app/monitor.py.bak_tipo_llamada_20260907_131317",
+        "app/monitor.py.bak_todo_20260907_091654",
+        "app/routes.py.bak_cdr_borrado_20260907_164920",
+        "app/routes.py.bak_cdr_clasificacion_20260907_155151",
+        "app/routes.py.bak_cdr_compat_20260907_111921",
+        "app/routes.py.bak_cdr_contadores_20260907_141708",
+        "app/routes.py.bak_cdr_externas_20260907_161939",
+        "app/routes.py.bak_cdr_filtros_20260907_141301",
+        "app/routes.py.bak_cdr_paginacion_20260907_143045",
+        "app/routes.py.bak_cdr_realizadas_20260907_134155",
+        "app/routes.py.bak_cdr_realizadas_final_20260907_162637",
+        "app/routes.py.bak_cdr_ruta_20260907_100819",
+        "app/routes.py.bak_cdr_ruta_20260907_110033",
+        "app/routes.py.bak_cdr_ruta_fix_20260907_110258",
+        "app/routes.py.bak_cdr_stats_final_20260907_142502",
+        "app/routes.py.bak_colgar2_20260907_114221",
+        "app/routes.py.bak_colgar_20260907_114131",
+        "app/routes.py.bak_error_extension_20260907_160520",
+        "app/routes.py.bak_error_extension_20260907_160541",
+        "app/routes.py.bak_error_extension_20260907_160616",
+        "app/routes.py.bak_externas9_20260907_134646",
+        "app/routes.py.bak_externas_20260907_160111",
+        "app/routes.py.bak_filtro_externas9_20260907_135844",
+        "app/routes.py.bak_final_20260907_092239",
+        "app/routes.py.bak_todo_20260907_091654",
+        "templates/monitoreo.html.bak_20260907_132628",
+        "templates/monitoreo.html.bak_call_compacto_20260907_111235",
+        "templates/monitoreo.html.bak_cdr_borrado_20260907_164920",
+        "templates/monitoreo.html.bak_cdr_contadores_final_20260907_163028",
+        "templates/monitoreo.html.bak_cdr_debug_20260907_154615",
+        "templates/monitoreo.html.bak_cdr_final_20260907_090349",
+        "templates/monitoreo.html.bak_cdr_final_20260907_150120",
+        "templates/monitoreo.html.bak_cdr_live_20260907_085457",
+        "templates/monitoreo.html.bak_cdr_paginacion_20260907_143045",
+        "templates/monitoreo.html.bak_cdr_paginacion_20260907_143842",
+        "templates/monitoreo.html.bak_cdr_realizada_20260907_132849",
+        "templates/monitoreo.html.bak_cdr_realizadas_20260907_134155",
+        "templates/monitoreo.html.bak_cdr_realizadas_final_20260907_162637",
+        "templates/monitoreo.html.bak_clasificacion_visual_20260907_163532",
+        "templates/monitoreo.html.bak_colgar_front_20260907_114639",
+        "templates/monitoreo.html.bak_colores_20260907_125337",
+        "templates/monitoreo.html.bak_colores_20260907_125932",
+        "templates/monitoreo.html.bak_colores_final_20260907_131524",
+        "templates/monitoreo.html.bak_contadores_20260907_112610",
+        "templates/monitoreo.html.bak_contadores_fix_20260907_112739",
+        "templates/monitoreo.html.bak_contadores_ok_20260907_164027",
+        "templates/monitoreo.html.bak_contadores_realizadas_20260907_163226",
+        "templates/monitoreo.html.bak_externas9_20260907_134646",
+        "templates/monitoreo.html.bak_filtro_externas9_20260907_135844",
+        "templates/monitoreo.html.bak_final_20260907_092239",
+        "templates/monitoreo.html.bak_ruta_cdr_20260907_094649",
+        "templates/monitoreo.html.bak_ruta_click_20260907_094018",
+        "templates/monitoreo.html.bak_tipo_llamada_20260907_131317",
+        "templates/monitoreo.html.bak_todo_20260907_091654"
+      ]
+    },
+    {
+      "source_commit": "d7450acc688a9a3918e49ef374b4dce9a89ffbc6",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github_sync_state.json",
+        "app/routes.py.bak_antes_cdr_exterior_final_20260907_170604",
+        "app/routes.py.bak_antes_cdr_exterior_final_20260907_170626",
+        "app/routes.py.bak_cdr_exterior_20260907_170409",
+        "app/routes.py.bak_cdr_exterior_20260907_170734",
+        "app/routes.py.bak_cdr_exterior_regla_final_20260907_171432",
+        "app/routes.py.bak_cdr_fix_20260907_170333",
+        "app/routes.py.bak_cdr_realizadas_final_20260907_171735",
+        "app/routes.py.bak_cdr_stats_20260907_170949",
+        "app/routes.py.bak_cdr_stats_final_20260907_171106"
+      ]
+    },
+    {
+      "source_commit": "a3141215ffd47ee320243ce612abda8c28c40c60",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/asterisk.py.bak_final_20260907_092239"
+      ]
+    },
+    {
+      "source_commit": "c59f99a78fbe80f5644a0964a617eb9e146275f5",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/asterisk.py.bak_todo_20260907_091654"
+      ]
+    },
+    {
+      "source_commit": "418d227bf903beda76a77c37e88a4185da379aca",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/monitor.py.bak_cdr_paginacion_20260907_143045"
+      ]
+    },
+    {
+      "source_commit": "060815393218af3feaedd47d8f5438e389e3bd6e",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/monitor.py.bak_colgar_20260907_113548"
+      ]
+    },
+    {
+      "source_commit": "f8ae71046578d1a1bb213b5accaafe023acdf861",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/monitor.py.bak_colores_20260907_125337"
+      ]
+    },
+    {
+      "source_commit": "37113099b1f63e8aaf9a6463438a1ba77fd7988c",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/monitor.py.bak_endpoint_colgar_20260907_113801"
+      ]
+    },
+    {
+      "source_commit": "bb0e44925af9fa39c66d65670dfd79e93e783f8a",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/monitor.py.bak_final_20260907_092239"
+      ]
+    },
+    {
+      "source_commit": "6c6ecf11c32351e5b794d895ddb29d9ea1077842",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/monitor.py.bak_live_dup_20260907_102049"
+      ]
+    },
+    {
+      "source_commit": "bff59fe82c329fdfba11c447c6b8143330751e72",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/monitor.py.bak_llamadas_20260907_093215"
+      ]
+    },
+    {
+      "source_commit": "ed1db608860ef5c59cfbc9d3567f53c177661ac1",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/monitor.py.bak_ooh323_20260904_171914"
+      ]
+    },
+    {
+      "source_commit": "1a06cfb28fdd2772fccab54f65bd53aedac14405",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/monitor.py.bak_ooh323_regex_20260904_172250"
+      ]
+    },
+    {
+      "source_commit": "5b29950d1993edd1377a8b6701183c71a823b903",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/monitor.py.bak_tipo_llamada_20260907_131317"
+      ]
+    },
+    {
+      "source_commit": "ad22e34758e516c98b082d3435bf353e2a249834",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/monitor.py.bak_todo_20260907_091654"
+      ]
+    },
+    {
+      "source_commit": "ae8070e2f02ba6f6bf4eef9362d5eaee12c81856",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_antes_cdr_exterior_final_20260907_170604"
+      ]
+    },
+    {
+      "source_commit": "2b1d1c066ced905141a0ee8371dccabd273f2973",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_antes_cdr_exterior_final_20260907_170626"
+      ]
+    },
+    {
+      "source_commit": "1cfad7945e7e88295b2babc75079207945217bdd",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_cdr_borrado_20260907_164920"
+      ]
+    },
+    {
+      "source_commit": "92dd90fb04a5e81ce88fa35bdcfa5d8e5445ce5c",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_cdr_clasificacion_20260907_155151"
+      ]
+    },
+    {
+      "source_commit": "ba8ab3d235d34b108e81e95bb15b5cee5fb92726",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_cdr_compat_20260907_111921"
+      ]
+    },
+    {
+      "source_commit": "9f8664b9aca61de54163e35e33fd784c25b5c299",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_cdr_contadores_20260907_141708"
+      ]
+    },
+    {
+      "source_commit": "6f6b96a48215ffd3b2c997919583a6d87bfbb10a",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_cdr_exterior_20260907_170409"
+      ]
+    },
+    {
+      "source_commit": "5d367f6bb13ff049bd6918e2e32b40c81a534e3c",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_cdr_exterior_20260907_170734"
+      ]
+    },
+    {
+      "source_commit": "57ea939b1058998721bbdc74b3c8c36591cfe734",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_cdr_exterior_regla_final_20260907_171432"
+      ]
+    },
+    {
+      "source_commit": "5a344894bf4d4d5b6fc92240f3f15e0521baeeb8",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_cdr_externas_20260907_161939"
+      ]
+    },
+    {
+      "source_commit": "0a0c5ad497b6f16e198709fbdf9fdfb29aa549e3",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_cdr_filtros_20260907_141301"
+      ]
+    },
+    {
+      "source_commit": "d176fc93287ed7261399baaa1610e23e08f6f772",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_cdr_fix_20260907_170333"
+      ]
+    },
+    {
+      "source_commit": "839d118b8f0b82ef904d73630ba0bf16594c55f0",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_cdr_paginacion_20260907_143045"
+      ]
+    },
+    {
+      "source_commit": "ae59cbb1a514786111fa32c0a1eb6d474c034b37",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_cdr_realizadas_20260907_134155"
+      ]
+    },
+    {
+      "source_commit": "4fdb9bf307b832ec227dc15376071944a250c9bf",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_cdr_realizadas_final_20260907_162637"
+      ]
+    },
+    {
+      "source_commit": "12dc19e910d599f5fa21542ea2dd1440b36a8d50",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_cdr_realizadas_final_20260907_171735"
+      ]
+    },
+    {
+      "source_commit": "80406f596bb1186d19124fc8bfe063e3b979b51a",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_cdr_ruta_20260904_165022"
+      ]
+    },
+    {
+      "source_commit": "a5bdc2b91d928d847f02d23163849fa85822f035",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_cdr_ruta_20260907_100819"
+      ]
+    },
+    {
+      "source_commit": "3d1040ac29feb3ca13c442202ef575ba86a6ced2",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_cdr_ruta_20260907_110033"
+      ]
+    },
+    {
+      "source_commit": "211eda9c3c15ca35108f94da9c3bcf393ae2cb07",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_cdr_ruta_fix_20260907_110258"
+      ]
+    },
+    {
+      "source_commit": "5dd1ca61d0fed9b02e7055e257f5145f4335f94c",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_cdr_ruta_v2_20260904_165200"
+      ]
+    },
+    {
+      "source_commit": "b67254fd9cc9d885243d817f478ab677a664db2c",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_cdr_ruta_v3_20260904_170007"
+      ]
+    },
+    {
+      "source_commit": "5589b45f56581363c9b7b5501cf8cf6758c4ef6d",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_cdr_ruta_v4_20260904_170206"
+      ]
+    },
+    {
+      "source_commit": "592d6aca6a486d3b8dc426ae81ffc39262d027ce",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_cdr_stats_20260907_170949"
+      ]
+    },
+    {
+      "source_commit": "5434942fadae07d1dfc0d45d3880d662aeb3983f",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_cdr_stats_final_20260907_142502"
+      ]
+    },
+    {
+      "source_commit": "a2c46528fae9d993cbf8276e9ecc3b325b2a4ce0",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_cdr_stats_final_20260907_171106"
+      ]
+    },
+    {
+      "source_commit": "9f5fce05660141ff697efc964ee089cc29be8546",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_colgar2_20260907_114221"
+      ]
+    },
+    {
+      "source_commit": "ded092daa1941e24b93f6506132fdbff398c2517",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_colgar_20260907_114131"
+      ]
+    },
+    {
+      "source_commit": "dc0434dca361cdc56c7209c6e1937e1e478afac9",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_error_extension_20260907_160520"
+      ]
+    },
+    {
+      "source_commit": "c28b7707772055465d7aeee377b6f58678cd7eb9",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_error_extension_20260907_160541"
+      ]
+    },
+    {
+      "source_commit": "9887d893aed27a83af453b7b4cb36d7de301563a",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_error_extension_20260907_160616"
+      ]
+    },
+    {
+      "source_commit": "d4cf71d80aa047c3c4e94f321775c8a35f2db80d",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_externas9_20260907_134646"
+      ]
+    },
+    {
+      "source_commit": "e4fe0ce1572f85b9e38923e6930778c56c6646e1",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_externas_20260907_160111"
+      ]
+    },
+    {
+      "source_commit": "76053e971a43a52ed8fe9ee172e6f02961851272",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_filtro_externas9_20260907_135844"
+      ]
+    },
+    {
+      "source_commit": "e7587b7d482236446d317f973093b1bbd9ed6954",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_final_20260907_092239"
+      ]
+    },
+    {
+      "source_commit": "9bb623e520174876f486af9530d339101cc7cf23",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_ruta_20260904_163213"
+      ]
+    },
+    {
+      "source_commit": "fa4177fa36ea4b69755fb175f7b7d8f641337ca7",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_ruta_tuple_20260904_171550"
+      ]
+    },
+    {
+      "source_commit": "03fbb8545184251ae7b9c3634011127b53b416e1",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_todo_20260907_091654"
+      ]
+    },
+    {
+      "source_commit": "63948d983a78ae4222ac184088e70aa6573839e8",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/monitoreo.html.bak_20260907_132628"
+      ]
+    },
+    {
+      "source_commit": "69a3ff027a7ee4deab48e82d4763ce1576938e79",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/monitoreo.html.bak_call_compacto_20260907_111235"
+      ]
+    },
+    {
+      "source_commit": "a6aa95f093da0b801cd5229a284cf03a7f925e39",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/monitoreo.html.bak_cdr_borrado_20260907_164920"
+      ]
+    },
+    {
+      "source_commit": "50010fe66d721cc68e0430c34a42e068123c7beb",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/monitoreo.html.bak_cdr_click_20260904_165641"
+      ]
+    },
+    {
+      "source_commit": "3db175dfd52739cff2ec82f331e0aa11558818b0",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/monitoreo.html.bak_cdr_contadores_final_20260907_163028"
+      ]
+    },
+    {
+      "source_commit": "e20485aea40075031d148d245f4c31f36405c4c1",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/monitoreo.html.bak_cdr_debug_20260907_154615"
+      ]
+    },
+    {
+      "source_commit": "d95c7ec8c5631a10d5b8120cff42beb1d9f39c54",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/monitoreo.html.bak_cdr_final_20260907_090349"
+      ]
+    },
+    {
+      "source_commit": "63c7cad58f89f10d728a1698450f3342fa1dd229",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/monitoreo.html.bak_cdr_final_20260907_150120"
+      ]
+    },
+    {
+      "source_commit": "549b526f3bc5387db74108790e604119f52f5773",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/monitoreo.html.bak_cdr_live_20260907_085457"
+      ]
+    },
+    {
+      "source_commit": "21994bfc072cc5ee0cc0bd2cbd82df65ad48b1c5",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/monitoreo.html.bak_cdr_paginacion_20260907_143045"
+      ]
+    },
+    {
+      "source_commit": "fe65d9909ed979915a7e84c5a3b7dc9009d6cb6d",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/monitoreo.html.bak_cdr_paginacion_20260907_143842"
+      ]
+    },
+    {
+      "source_commit": "4256fb70ce0690a4961928758dd8ef7b275f08c1",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/monitoreo.html.bak_cdr_realizada_20260907_132849"
+      ]
+    },
+    {
+      "source_commit": "7c714fad2e58b379436d6344f59ea19c71204ec1",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/monitoreo.html.bak_cdr_realizadas_20260907_134155"
+      ]
+    },
+    {
+      "source_commit": "874309ac4dcd75dad7d717f39051e95687dd48b8",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/monitoreo.html.bak_cdr_realizadas_final_20260907_162637"
+      ]
+    },
+    {
+      "source_commit": "52d428f39321d0f46d962dd4a81121c77d38b432",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/monitoreo.html.bak_cdr_ruta_20260904_165022"
+      ]
+    },
+    {
+      "source_commit": "a6d5785511a9af211f617120c5e7f162d62d4f2e",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/monitoreo.html.bak_cdr_ruta_v2_20260904_165200"
+      ]
+    },
+    {
+      "source_commit": "4e470db67b9ae2e20a0f922eaa0bf1f5f70e3b5e",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/monitoreo.html.bak_cdr_ruta_v3_20260904_170006"
+      ]
+    },
+    {
+      "source_commit": "047c797e3276c0367b216c80611ddc3791767f7f",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/monitoreo.html.bak_clasificacion_visual_20260907_163532"
+      ]
+    },
+    {
+      "source_commit": "ae35673f35e8b2abc92f12f43bce91f4981b47ec",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/monitoreo.html.bak_colgar_front_20260907_114639"
+      ]
+    },
+    {
+      "source_commit": "9634baf783e16622ef9f7d0c8473d5d632372be2",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/monitoreo.html.bak_colores_20260907_125337"
+      ]
+    },
+    {
+      "source_commit": "52a6f6fbffdc10fc9763a34a0238ba1c584e0c4b",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/monitoreo.html.bak_colores_20260907_125932"
+      ]
+    },
+    {
+      "source_commit": "c196ae943677ca392f0a6dd2c1aa6cda61493def",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/monitoreo.html.bak_colores_final_20260907_131524"
+      ]
+    },
+    {
+      "source_commit": "ee6270c55cd4f8cd9514d9658b90500e9680fa75",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/monitoreo.html.bak_contadores_20260907_112610"
+      ]
+    },
+    {
+      "source_commit": "abf6032e75485204ca7fc2e0e2d1b6fbb673274d",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/monitoreo.html.bak_contadores_fix_20260907_112739"
+      ]
+    },
+    {
+      "source_commit": "ae535588cdb1412a7cbec3c98b874c2a9d704dc5",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/monitoreo.html.bak_contadores_ok_20260907_164027"
+      ]
+    },
+    {
+      "source_commit": "5a5fac5d369a562090470ae12553f1a32909f0de",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/monitoreo.html.bak_contadores_realizadas_20260907_163226"
+      ]
+    },
+    {
+      "source_commit": "e442d5338856281bef1a2eae64dc2df9bdedd7e8",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/monitoreo.html.bak_externas9_20260907_134646"
+      ]
+    },
+    {
+      "source_commit": "6f4c7a339d5b695d2ac133b21a6a53e80be06d48",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/monitoreo.html.bak_filtro_externas9_20260907_135844"
+      ]
+    },
+    {
+      "source_commit": "b4499192925823abe62cc7b8a0f3f96412a5e2b9",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/monitoreo.html.bak_final_20260907_092239"
+      ]
+    },
+    {
+      "source_commit": "c7a974ebc03a748674f942ef1cc6d8cec85e36d5",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/monitoreo.html.bak_mobile_20260904_173047"
+      ]
+    },
+    {
+      "source_commit": "080f8fca91ffecddfc6090012622e82cd9b4c8b8",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/monitoreo.html.bak_ruta_20260904_163213"
+      ]
+    },
+    {
+      "source_commit": "6ba542606711b0155a6d192169be28e7934c4fe7",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/monitoreo.html.bak_ruta_cdr_20260907_094649"
+      ]
+    },
+    {
+      "source_commit": "f60b6d4f1f3f2827e479ff024236e413421c7fbe",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/monitoreo.html.bak_ruta_click_20260907_094018"
+      ]
+    },
+    {
+      "source_commit": "952333e9f686bbedaa5f0f1a8ff8ffe93470029c",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/monitoreo.html.bak_ruta_fix_20260904_171021"
+      ]
+    },
+    {
+      "source_commit": "0a3265a0fcba0f9357b7ed7237d83a3b4117d92a",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/monitoreo.html.bak_ruta_perfil_20260904_170732"
+      ]
+    },
+    {
+      "source_commit": "f2695f86bedc0230d36d456c5afa3b5bef952ed1",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/monitoreo.html.bak_tipo_llamada_20260907_131317"
+      ]
+    },
+    {
+      "source_commit": "1f8cbfa1bac2417935d4f3863da92b3f3666c92b",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/monitoreo.html.bak_todo_20260907_091654"
+      ]
+    },
+    {
+      "source_commit": "2d137ed32e5347c90e307a0b4a7f47e325915945",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github_sync_state.json",
+        ".limpieza_backups_status.json",
+        "scripts/limpiar_backups.sh"
+      ]
+    },
+    {
+      "source_commit": "20e3c936d2225761f6540971b62ad28ef1762c1f",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "b01ed5079c8eaf1f369da8c5cf852f351d3a7882",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github_sync_state.json",
+        "templates/admin.html.bak.20260908-131056"
+      ]
+    },
+    {
+      "source_commit": "d1dd0390df7583fbee05d3c57f044f8322fd57b3",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github_sync_state.json",
+        ".limpieza_backups_status.json",
+        "app/routes.py.bak-duplicado-reinicio-20260908-140205",
+        "app/routes.py.bak-reinicio-20260908-140019",
+        "app/routes.py.bak-reinicio-simple-20260908-141025",
+        "app/routes.py.bak.20260908-135152",
+        "app/routes.py.roto.20260908-135726",
+        "data/config.json",
+        "templates/admin.html.bak-modal-reinicio-20260908-141357",
+        "templates/admin.html.bak-reinicio-simple-20260908-141025",
+        "templates/admin.html.bak-reinicio-ux-20260908-141821",
+        "templates/admin.html.bak.20260908-134440",
+        "templates/admin.html.bak.20260908-134730",
+        "templates/admin.html.bak.reinicio-20260908-140658"
+      ]
+    },
+    {
+      "source_commit": "2ed92853e9c252c323bf71b32d34825ef7c76cb3",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak-duplicado-reinicio-20260908-140205"
+      ]
+    },
+    {
+      "source_commit": "136c13fdc86843acf05f3be2829c8a8937881bb0",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak-reinicio-20260908-140019"
+      ]
+    },
+    {
+      "source_commit": "e049fccbd1fe87176023322d7ee8b5d7f9c2638e",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak-reinicio-simple-20260908-141025"
+      ]
+    },
+    {
+      "source_commit": "811ae5da75d8eb5e8b5c6f5e0a1fa8cfcd4ff8be",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/admin.html.bak-modal-reinicio-20260908-141357"
+      ]
+    },
+    {
+      "source_commit": "3c1c1d75fb9cda18a90ee985132c441142302ffe",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/admin.html.bak-reinicio-simple-20260908-141025"
+      ]
+    },
+    {
+      "source_commit": "460e8a7dbdb2648740871c0d8ea7acbb23b68e67",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/admin.html.bak-reinicio-ux-20260908-141821"
+      ]
+    },
+    {
+      "source_commit": "b6f6340994cbabf4267dbae98f6963d961e41bdb",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/monitor.py.bak.20260904_150812"
+      ]
+    },
+    {
+      "source_commit": "41072deb44522db44aa096ecd30214fec56ca837",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/monitor.py.bak.20260904_151145"
+      ]
+    },
+    {
+      "source_commit": "7ed450d346e594c93b42e7f3fbfee681dfd92ba1",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak.20260908-135152"
+      ]
+    },
+    {
+      "source_commit": "2f1dbfd63e5ab9d49691366b2b4cfdedcbd6f7fc",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/admin.html.bak.20260908-131056"
+      ]
+    },
+    {
+      "source_commit": "567ba5e5d9bccccda24d67ff2d37737c65997f37",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/admin.html.bak.20260908-134440"
+      ]
+    },
+    {
+      "source_commit": "60736142f59c422c942a960a0e1331197013a9f2",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/admin.html.bak.20260908-134730"
+      ]
+    },
+    {
+      "source_commit": "a477d77f216e589b53790b79080bcad86503e331",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/admin.html.bak.reinicio-20260908-140658"
+      ]
+    },
+    {
+      "source_commit": "e8ef6746b58718c2a78b38663f0eef42bbedd403",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "75e2d3fe06bfa8b562717227c65ca0fffaef27a1",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "6accafc65dcbd1a976eccb07839c4243f5cc511c",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github_sync_state.json",
+        ".limpieza_backups_status.json",
+        "scripts/limpiar_backups.sh"
+      ]
+    },
+    {
+      "source_commit": "1f15d0da29400e57fc31ecd2e78eb033974f09da",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github_sync_state.json",
+        "app/backup.py.bak-scheduler-20260908-160825",
+        "app/routes.py.bak-github-password-20260908-174542",
+        "data/sftp_servers.json",
+        "templates/admin.html.bak-ANTES-RESTORE-DEFINITIVO-20260908-171839",
+        "templates/admin.html.bak-antes-restauracion-base-20260908-171211",
+        "templates/admin.html.bak-antes-restauracion-real-20260908-171423",
+        "templates/admin.html.bak-antes-restaurar-estructura-20260908-163130",
+        "templates/admin.html.bak-antes-restaurar-final-20260908-162415",
+        "templates/admin.html.bak-antes-restaurar-github-20260908-171007",
+        "templates/admin.html.bak-antes-restaurar-modal-unico-20260908-170728",
+        "templates/admin.html.bak-antes-restaurar-modal-unico-20260908-170732",
+        "templates/admin.html.bak-antes-restaurar-modal-unico-20260908-170759",
+        "templates/admin.html.bak-backup-fix3-20260908-164622",
+        "templates/admin.html.bak-backup-sistemas-20260908-164407",
+        "templates/admin.html.bak-backup-sistemas-fix2-20260908-164445",
+        "templates/admin.html.bak-estado-actual-20260908-171042",
+        "templates/admin.html.bak-estado-roto-20260908-170923",
+        "templates/admin.html.bak-fix-estructura-20260908-162200",
+        "templates/admin.html.bak-fix-perfil-password-20260908-173011",
+        "templates/admin.html.bak-github-modal-20260908-174301",
+        "templates/admin.html.bak-github-password-20260908-174000",
+        "templates/admin.html.bak-modal-TODAS-20260908-172136",
+        "templates/admin.html.bak-modal-backup-20260908-144219",
+        "templates/admin.html.bak-modal-backup-direct-20260908-145324",
+        "templates/admin.html.bak-modal-backup-operaciones-20260908-160310",
+        "templates/admin.html.bak-modal-error-20260908-164954",
+        "templates/admin.html.bak-modal-generico-20260908-165535",
+        "templates/admin.html.bak-modal-password-final-20260908-165501",
+        "templates/admin.html.bak-modal-perfil-plantilla-20260908-172703",
+        "templates/admin.html.bak-modal-reutilizacion-20260908-145749",
+        "templates/admin.html.bak-modal-unico-20260908-170611",
+        "templates/admin.html.bak-modal-unico-20260908-172343",
+        "templates/admin.html.bak-password-backup-20260908-143706",
+        "templates/admin.html.bak-password-fix-20260908-165736",
+        "templates/admin.html.bak-quitar-async-duplicado-20260908-170103",
+        "templates/admin.html.bak-quitar-mantenimiento-backup-20260908-155638",
+        "templates/admin.html.bak-restaurar-paneles-20260908-161516",
+        "templates/admin.html.bak-restaurar-seguridad-mantenimiento-20260908-161908",
+        "templates/admin.html.bak-save-perfil-final-20260908-173251",
+        "templates/admin.html.bak-tabs-definitivo-20260908-162830"
+      ]
+    },
+    {
+      "source_commit": "0a241b60ce3372f27ca90b9fb9dba76afff1c7d3",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github_sync_state.json",
+        "templates/admin.html.bak-fix-github-started-20260908-175116"
+      ]
+    },
+    {
+      "source_commit": "b32b83b9fdb208200ffc4e008673e7d4bd46bbac",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github_sync_state.json"
+      ]
+    },
+    {
+      "source_commit": "16801bf49698e346ef0ec23311d90b99c7363c04",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github_sync_state.json",
+        "templates/admin.html.bak-github-progreso-final-20260908-175226"
+      ]
+    },
+    {
+      "source_commit": "ab55c35681e76e1ef8f0e4d7b65c83f5b6c94722",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github_sync_state.json"
+      ]
+    },
+    {
+      "source_commit": "b3786f6ca3eceaab924e386f841d4dd75b20f33c",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github_sync_state.json"
+      ]
+    },
+    {
+      "source_commit": "471dfacaaf3cf37e48efba7e70512c236d1d22df",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/backup.py.bak-scheduler-20260908-160825"
+      ]
+    },
+    {
+      "source_commit": "ef1223f03af57cbf348960942ff1492e5737d3af",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak-github-password-20260908-174542"
+      ]
+    },
+    {
+      "source_commit": "99d8d18e39c8d8b071df51e2ef5e0babba069ebe",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/admin.html.bak-ANTES-RESTORE-DEFINITIVO-20260908-171839"
+      ]
+    },
+    {
+      "source_commit": "e1ea692db56f620ce5d7adde5bedb3e57819465a",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/admin.html.bak-antes-restauracion-base-20260908-171211"
+      ]
+    },
+    {
+      "source_commit": "6f95b1bc25fe74060dabfe28b5a8c4d5772b78f8",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/admin.html.bak-antes-restauracion-real-20260908-171423"
+      ]
+    },
+    {
+      "source_commit": "b75ea412dac1e3eac51370f0f6c65285d0da3cb4",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/admin.html.bak-antes-restaurar-estructura-20260908-163130"
+      ]
+    },
+    {
+      "source_commit": "3ab1b19168dab1e03d7ccd71551add151964d08d",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/admin.html.bak-antes-restaurar-final-20260908-162415"
+      ]
+    },
+    {
+      "source_commit": "a9e07976514b2c99637dc62f1740de455f53e451",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/admin.html.bak-antes-restaurar-github-20260908-171007"
+      ]
+    },
+    {
+      "source_commit": "76d2d58b880c6afdb2894d31b6bc1d9551ab3625",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/admin.html.bak-antes-restaurar-modal-unico-20260908-170728"
+      ]
+    },
+    {
+      "source_commit": "553fc092c6c52527ba7e7c98b258049059cef2b1",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/admin.html.bak-antes-restaurar-modal-unico-20260908-170732"
+      ]
+    },
+    {
+      "source_commit": "59cb402310541c2bf230fcab07bccf6447b10faa",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/admin.html.bak-antes-restaurar-modal-unico-20260908-170759"
+      ]
+    },
+    {
+      "source_commit": "f3886a6f30373a7e180513ba601bac221c1c58aa",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/admin.html.bak-backup-fix3-20260908-164622"
+      ]
+    },
+    {
+      "source_commit": "c67f4db0385d6fca2f939f28bb27f667e2c9aec2",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/admin.html.bak-backup-sistemas-20260908-164407"
+      ]
+    },
+    {
+      "source_commit": "857b08cbac484831ee148ee4df8bdf902f09bfdd",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/admin.html.bak-backup-sistemas-fix2-20260908-164445"
+      ]
+    },
+    {
+      "source_commit": "aa95061dd4dda2015b35bb77a0bb7b67604141c9",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/admin.html.bak-estado-actual-20260908-171042"
+      ]
+    },
+    {
+      "source_commit": "995225b1b392d607d9d1115e0d0b7473839b7ac7",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/admin.html.bak-estado-roto-20260908-170923"
+      ]
+    },
+    {
+      "source_commit": "d42998a6c3893d57d25c26fb4372b184b08b3720",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/admin.html.bak-fix-estructura-20260908-162200"
+      ]
+    },
+    {
+      "source_commit": "f0147b96007d33c0b3e0320d84ea3fc4b5216922",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/admin.html.bak-fix-github-started-20260908-175116"
+      ]
+    },
+    {
+      "source_commit": "37442680bc0ef9394e1cfcd2e1580e688a834ee0",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/admin.html.bak-fix-perfil-password-20260908-173011"
+      ]
+    },
+    {
+      "source_commit": "53040d23836ff73eb89ae6e5844078cdaf0fc9ba",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/admin.html.bak-github-modal-20260908-174301"
+      ]
+    },
+    {
+      "source_commit": "846f940caf480cc6ba7cde6ae34a8ff16a44223f",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/admin.html.bak-github-password-20260908-174000"
+      ]
+    },
+    {
+      "source_commit": "5da187c27ffbe37ec82b7a67a95143d724055a5c",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/admin.html.bak-github-progreso-final-20260908-175226"
+      ]
+    },
+    {
+      "source_commit": "a0da4e614ddedd8052505f3cf7838eeaabd70ff8",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/admin.html.bak-modal-TODAS-20260908-172136"
+      ]
+    },
+    {
+      "source_commit": "ac2546503d0ebb43073d8c05e69489300a892fd8",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/admin.html.bak-modal-backup-20260908-144219"
+      ]
+    },
+    {
+      "source_commit": "d30b7d3fc5eb392ffcc1a26ba6f0941c45f7a8e1",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/admin.html.bak-modal-backup-direct-20260908-145324"
+      ]
+    },
+    {
+      "source_commit": "8515f7995843960dce42f301735fecbed8c94ba1",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/admin.html.bak-modal-backup-operaciones-20260908-160310"
+      ]
+    },
+    {
+      "source_commit": "d0c91fc80d9985dfb089a19422cbb03c1904d781",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/admin.html.bak-modal-error-20260908-164954"
+      ]
+    },
+    {
+      "source_commit": "c622b2a7f6ae9dce5e9d94287a153e73426ea67c",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/admin.html.bak-modal-generico-20260908-165535"
+      ]
+    },
+    {
+      "source_commit": "452ab83582a2c0fbed7cd1a334b2607149dbf025",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/admin.html.bak-modal-password-final-20260908-165501"
+      ]
+    },
+    {
+      "source_commit": "3ec879f849d6f3ee4363dad2983ba7642edcad27",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/admin.html.bak-modal-perfil-plantilla-20260908-172703"
+      ]
+    },
+    {
+      "source_commit": "585189a6f35faa9b43684fdb297e5b82d29d7344",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/admin.html.bak-modal-reutilizacion-20260908-145749"
+      ]
+    },
+    {
+      "source_commit": "d059b37f8ed791c636da10e267fa584387725078",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/admin.html.bak-modal-unico-20260908-170611"
+      ]
+    },
+    {
+      "source_commit": "1459e87d2742d1e4fcfc3d29082783807c3e837b",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/admin.html.bak-modal-unico-20260908-172343"
+      ]
+    },
+    {
+      "source_commit": "1d2241467aab6f6a5d73abb104213c510351474f",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/admin.html.bak-password-backup-20260908-143706"
+      ]
+    },
+    {
+      "source_commit": "ced54286926fc344accc3bc1756dff4e97663fb2",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/admin.html.bak-password-fix-20260908-165736"
+      ]
+    },
+    {
+      "source_commit": "d60616921343e4c1a366157523376bbcd227e543",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/admin.html.bak-quitar-async-duplicado-20260908-170103"
+      ]
+    },
+    {
+      "source_commit": "4487900b87be16a03ad46c9d73539d72319c162b",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/admin.html.bak-quitar-mantenimiento-backup-20260908-155638"
+      ]
+    },
+    {
+      "source_commit": "78016f9acd35742cbdad925f3c5cb141bb7bf756",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/admin.html.bak-restaurar-paneles-20260908-161516"
+      ]
+    },
+    {
+      "source_commit": "db97586df850ab567aa7f514955e3fc62283a9db",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/admin.html.bak-restaurar-seguridad-mantenimiento-20260908-161908"
+      ]
+    },
+    {
+      "source_commit": "4bf8d25e162e8e864893763d441937e22e7be333",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/admin.html.bak-save-perfil-final-20260908-173251"
+      ]
+    },
+    {
+      "source_commit": "7b890932d7903fdced55516bed85c2499f3412c9",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/admin.html.bak-tabs-definitivo-20260908-162830"
+      ]
+    },
+    {
+      "source_commit": "41e8ed242258efa5b5a49eaa647fb5e957831e82",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github_sync_state.json",
+        ".limpieza_backups_status.json"
+      ]
+    },
+    {
+      "source_commit": "c917fc12aa40846f0d6c84b00477fe020bb71ad7",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github_sync_state.json",
+        ".limpieza_backups_status.json",
+        "data/sftp_servers.json"
+      ]
+    },
+    {
+      "source_commit": "25f2b421e85a77f4b7d30048f09a681a84699639",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github_sync_state.json"
+      ]
+    },
+    {
+      "source_commit": "3c427666ca5d2236b4dd0a91baa09f6c77bea6b9",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github_sync_state.json",
+        "cert.pem",
+        "data/sftp_servers.json",
+        "key.pem",
+        "static/manifest.json"
+      ]
+    },
+    {
+      "source_commit": "bdf47cc29e0d3331458a6a722d215c1f3c9bcd5a",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github_sync_state.json",
+        "data/sftp_servers.json"
+      ]
+    },
+    {
+      "source_commit": "8d89c69e6be795dd91aa00fcd7144b297f5bceed",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "Configuration.csv"
+      ]
+    },
+    {
+      "source_commit": "4407fca6b5ac41f7880eb81900a3624e876120fb",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github_sync_state.json",
+        "Configuration.csv",
+        "data/Registro_105080.xlsx",
+        "data/sftp_servers.json"
+      ]
+    },
+    {
+      "source_commit": "611f32c816503ac67424d4b7b013774ec57ed7aa",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github_sync_state.json",
+        "static/manifest.json"
+      ]
+    },
+    {
+      "source_commit": "c300232b4e2b992648d364f529e091116946e4eb",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github_sync_state.json",
+        "data/Registro_105080.xlsx",
+        "data/configs/0c383e64818f.cfg"
+      ]
+    },
+    {
+      "source_commit": "a7d112673bbf95022ee9849f4aa6864eeb05ff38",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github_sync_state.json",
+        "data/Registro_105080.xlsx",
+        "data/configs/0c383e64818f.cfg"
+      ]
+    },
+    {
+      "source_commit": "1349b98821adf13df750a7263e625d0fd7bfd5c8",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github_sync_state.json",
+        "data/Registro_105080.xlsx",
+        "data/configs/0c383e64818f.cfg",
+        "data/ubicaciones_perfiles.json"
+      ]
+    },
+    {
+      "source_commit": "f7c78a83f907da2275e95eb614381ffd7213d8d9",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github_sync_state.json"
+      ]
+    },
+    {
+      "source_commit": "552d740dd972011e616fc1b4ebcd0765ae2c7fd1",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github_sync_state.json",
+        "app/monitor.py.vp-backup-synway-20260930-103001",
+        "app/routes.py.bak_recibidas_20260930_111832"
+      ]
+    },
+    {
+      "source_commit": "e240190be4486c8ed415ef443b699f79b6f1330e",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github_sync_state.json",
+        "app/routes.py.bak_20260930_160831",
+        "templates/monitoreo.html.bak_20260930_171045"
+      ]
+    },
+    {
+      "source_commit": "9a53b93f9516dfde6c5df02a496a1989d393dc24",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_20260930_160831"
+      ]
+    },
+    {
+      "source_commit": "6266dd647d0aebd562ccb07d252b2c03430571f3",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_recibidas_20260930_111832"
+      ]
+    },
+    {
+      "source_commit": "c42ffccbec13f41cea3afe5d6b92dbeb467fae49",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/monitoreo.html.bak_20260930_171045"
+      ]
+    },
+    {
+      "source_commit": "45604ff566ff70cf04d309f836e2d2ff25444433",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github_sync_state.json",
+        ".limpieza_backups_status.json",
+        "templates/admin.html.bak_20260930_173001",
+        "templates/index.html.bak_20260930_172201",
+        "templates/index.html.bak_20260930_172315",
+        "templates/index.html.bak_20260930_172344"
+      ]
+    },
+    {
+      "source_commit": "2cf8fcb5540f734acf0ef0e04ceb7285a99a772d",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/admin.html.bak_20260930_173001"
+      ]
+    },
+    {
+      "source_commit": "45a3593417618074c0a640cd3c4928dc7e3daede",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/index.html.bak_20260930_172201"
+      ]
+    },
+    {
+      "source_commit": "ec92f7a18365f6be8e966cd1d991ebb81d4ccda2",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/index.html.bak_20260930_172315"
+      ]
+    },
+    {
+      "source_commit": "0f4e4ae935865ab362b010da1a71f2c60c0ceb8a",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/index.html.bak_20260930_172344"
+      ]
+    },
+    {
+      "source_commit": "ce558b1dfca30b49e2dd24de7b824d8b68cc15de",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "-c",
+        ".github_sync_state.json",
+        ".limpieza_backups_status.json",
+        "app/config.py.bak_cfg_xml_20261001_121415",
+        "app/routes.py.bak_admin_xml_20261001_115033",
+        "app/routes.py.bak_gs_20261001_093332",
+        "app/routes.py.bak_gs_busqueda_normalizada_20261001_104902",
+        "app/routes.py.bak_gs_final_20261001_114319",
+        "app/routes.py.bak_gs_nombre_admin_20261001_103312",
+        "app/routes.py.bak_gs_ruta_20261001_104217",
+        "app/routes.py.bak_gs_sin_fallback_20261001_104602",
+        "app/routes.py.bak_gs_tftp_final_20261001_133939",
+        "app/routes.py.bak_gs_tftp_final_20261001_134053",
+        "app/routes.py.bak_plantillas_20261001_113821",
+        "app/routes.py.bak_rango2_20261001_154844",
+        "app/routes.py.bak_rango_20261001_153339",
+        "app/routes.py.bak_tftp_gs_20261001_133623",
+        "app/routes.py.bak_tpl_20261001_094939",
+        "data/Registro_101295.xlsx",
+        "data/Registro_101295.xlsx.bak_rango",
+        "data/Registro_105080.xlsx",
+        "data/configs/0c383e64818f.cfg",
+        "data/configs/cfg000b82fb2169.xml",
+        "data/ubicaciones_perfiles.json",
+        "host 10.12.13.84 and udp port 69",
+        "templates/admin.html.bak_gs_final_20261001_114319",
+        "templates/admin.html.bak_modal_tpl_20261001_120249",
+        "templates/admin.html.bak_modal_tpl_20261001_120342",
+        "templates/admin.html.bak_modal_tpl_20261001_120407",
+        "templates/admin.html.bak_modal_tpl_fix_20261001_120425",
+        "templates/admin.html.bak_plantillas_20261001_113821",
+        "templates/index.html.bak_rango2_20261001_154844",
+        "templates/index.html.bak_rango_20261001_153339"
+      ]
+    },
+    {
+      "source_commit": "7560a89422a79ae8dc49302fb9cafbb5e561cb69",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github_sync_state.json",
+        "app/routes.py.bak_monitor_auto_stop_20261002_141136",
+        "app/routes.py.bak_monitor_auto_stop_20261002_141243",
+        "app/routes.py.bak_row_20261002_094234",
+        "data/Registro_101295.xlsx",
+        "data/Registro_105080.xlsx",
+        "data/Registro_105080.xlsx.bak_rango",
+        "data/configs/cfg000b82fcdcec.xml"
+      ]
+    },
+    {
+      "source_commit": "28c6a1a656a2162307d37833f19ce68f6c8ad75b",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github_sync_state.json",
+        "app/asterisk.py.bak_astdb_20261005_084157",
+        "app/asterisk.py.bak_bulk3_20261005_082352",
+        "app/routes.py.bak_bulk3_20261005_082352",
+        "app/routes.py.bak_row_20261005_084907",
+        "data/Registro_101295.xlsx",
+        "data/Registro_101295.xlsx.bak_rango",
+        "data/Registro_105080.xlsx",
+        "data/Registro_105080.xlsx.bak_rango",
+        "data/cargas_masivas/rango_1000_1010_20261005_082502.csv",
+        "data/cargas_masivas/rango_1001_1010_20261005_082859.csv",
+        "data/cargas_masivas/rango_1001_1010_20261005_084332.csv"
+      ]
+    },
+    {
+      "source_commit": "5f19ff207350088c289ae0463a680c540c104c98",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github_sync_state.json",
+        "app/asterisk.py.bak_individual_20261005_094340",
+        "app/asterisk.py.bak_individual_final_20261005_095604",
+        "app/routes.py.bak_individual_20261005_094340",
+        "app/routes.py.bak_individual_final_20261005_095604",
+        "data/Registro_101295.xlsx",
+        "data/Registro_105080.xlsx",
+        "data/Registro_105080.xlsx.bak_rango",
+        "data/cargas_masivas/rango_1001_1099_20261005_105345.csv",
+        "data/cargas_masivas/rango_1099_1190_20261005_105627.csv",
+        "data/cargas_masivas/rango_1189_1299_20261005_105746.csv",
+        "data/cargas_masivas/rango_1300_1400_20261005_105845.csv",
+        "data/cargas_masivas/rango_1400_1500_20261005_105948.csv",
+        "data/cargas_masivas/rango_1500_1699_20261005_110041.csv"
+      ]
+    },
+    {
+      "source_commit": "9401aa8c7732658d042b79e1f38af8a7f93d5145",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github_sync_state.json",
+        "data/Registro_105080.xlsx",
+        "data/Registro_105080.xlsx.bak_rango",
+        "data/cargas_masivas/rango_1700_1899_20261005_110213.csv",
+        "data/cargas_masivas/rango_1900_1999_20261005_110312.csv",
+        "data/configs/0c383e64818f.cfg"
+      ]
+    },
+    {
+      "source_commit": "0e9f39c3ea3aaec4b203da7463d857b15cb6ccc6",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "-Dasterisk",
+        "-e",
+        "-p..voip26",
+        ".github_sync_state.json",
+        "data/Registro_101295.xlsx",
+        "data/Registro_105080.xlsx",
+        "data/Registro_105080.xlsx.bak_rango",
+        "data/cargas_masivas/rango_1608_1608_20261005_130102.csv",
+        "data/configs/cfg000b82fcdcec.xml"
+      ]
+    },
+    {
+      "source_commit": "e3e3059ad842e0353d392b4c0c4db6556ddcf01e",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github_sync_state.json",
+        "app/backup.py.vp-backup-fecha-20261005-152638",
+        "app/backup.py.vp-backup-fromisoformat-20261005-152819",
+        "app/monitor.py.bak-20261005-144534",
+        "app/monitor.py.vp-backup-20261005-145640",
+        "app/monitor.py.vp-backup-fecha-20261005-152500",
+        "app/monitor.py.vp-backup-final-20261005-145958",
+        "app/monitor.py.vp-backup-fix-fecha-20261005-152221",
+        "app/routes.py.bak-20261005-140602",
+        "app/routes.py.bak-fix8092-20261005-140856",
+        "app/routes.py.bak-iax2-host-20261005-171553",
+        "app/routes.py.bak_20261005_162536",
+        "app/routes.py.bak_ctx_20261005_163539",
+        "app/routes.py.bak_iax2_20261005_165551",
+        "app/routes.py.bak_iax2_20261005_165646",
+        "app/routes.py.vp-backup-20261005-140129",
+        "app/routes.py.vp-backup-eliminar-troncal-20261005-160717",
+        "templates/monitoreo.html.vp-backup-20261005-140129"
+      ]
+    },
+    {
+      "source_commit": "2c59a4f5ef8f7d527eb9906be2d10dcdfc1d814d",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github_sync_state.json",
+        "app/routes.py.bak-iax-bilateral-20261006-162613",
+        "app/routes.py.bak-iax2-bilateral-final-20261006_164835",
+        "app/routes.py.bak-iax2-credenciales-20261006-165142",
+        "app/routes.py.bak-iax2-nohost-20261006_164052",
+        "app/routes.py.bak_20261006_091841",
+        "app/routes.py.bak_20261006_092127",
+        "app/routes.py.bak_dialplan_20261007_083920",
+        "app/routes.py.bak_dialplan_roto_20261007_093151",
+        "app/routes.py.bak_iax_cruce_20261006_173946",
+        "app/routes.py.bak_iax_flags_20261006_170453",
+        "app/routes.py.bak_iax_generico_20261006_174854",
+        "data/Registro_105080.xlsx",
+        "data/configs/0c383e64818f.cfg",
+        "data/sftp_servers.json",
+        "templates/admin.html.bak_dialplan_20261007_083920",
+        "templates/monitoreo.html.bak-iax-bilateral-20261006-162613",
+        "templates/monitoreo.html.bak-iax-nohost-20261006-163628",
+        "templates/monitoreo.html.bak-iax-ui-20261006-163014",
+        "templates/monitoreo.html.bak_20261006_091841",
+        "templates/monitoreo.html.bak_20261006_092127"
+      ]
+    },
+    {
+      "source_commit": "ffaafb1a2f413e62826eae66863f96b60de97224",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github_sync_state.json"
+      ]
+    },
+    {
+      "source_commit": "a22bd6aa97e556e6ddb656b987070c160f69d59a",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github_sync_state.json",
+        "app/routes.py.bak_antes_fix_eliminar_20261007_101532"
+      ]
+    },
+    {
+      "source_commit": "04620be51ce2f1b95f3644c950020634d7affbf3",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github_sync_state.json",
+        "app/routes.py.bak_dialplan_invertido_20261007_105246",
+        "app/routes.py.bak_iax_bilateral_ruta_20261007_104402",
+        "data/sftp_servers.json"
+      ]
+    },
+    {
+      "source_commit": "08279b02b299a9f4337749b791195e11736b3b7b",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github_sync_state.json",
+        "app/routes.py.bak_ruta_iax_20261007_122011"
+      ]
+    },
+    {
+      "source_commit": "a1d160a4f3fec8d9b4d6c0e92b75c0cf5fb6608d",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github_sync_state.json",
+        "data/Registro_101295.xlsx",
+        "data/Registro_105080.xlsx",
+        "data/configs/cfg000b82fcdcec.xml"
+      ]
+    },
+    {
+      "source_commit": "32b0fa86e6480ad26e6aa9fb6afe505b24fb8bf4",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github_sync_state.json",
+        "data/ubicaciones_perfiles.json",
+        "templates/admin.html.bak_20261007_134406",
+        "templates/admin.html.bak_fix_cfgcolor_20261007_141135",
+        "templates/admin.html.bak_sin_empresa_20261007_135418",
+        "templates/admin.html.bak_tdz_20261007_134913",
+        "templates/admin.html.bak_ubic_fix_20261007_140253",
+        "templates/admin.html.bak_ubicaciones_20261007_134055"
+      ]
+    },
+    {
+      "source_commit": "80586041c621adf5d0a5ff608946cb9f1dbca3e3",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github_sync_state.json"
+      ]
+    },
+    {
+      "source_commit": "b69b65bdef3810d244c5625a972dbfaf9cf12734",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github_sync_state.json",
+        "backup_admin_internos_20261007_143540/routes.py",
+        "backup_admin_internos_20261007_144046/monitoreo.html",
+        "backup_admin_internos_20261007_144046/routes.py",
+        "backup_orden_desvio_20261007_144702/monitoreo.html"
+      ]
+    },
+    {
+      "source_commit": "06241839fb252f9550931f7eddef5e53aa314c02",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github_sync_state.json",
+        "backup_grupo_captura_20261007_145736/asterisk.py",
+        "backup_grupo_captura_20261007_145736/monitoreo.html",
+        "backup_grupo_captura_20261007_145736/routes.py",
+        "data/Registro_101295.xlsx",
+        "data/configs/0c383e64818f.cfg"
+      ]
+    },
+    {
+      "source_commit": "ae40b84f702e493aeed8b12b51a9faa8e7886ce1",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github_sync_state.json",
+        "data/Registro_101295.xlsx"
+      ]
+    },
+    {
+      "source_commit": "d2b2001b851869c40337ffe3b254ae32d502108c",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github_sync_state.json",
+        "app/routes.py.bak-json-grupos-20261008-153130",
+        "app/routes.py.bak.20261008-154912",
+        "app/routes.py.bak.20261008-155651",
+        "app/routes.py.bak.esc_20261008_091715",
+        "app/routes.py.bak.grupo_esc_20261008_091952",
+        "app/routes.py.bak.grupo_sip_20261008_091114",
+        "app/routes.py.bak.monitor.20261008_090941",
+        "app/routes.py.bak_grupo_sip_20261008_092350",
+        "data/Registro_101295.xlsx",
+        "templates/monitoreo.html.bak-20261008-144618",
+        "templates/monitoreo.html.bak-20261008-144900",
+        "templates/monitoreo.html.bak-20261008-145329",
+        "templates/monitoreo.html.bak-20261008-145644",
+        "templates/monitoreo.html.bak-20261008-145926",
+        "templates/monitoreo.html.bak-css-modal-20261008-151854",
+        "templates/monitoreo.html.bak-global-v7-20261008-150847",
+        "templates/monitoreo.html.bak-global-v8-20261008-151036",
+        "templates/monitoreo.html.bak-globalpw-20261008-150720",
+        "templates/monitoreo.html.bak-header-20261008-150031",
+        "templates/monitoreo.html.bak-modal-fix-20261008-151536",
+        "templates/monitoreo.html.bak-orden-20261008-150113",
+        "templates/monitoreo.html.bak-orden-20261008-150145",
+        "templates/monitoreo.html.bak-password-20261008-150428",
+        "templates/monitoreo.html.bak-v9-20261008-151222",
+        "templates/monitoreo.html.bak-v9-20261008-151249",
+        "templates/monitoreo.html.bak.20261008-154912",
+        "templates/monitoreo.html.bak.20261008-155651",
+        "templates/monitoreo.html.bak.monitor.20261008_090941",
+        "templates/monitoreo.html.bak_grupos_modal_20261008_142954",
+        "templates/monitoreo.html.bak_grupos_password_orden_20261008_143712"
+      ]
+    },
+    {
+      "source_commit": "38ed686e3d3a278ceb5b2021e5a842c24af5f9df",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github_sync_state.json",
+        "app/routes.py.bak-grupos-numero-20261009-112854",
+        "app/routes.py.bak-sintaxis-20261009-113406",
+        "data/Registro_101295.xlsx",
+        "data/Registro_105080.xlsx",
+        "data/Registro_105080.xlsx.bak_rango",
+        "data/cargas_masivas/rango_2001_2002_20261009_080031.csv",
+        "templates/monitoreo.html.bak-grupos-numero-20261009-112854",
+        "templates/monitoreo.html.bak-numero-admin-20261009-114155"
+      ]
+    },
+    {
+      "source_commit": "d032e9d7c50c2e98303ea9dea1c7915173ccc91c",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github_sync_state.json",
+        "data/ubicaciones_internos.json",
+        "templates/monitoreo.html.bak_selector_20261009_125229"
+      ]
+    },
+    {
+      "source_commit": "7781f27abd9a5d289b019adcb24527cbdfcc3b07",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github_sync_state.json",
+        "app/routes.py.bak_parche_ubicaciones_20261009_141449",
+        "app/routes.py.bak_pre_ruta_ipoffice_20261009_145344",
+        "app/routes.py.bak_refuerzo_20261009_141646",
+        "app/routes.py.bak_ubicaciones_20261009_135023",
+        "data/Registro_105080.xlsx",
+        "data/ubicaciones_internos.json",
+        "data/ubicaciones_internos.json.bak_20261009_135023",
+        "data/ubicaciones_internos.json.bak_pre_ruta_ipoffice_20261009_145344",
+        "ext-findmefollow",
+        "ext-local",
+        "templates/monitoreo.html.bak_paginacion_20261013_073016",
+        "templates/monitoreo.html.bak_pre_ruta_ipoffice_20261009_145344",
+        "templates/monitoreo.html.bak_ubic_masiva_20261009_142308"
+      ]
+    },
+    {
+      "source_commit": "9e8d08952684592e1b01b5f3c4bf685b3479dffb",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github_sync_state.json",
+        "app/asterisk.py.bak_max_contactos_20261013_124459",
+        "app/routes.py.bak_max_contactos_20261013_124459",
+        "app/routes.py.bak_modelo_excel_20261013_133615",
+        "data/Registro_101295.xlsx",
+        "data/Registro_105080.xlsx",
+        "data/sftp_servers.json",
+        "templates/index.html.bak_max_contactos_20261013_124459"
+      ]
+    },
+    {
+      "source_commit": "9fd19d02458c08e62d66f1babc843b506c03a87d",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github_sync_state.json",
+        "app/routes.py.bak_fix_edicion_20261013_143919",
+        "data/Registro_101295.xlsx",
+        "templates/index.html.bak_fix_edicion_20261013_143919"
+      ]
+    },
+    {
+      "source_commit": "aedc0058fc139759cf48d3b2645619e0e176ac97",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github_sync_state.json"
+      ]
+    },
+    {
+      "source_commit": "eb2a182edb0c0b55282dab3632aaae56a0f8fb8d",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github_sync_state.json",
+        "app/asterisk.py.bak_eliminar_20261013_153836",
+        "app/asterisk.py.bak_paralelo_20261013_153141",
+        "app/routes.py.bak_eliminar_20261013_153836",
+        "app/routes.py.bak_paralelo_20261013_153141",
+        "data/Registro_1012840.xlsx",
+        "data/Registro_101295.xlsx",
+        "data/Registro_105080.xlsx",
+        "data/Registro_127001.xlsx",
+        "data/Registro_503290.xlsx",
+        "data/Registro_Prueba issabel.xlsx",
+        "data/configs/0c383e64818f.cfg",
+        "data/configs/cfg000b82fcdcec.xml",
+        "templates/index.html.bak_aviso_20261013_154405",
+        "templates/index.html.bak_paralelo_20261013_153141"
+      ]
+    },
+    {
+      "source_commit": "b17709911b11501fccf717b34ac057ba19c4dc2c",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github_sync_state.json",
+        "app/monitor.py.bak_varios_telefonos_20261013_162629",
+        "app/routes.py.bak_contactos_20261014_083003",
+        "data/Registro_101295.xlsx",
+        "templates/index.html.bak_contactos_20261014_083003",
+        "templates/index.html.bak_contactos_index_20261014_072909",
+        "templates/index.html.bak_peers_20261014_074124",
+        "templates/index.html.fallo_contactos_20261014_073434",
+        "templates/index.html.fallo_contactos_20261014_073439"
+      ]
+    },
+    {
+      "source_commit": "1b82b816d10142e1a4450c0807683d522ab79069",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github_sync_state.json",
+        "app/asterisk.py.bak_antes_fix_20261014_095237",
+        "app/asterisk.py.bak_purga_20261014_095019",
+        "app/routes.py.bak_eliminacion_segura_20261014_115910",
+        "app/routes.py.bak_eliminar_20261014_115439",
+        "data/Registro_101295.xlsx",
+        "data/configs/0c383e64818f.cfg",
+        "data/configs/cfg000b82fcdcec.xml",
+        "data/ubicaciones_internos.json",
+        "templates/index.html.bak_compartidos_20261014_093059",
+        "templates/index.html.bak_eliminar_20261014_115439"
+      ]
+    },
+    {
+      "source_commit": "d0d790afef16d89191206a9e8bb38e460619943e",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github_sync_state.json",
+        "app/routes.py.bak_fix_eliminacion_masiva_20261014_121733",
+        "data/Registro_101295.xlsx",
+        "data/Registro_105080.xlsx",
+        "data/configs/cfg000b82fcdcec.xml",
+        "data/ubicaciones_internos.json"
+      ]
+    },
+    {
+      "source_commit": "882b9983581855eae3e56908d2dc5b30b79a610f",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github_sync_state.json"
+      ]
+    },
+    {
+      "source_commit": "653f99665f8002bd236014ee7885298559f2e613",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github_sync_state.json",
+        "app/routes.py.bak_anti_cuelgue_20261014_151634",
+        "app/routes.py.bak_asterisk_primero_20261014_150204",
+        "app/routes.py.bak_borrado_sin_mac_20261014_134322",
+        "app/routes.py.bak_excel_auto_20261014_144720",
+        "app/routes.py.bak_fallback_pjsip_ip_mac_20261014_162153",
+        "app/routes.py.bak_ip_por_mac_20261014_154440",
+        "app/routes.py.bak_macs_parser_regex_v2_20261014_161644",
+        "app/routes.py.bak_monitor_kwarg_20261014_152202",
+        "app/routes.py.bak_shutil_actualizar_20261014_163504",
+        "app/routes.py.bak_tempfile_20261014_145232",
+        "app/routes.py.bak_tempfile_actualizar_20261014_163208",
+        "data/Registro_101164880.xlsx",
+        "data/Registro_101184880.xlsx",
+        "data/Registro_101184880.xlsx.bak_mac_20261014_162958",
+        "data/Registro_101295.xlsx",
+        "data/Registro_105080.xlsx",
+        "data/Registro_503290.xlsx",
+        "data/configs/0c383e64818f.cfg",
+        "templates/index.html.bak_borrado_sin_mac_20261014_134322",
+        "templates/index.html.bak_excel_auto_20261014_144720"
+      ]
+    },
+    {
+      "source_commit": "7690f01dcc1135fdab54fa52c276a1ef8e6bd1e3",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github_sync_state.json",
+        "app/routes.py.bak_index_mac_asterisk_20261015_080024",
+        "app/routes.py.bak_ip_por_interno_20261015_084919",
+        "app/routes.py.bak_sync_full_mac_configs_20261015_080941",
+        "data/Registro_101164880.xlsx",
+        "data/Registro_101164880.xlsx.bak_auto_1792063530",
+        "data/Registro_101184880.xlsx",
+        "data/Registro_101184880.xlsx.bak_auto_1792062142",
+        "data/Registro_101295.xlsx",
+        "data/Registro_503290.xlsx",
+        "data/Registro_503290.xlsx.bak_auto_1792062104",
+        "data/Registro_503290.xlsx.bak_auto_1792062643"
+      ]
+    },
+    {
+      "source_commit": "c1337b9ee4c6e9d5b1ce3c86a59f04d72ec2bf0d",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github_sync_state.json",
+        "app/routes.py.bak_sip_phone_number_20261015_091553",
+        "data/Registro_101164880.xlsx",
+        "data/Registro_101184880.xlsx",
+        "data/Registro_101295.xlsx",
+        "data/Registro_105080.xlsx",
+        "data/Registro_503290.xlsx",
+        "data/Registro_503290.xlsx.bak_auto_1792067815"
+      ]
+    },
+    {
+      "source_commit": "3b25747492ca7e1e062f5daf5162b9926f361d6e",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github_sync_state.json",
+        "app/routes.py.bak_mac_vendor_20261015_100520",
+        "data/Registro_101164880.xlsx",
+        "data/Registro_101164880.xlsx.bak_auto_1792072656",
+        "data/Registro_101184880.xlsx",
+        "data/Registro_503290.xlsx",
+        "data/mac_vendor_db.json",
+        "templates/admin.html.bak_mac_vendor_20261015_100520"
+      ]
+    },
+    {
+      "source_commit": "be90c6c9a3882b6ff151a7bad992462cef959cd2",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github_sync_state.json",
+        "app/mac_vendor_db.py.bak_mac_vendor_upload_20261015_132814",
+        "app/routes.py.bak_mac_vendor_upload_20261015_132814",
+        "data/Registro_101164880.xlsx",
+        "data/Registro_101164880.xlsx.bak_mac_vendor_20261015_133253_2411241",
+        "data/Registro_101184880.xlsx",
+        "data/Registro_101184880.xlsx.bak_mac_vendor_20261015_133252_2411241",
+        "data/Registro_105080.xlsx",
+        "data/Registro_105080.xlsx.bak_mac_vendor_20261015_133253_2411241",
+        "data/Registro_503290.xlsx",
+        "data/Registro_503290.xlsx.bak_mac_vendor_20261015_133252_2411241",
+        "data/mac_vendor_db.json",
+        "templates/admin.html.bak_mac_vendor_upload_20261015_132814"
+      ]
+    },
+    {
+      "source_commit": "1bdbf0775128769adcfa2e7cdcf39b62d5e350f5",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github_sync_state.json",
+        "data/Registro_101184880.xlsx",
+        "data/Registro_101295.xlsx"
+      ]
+    },
+    {
+      "source_commit": "14c4d728ca00abdcfa1f7792e05b64d93ee1e607",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github_sync_state.json",
+        "data/Registro_101295.xlsx",
+        "data/Registro_503290.xlsx"
+      ]
+    },
+    {
+      "source_commit": "667e6c37935dab5b6ae42cfe1b185ff78323a84c",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github_sync_state.json"
+      ]
+    },
+    {
+      "source_commit": "66ebd7d3b7dc6dd10275da928701bfb493c3b0a7",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/asterisk.py.bak_antes_fix_20261014_095237"
+      ]
+    },
+    {
+      "source_commit": "79e802d20db6cf41f5c21ec2765dfbfcf50c5e5d",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/asterisk.py.bak_astdb_20261005_084157"
+      ]
+    },
+    {
+      "source_commit": "a7e09fc173026e6835d54139e00d76b45114d97f",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/asterisk.py.bak_bulk3_20261005_082352"
+      ]
+    },
+    {
+      "source_commit": "9337fdda51655f2d7471a047343e4f506a7553a3",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/asterisk.py.bak_eliminar_20261013_153836"
+      ]
+    },
+    {
+      "source_commit": "b78906452ae7a30acd1bb4e7aab5233f0f4eb65c",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/asterisk.py.bak_individual_20261005_094340"
+      ]
+    },
+    {
+      "source_commit": "2c45afeec4f1447ea915a77e18c6df342ce0686b",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/asterisk.py.bak_individual_final_20261005_095604"
+      ]
+    },
+    {
+      "source_commit": "8ed0e5deab2b159d87d89b3f1b8c3a4dad8a01a0",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/asterisk.py.bak_max_contactos_20261013_124459"
+      ]
+    },
+    {
+      "source_commit": "38fac214ad823469dc90390c35fbbab8d2ee8d7e",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/asterisk.py.bak_paralelo_20261013_153141"
+      ]
+    },
+    {
+      "source_commit": "7999e696fbd527d23de222b4ba6fc71089fe8899",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/asterisk.py.bak_purga_20261014_095019"
+      ]
+    },
+    {
+      "source_commit": "a626f4c4b5b4d8949ac868d03235e9b2b4257523",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/config.py.bak_cfg_xml_20261001_121415"
+      ]
+    },
+    {
+      "source_commit": "edafec8ce1ecef79a261f9f1051e330ed084a764",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/mac_vendor_db.py.bak_mac_vendor_upload_20261015_132814"
+      ]
+    },
+    {
+      "source_commit": "300821e5827377619e0df9bd98973761cd03ce7b",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/monitor.py.bak-20261005-144534"
+      ]
+    },
+    {
+      "source_commit": "7bd093870d9e5f2a834aaae52611004693df4389",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/monitor.py.bak_varios_telefonos_20261013_162629"
+      ]
+    },
+    {
+      "source_commit": "385b1d04945396f47ff861438e43cb510603dc8f",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak-20261005-140602"
+      ]
+    },
+    {
+      "source_commit": "b0d1369174bddbdd61f386096677679245f00c42",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak-fix8092-20261005-140856"
+      ]
+    },
+    {
+      "source_commit": "6d2e529cf9c568303dd36c27fd3939cfd396df23",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak-grupos-numero-20261009-112854"
+      ]
+    },
+    {
+      "source_commit": "4e372dec41c963764a59da911a63215754ba535a",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak-iax-bilateral-20261006-162613"
+      ]
+    },
+    {
+      "source_commit": "dc46a849f274e6a292b129892257f9d1d047b3f0",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak-iax2-bilateral-final-20261006_164835"
+      ]
+    },
+    {
+      "source_commit": "0c9a9504826df0e19bb9aed7cd4373f48dfbf968",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak-iax2-credenciales-20261006-165142"
+      ]
+    },
+    {
+      "source_commit": "c99031d0dd2ea0e6acbb3bfef5cb339dfd1ef878",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak-iax2-host-20261005-171553"
+      ]
+    },
+    {
+      "source_commit": "ebf520aca9c0fbb9c3f818da4b5ed4e26e7dec0b",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak-iax2-nohost-20261006_164052"
+      ]
+    },
+    {
+      "source_commit": "0a96d3316d4b1bd5c6ac20994bde164f51d18259",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak-json-grupos-20261008-153130"
+      ]
+    },
+    {
+      "source_commit": "2e210e8d96f2a00a337642c5bf4b366ad3b98300",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak-sintaxis-20261009-113406"
+      ]
+    },
+    {
+      "source_commit": "e81aa1f7a0c62b06643770358972663f62d41bef",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak.20261008-154912"
+      ]
+    },
+    {
+      "source_commit": "8e90ab1512133601c5c7f5706fca47bba335c7fc",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak.20261008-155651"
+      ]
+    },
+    {
+      "source_commit": "b5b685937bec566cf9eeb87a52eac939e9138539",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak.esc_20261008_091715"
+      ]
+    },
+    {
+      "source_commit": "bfd96a38a702c0a9a83f6333984af6dcfc6ad418",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak.grupo_esc_20261008_091952"
+      ]
+    },
+    {
+      "source_commit": "c6c59e0c8a71d1c8072435ad5062827b9daee20d",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak.grupo_sip_20261008_091114"
+      ]
+    },
+    {
+      "source_commit": "ba058d7bfd5c2540eb44b228db5e05b0311e7c08",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak.monitor.20261008_090941"
+      ]
+    },
+    {
+      "source_commit": "49aea60250ece4bc36563ec040f02cb0eddc2a2f",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_20261005_162536"
+      ]
+    },
+    {
+      "source_commit": "9366083ad84b4fb03a697201c808bf98810e495c",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_20261006_091841"
+      ]
+    },
+    {
+      "source_commit": "7276070172f900b8b97aa6f025f363fd6bbad006",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_20261006_092127"
+      ]
+    },
+    {
+      "source_commit": "8b433d8f1a1796340d7c0236c9c29d1cf41cbd00",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_admin_xml_20261001_115033"
+      ]
+    },
+    {
+      "source_commit": "f8b0c60e8f9e28614a6e4bd71c047e9ce58af713",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_antes_fix_eliminar_20261007_101532"
+      ]
+    },
+    {
+      "source_commit": "2e812841cceb9076d8e0d5e24db5dba69c2f1c16",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_anti_cuelgue_20261014_151634"
+      ]
+    },
+    {
+      "source_commit": "e640baf3d1587f454f76fdb68aa67001321a9a68",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_asterisk_primero_20261014_150204"
+      ]
+    },
+    {
+      "source_commit": "de3a119cf26fd0d02083a49a34cf26a79ddd3797",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_borrado_sin_mac_20261014_134322"
+      ]
+    },
+    {
+      "source_commit": "3aafc222cd050077d3e1f1e5f00cd7c61e8117cb",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_bulk3_20261005_082352"
+      ]
+    },
+    {
+      "source_commit": "747d0124ffdb54ebaf5a01740239b0964c95c5f7",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_contactos_20261014_083003"
+      ]
+    },
+    {
+      "source_commit": "71dd20a8ff5973065904352b7937032e35382dc0",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_ctx_20261005_163539"
+      ]
+    },
+    {
+      "source_commit": "3a0f3d106385074ab7eff05e9453a20fde2cc080",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_dialplan_20261007_083920"
+      ]
+    },
+    {
+      "source_commit": "28a5afe1090a0b63ce7f5a8a1a39319ae96cdec9",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_dialplan_invertido_20261007_105246"
+      ]
+    },
+    {
+      "source_commit": "4cbcc862fb2d0ae8df5f0c271fb97bc8c93ce4f5",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_dialplan_roto_20261007_093151"
+      ]
+    },
+    {
+      "source_commit": "f4a1be78e5e8ca9b2c42952766796acde6900c69",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_eliminacion_segura_20261014_115910"
+      ]
+    },
+    {
+      "source_commit": "7753afd8e50777b9c149d7bd70609a70549adeb5",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_eliminar_20261013_153836"
+      ]
+    },
+    {
+      "source_commit": "7fdbca1fedc298cfea399d30c5d9ec12ff9964f2",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_eliminar_20261014_115439"
+      ]
+    },
+    {
+      "source_commit": "e5566b4ebd00b2563ddc998f66ca68a8de1ffd6a",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_excel_auto_20261014_144720"
+      ]
+    },
+    {
+      "source_commit": "bfea1a14acc27c1f37d9521437572358e1a9bd32",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_fallback_pjsip_ip_mac_20261014_162153"
+      ]
+    },
+    {
+      "source_commit": "dc3711ffbb02eeaa12bccfa486ba59762b4c7fdb",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_fix_edicion_20261013_143919"
+      ]
+    },
+    {
+      "source_commit": "56b290b9657e9e30578b8e16b65bf37ac8509c9f",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_fix_eliminacion_masiva_20261014_121733"
+      ]
+    },
+    {
+      "source_commit": "f34933e443696da5d10e8bb31d8c783e7835a991",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_grupo_sip_20261008_092350"
+      ]
+    },
+    {
+      "source_commit": "275cc211a29560cdd5aba7b0c1d63122fd901323",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_gs_20261001_093332"
+      ]
+    },
+    {
+      "source_commit": "08be9420f595d61a65d31de7319e82c64bf39289",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_gs_busqueda_normalizada_20261001_104902"
+      ]
+    },
+    {
+      "source_commit": "32f270ecc91a2619de9d22566f18aa471d2b45c2",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_gs_final_20261001_114319"
+      ]
+    },
+    {
+      "source_commit": "d5b31c468592b1ee9dadc39d616223d395a610c5",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_gs_nombre_admin_20261001_103312"
+      ]
+    },
+    {
+      "source_commit": "1c8858646e2a0d9d67fbce481edaf70685761c03",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_gs_ruta_20261001_104217"
+      ]
+    },
+    {
+      "source_commit": "7c6584f9858e3208d78539b802846dc772f57870",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_gs_sin_fallback_20261001_104602"
+      ]
+    },
+    {
+      "source_commit": "10c3ca18bfa2a364de0daee6537f39364861b39c",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_gs_tftp_final_20261001_133939"
+      ]
+    },
+    {
+      "source_commit": "410abd2acbe9817baac845592672c890272deee1",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_gs_tftp_final_20261001_134053"
+      ]
+    },
+    {
+      "source_commit": "e194daf813989d49a5298f5e85e7080c527d5a3d",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_iax2_20261005_165551"
+      ]
+    },
+    {
+      "source_commit": "6e7b11ebfef7e47add0539e9d86c43a1b73c872f",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_iax2_20261005_165646"
+      ]
+    },
+    {
+      "source_commit": "9ae23de2e47b1060ded36797cb9e772a0ceabe56",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_iax_bilateral_ruta_20261007_104402"
+      ]
+    },
+    {
+      "source_commit": "41b8c7ad0c0e385ad08cd08542ec92819970a8e7",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_iax_cruce_20261006_173946"
+      ]
+    },
+    {
+      "source_commit": "04ccf2e689349ff272af03a1db9539a705edfa8e",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_iax_flags_20261006_170453"
+      ]
+    },
+    {
+      "source_commit": "b431c7c46b52b1c01dbfb6b77d7ae8dab2cca1f2",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_iax_generico_20261006_174854"
+      ]
+    },
+    {
+      "source_commit": "c0f36dd0e5747043e31c23ec455561cc585d6b09",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_index_mac_asterisk_20261015_080024"
+      ]
+    },
+    {
+      "source_commit": "13a5d199b9626c9a0a29e69c47ecfcde55bcacd4",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_individual_20261005_094340"
+      ]
+    },
+    {
+      "source_commit": "ef2736c0a51e1074e77a13dca782bf7eb2dd3f30",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_individual_final_20261005_095604"
+      ]
+    },
+    {
+      "source_commit": "2f0c4a0182365ddcb61971b868ac38a1bc733ae1",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_ip_por_interno_20261015_084919"
+      ]
+    },
+    {
+      "source_commit": "b65841ceff462419e983964ade9245785fc08fae",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_ip_por_mac_20261014_154440"
+      ]
+    },
+    {
+      "source_commit": "c807979eb14fcaee053bc3cd3087edce7ce99a6c",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_mac_vendor_20261015_100520"
+      ]
+    },
+    {
+      "source_commit": "599eca979c634f67172f3b192ffa1eec38b9a6b6",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_mac_vendor_upload_20261015_132814"
+      ]
+    },
+    {
+      "source_commit": "723d769f39a4918fe375d37b17de8d2fa4fb530d",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_macs_parser_regex_v2_20261014_161644"
+      ]
+    },
+    {
+      "source_commit": "458d0540ce2c1a5915452d2c1817a8072c618d85",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_max_contactos_20261013_124459"
+      ]
+    },
+    {
+      "source_commit": "3be1e3b938112b943154170e3a960eb55671aa72",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_modelo_excel_20261013_133615"
+      ]
+    },
+    {
+      "source_commit": "dd34f3d079ae99836501f276ff4d238d83a81c39",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_monitor_auto_stop_20261002_141136"
+      ]
+    },
+    {
+      "source_commit": "edadb54484274f1667567ef152c52d71db7e3f76",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_monitor_auto_stop_20261002_141243"
+      ]
+    },
+    {
+      "source_commit": "4fca51eb3d63fc77d3dee6fc67cb9f4923280dfc",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_monitor_kwarg_20261014_152202"
+      ]
+    },
+    {
+      "source_commit": "f2ed6a54ec5d2d93f54620f67a9a90bfc00b142c",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_paralelo_20261013_153141"
+      ]
+    },
+    {
+      "source_commit": "54d2edb8bd098dba743127483d5f0e26aad333a1",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_parche_ubicaciones_20261009_141449"
+      ]
+    },
+    {
+      "source_commit": "2bcfdf7af59e4187396370a671d6a611fd002a7a",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_plantillas_20261001_113821"
+      ]
+    },
+    {
+      "source_commit": "84d5e1208080d589dd96ab037b2fd15ba978d2eb",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_pre_ruta_ipoffice_20261009_145344"
+      ]
+    },
+    {
+      "source_commit": "21917ef208dfc46b910f96a7fbb65bd0d0854177",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_rango2_20261001_154844"
+      ]
+    },
+    {
+      "source_commit": "6b9266afdfc24432cc6b93606fe2d898ce4b67e5",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_rango_20261001_153339"
+      ]
+    },
+    {
+      "source_commit": "a8bac495d85885dac338f4a74d15ad137ba3f351",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_refuerzo_20261009_141646"
+      ]
+    },
+    {
+      "source_commit": "b531322b0180ef58fdfa7ff372435931a9361e15",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_row_20261002_094234"
+      ]
+    },
+    {
+      "source_commit": "ef3e5efb4c97da838b4d5affdb9a5526dccad59e",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_row_20261005_084907"
+      ]
+    },
+    {
+      "source_commit": "92e4302180cbaf425e18c1a5c3ffc16e81bf0201",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_ruta_iax_20261007_122011"
+      ]
+    },
+    {
+      "source_commit": "47999f9401c79f56203b85c1e8effb173b3a7f63",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_shutil_actualizar_20261014_163504"
+      ]
+    },
+    {
+      "source_commit": "86faf957890d4ade53c6a46fb4198e8f7f17907c",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_sip_phone_number_20261015_091553"
+      ]
+    },
+    {
+      "source_commit": "87c7d34b95eb2b990ce9b21b3cb35e3c8dbe07c3",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_sync_full_mac_configs_20261015_080941"
+      ]
+    },
+    {
+      "source_commit": "941218c8e268abc4ad83f7b28bdab853e9fa632b",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_tempfile_20261014_145232"
+      ]
+    },
+    {
+      "source_commit": "8ddb1b481d987e185bfea8eb3b0bcc1428a67921",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_tempfile_actualizar_20261014_163208"
+      ]
+    },
+    {
+      "source_commit": "7c9ff4e1bc1a970126d0599deffa37d1049e0afc",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_tftp_gs_20261001_133623"
+      ]
+    },
+    {
+      "source_commit": "59ae9fb0b5833f5bbac331837195b40be9aaa2ef",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_tpl_20261001_094939"
+      ]
+    },
+    {
+      "source_commit": "85a9684f2a6e0e21a391876dead61ad10721c206",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "app/routes.py.bak_ubicaciones_20261009_135023"
+      ]
+    },
+    {
+      "source_commit": "02d1bb911b230dffd9f1e62edd38435219079f93",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "backup_admin_internos_20261007_143540/routes.py"
+      ]
+    },
+    {
+      "source_commit": "b37f28105598ae16174b4c108f4080ad37b07a7f",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "backup_admin_internos_20261007_144046/monitoreo.html"
+      ]
+    },
+    {
+      "source_commit": "eea2ff5f7894f15b709abba92b0d0515413b0865",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "backup_admin_internos_20261007_144046/routes.py"
+      ]
+    },
+    {
+      "source_commit": "963bc466f00eddd584f02bdcfcab1918b86ea228",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "backup_grupo_captura_20261007_145736/asterisk.py"
+      ]
+    },
+    {
+      "source_commit": "5d29514436a48d1336588e1b8b3e1ad6e55e1664",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "backup_grupo_captura_20261007_145736/monitoreo.html"
+      ]
+    },
+    {
+      "source_commit": "0f9823d7f5ce33ee5d43edfb28202f1616396c43",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "backup_grupo_captura_20261007_145736/routes.py"
+      ]
+    },
+    {
+      "source_commit": "595fdb7ce17ad78fe58a320c01bf33e71089e53c",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "backup_orden_desvio_20261007_144702/monitoreo.html"
+      ]
+    },
+    {
+      "source_commit": "58415554be953bd227c4ead433c828f0519d905c",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "data/Registro_101164880.xlsx.bak_auto_1792063530"
+      ]
+    },
+    {
+      "source_commit": "5935148f46b9810927253be8802eb8f422b9cf6a",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "data/Registro_101164880.xlsx.bak_auto_1792072656"
+      ]
+    },
+    {
+      "source_commit": "32c0707de81428a1de7934cfddd125c2a94c07d5",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "data/Registro_101164880.xlsx.bak_mac_vendor_20261015_133253_2411241"
+      ]
+    },
+    {
+      "source_commit": "2def22e3e359f3542d5a5ac69aa934c8f80836da",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "data/Registro_101184880.xlsx.bak_auto_1792062142"
+      ]
+    },
+    {
+      "source_commit": "9a3152f3924c752241fb67a0b1d276fceb10f37b",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "data/Registro_101184880.xlsx.bak_mac_20261014_162958"
+      ]
+    },
+    {
+      "source_commit": "6f0733bffef9c6925e668406bc014b2d43539f2b",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "data/Registro_101184880.xlsx.bak_mac_vendor_20261015_133252_2411241"
+      ]
+    },
+    {
+      "source_commit": "54a68107464a01b4ecbac95536529b3f9ccfcd8c",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "data/Registro_101295.xlsx.bak_rango"
+      ]
+    },
+    {
+      "source_commit": "67a546a18e3ebd1e6bc0d9470c3a6086a07f7baf",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "data/Registro_105080.xlsx.bak_mac_vendor_20261015_133253_2411241"
+      ]
+    },
+    {
+      "source_commit": "c9f99d566049f69c1190df7f6895c8ef37021510",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "data/Registro_105080.xlsx.bak_rango"
+      ]
+    },
+    {
+      "source_commit": "8e113382fb527a2d7ba9dcd62736bd6e1e7c93a5",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "data/Registro_503290.xlsx.bak_auto_1792062104"
+      ]
+    },
+    {
+      "source_commit": "b73270f4bfa4f6983d90687bef9b55b47410a254",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "data/Registro_503290.xlsx.bak_auto_1792062643"
+      ]
+    },
+    {
+      "source_commit": "fcdd3417eb6e55650ddb150cf4eb023699e62512",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "data/Registro_503290.xlsx.bak_auto_1792067815"
+      ]
+    },
+    {
+      "source_commit": "39f85e56f514cc98732069852ba62e0f107117bb",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "data/Registro_503290.xlsx.bak_mac_vendor_20261015_133252_2411241"
+      ]
+    },
+    {
+      "source_commit": "82fc15baf68c7991d091a46ba833c5b6cdfefbaa",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "data/ubicaciones_internos.json.bak_20261009_135023"
+      ]
+    },
+    {
+      "source_commit": "6ac011e6ff8cc4afe111c93c1a67dd035ac0f477",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "data/ubicaciones_internos.json.bak_pre_ruta_ipoffice_20261009_145344"
+      ]
+    },
+    {
+      "source_commit": "19171a1d55ea937f6bbeb1b1733162443fe2ef9d",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/admin.html.bak_20261007_134406"
+      ]
+    },
+    {
+      "source_commit": "2fef6c540d88070620e81d7bd0912ade72c8c43b",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/admin.html.bak_dialplan_20261007_083920"
+      ]
+    },
+    {
+      "source_commit": "76bbac112f16f83840d9636c28e285d1925c09e9",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/admin.html.bak_fix_cfgcolor_20261007_141135"
+      ]
+    },
+    {
+      "source_commit": "f876ed89080d958b14309acda2aae51e7039e1d7",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/admin.html.bak_gs_final_20261001_114319"
+      ]
+    },
+    {
+      "source_commit": "90e8bf68ef7d11b1ee571d066bbf19ac0349b015",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/admin.html.bak_mac_vendor_20261015_100520"
+      ]
+    },
+    {
+      "source_commit": "6272b750b2f53f2a9bc7d985b7833c8dbf8c8aa1",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/admin.html.bak_mac_vendor_upload_20261015_132814"
+      ]
+    },
+    {
+      "source_commit": "ceb2f8f4001abd10fe91092480b2305658a0eee8",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/admin.html.bak_modal_tpl_20261001_120249"
+      ]
+    },
+    {
+      "source_commit": "26de0d1c8057a19ead0a1ba4750c343d63509c81",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/admin.html.bak_modal_tpl_20261001_120342"
+      ]
+    },
+    {
+      "source_commit": "e504688ad367d8682ed3094f8cadd47e9061f219",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/admin.html.bak_modal_tpl_20261001_120407"
+      ]
+    },
+    {
+      "source_commit": "97d6cb359b6ed3e502168ae0cdd8f26e38aae3e4",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/admin.html.bak_modal_tpl_fix_20261001_120425"
+      ]
+    },
+    {
+      "source_commit": "1cae67ee7b4176e012cb1905c39bd7c1b89eea55",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/admin.html.bak_plantillas_20261001_113821"
+      ]
+    },
+    {
+      "source_commit": "3476eed238edb6a749dc13783a12f32366c53284",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/admin.html.bak_sin_empresa_20261007_135418"
+      ]
+    },
+    {
+      "source_commit": "65460ed906afd72c325c3991de10321387aba7a2",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/admin.html.bak_tdz_20261007_134913"
+      ]
+    },
+    {
+      "source_commit": "fb03fee268339a8eb2d2f436a10b23e99ebe4c72",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/admin.html.bak_ubic_fix_20261007_140253"
+      ]
+    },
+    {
+      "source_commit": "83c1538b6fb93808125e290148508ff2be4c4e13",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/admin.html.bak_ubicaciones_20261007_134055"
+      ]
+    },
+    {
+      "source_commit": "975709ccc0d2360dec0490e159a72f6b181f566a",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/index.html.bak_aviso_20261013_154405"
+      ]
+    },
+    {
+      "source_commit": "050a771eccd984e387e444f1f19c5b532a4ae1a9",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/index.html.bak_borrado_sin_mac_20261014_134322"
+      ]
+    },
+    {
+      "source_commit": "a30170b1255f4d792cdca946f64a31e21d85b9b9",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/index.html.bak_compartidos_20261014_093059"
+      ]
+    },
+    {
+      "source_commit": "9e1d214eceb326b853f0ed081b35be9532af0c04",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/index.html.bak_contactos_20261014_083003"
+      ]
+    },
+    {
+      "source_commit": "ccd2c745e3b0e55f5800f52dcf9211800e20f7c5",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/index.html.bak_contactos_index_20261014_072909"
+      ]
+    },
+    {
+      "source_commit": "0b209b11f6aacaa82c80eed0893223f1e8789a55",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/index.html.bak_eliminar_20261014_115439"
+      ]
+    },
+    {
+      "source_commit": "45fc632c556606d809213d2672a73daabb419f8b",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/index.html.bak_excel_auto_20261014_144720"
+      ]
+    },
+    {
+      "source_commit": "7056a851bc05b3c52eeb5be6ea541ced9a37995f",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/index.html.bak_fix_edicion_20261013_143919"
+      ]
+    },
+    {
+      "source_commit": "b08b902b4923052306d647d71c1fdd5e8d9ea0e7",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/index.html.bak_max_contactos_20261013_124459"
+      ]
+    },
+    {
+      "source_commit": "a550b4763864c1c7f19ef7e9057d98ad45b0e485",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/index.html.bak_paralelo_20261013_153141"
+      ]
+    },
+    {
+      "source_commit": "7bfd62f64567145a942e90ec99a3001345a2989a",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/index.html.bak_peers_20261014_074124"
+      ]
+    },
+    {
+      "source_commit": "484cb0867ad84978d76f4fbb117dac400dac925b",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/index.html.bak_rango2_20261001_154844"
+      ]
+    },
+    {
+      "source_commit": "59deaa8d6ed7044d328abd7f2a85d69173903a65",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/index.html.bak_rango_20261001_153339"
+      ]
+    },
+    {
+      "source_commit": "241325706bbd5b3475cbd78b6d8cb39c8a5b85d7",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/monitoreo.html.bak-20261008-144618"
+      ]
+    },
+    {
+      "source_commit": "3ceeb875d707c97500390029481d703a9ccff46c",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/monitoreo.html.bak-20261008-144900"
+      ]
+    },
+    {
+      "source_commit": "753cc0e9f32afe7ffad6bb99b2818ab03f15a508",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/monitoreo.html.bak-20261008-145329"
+      ]
+    },
+    {
+      "source_commit": "2afade5f4c84d0daea8bd4fa0ecd024acbda41ee",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/monitoreo.html.bak-20261008-145644"
+      ]
+    },
+    {
+      "source_commit": "da1fdf04d23972fabac82ebad64ee7e8e5533ec1",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/monitoreo.html.bak-20261008-145926"
+      ]
+    },
+    {
+      "source_commit": "e1d4d84559ef5e76e8b1ff4fab13061cc6be5381",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/monitoreo.html.bak-css-modal-20261008-151854"
+      ]
+    },
+    {
+      "source_commit": "17ed757ed6fdd8bd1caf915b6a2836c9c6b5f7b2",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/monitoreo.html.bak-global-v7-20261008-150847"
+      ]
+    },
+    {
+      "source_commit": "e4d127f96b4061e2eb765c24fad135f2264293a0",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/monitoreo.html.bak-global-v8-20261008-151036"
+      ]
+    },
+    {
+      "source_commit": "0cdbf29046a6c69f509b229df7d72d1a2a178ace",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/monitoreo.html.bak-globalpw-20261008-150720"
+      ]
+    },
+    {
+      "source_commit": "c34bb1b24d8d2006e76faf3a7ec72237eae9337f",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/monitoreo.html.bak-grupos-numero-20261009-112854"
+      ]
+    },
+    {
+      "source_commit": "0150c4844e2b05c512fd77331fe2eed0cc17910f",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/monitoreo.html.bak-header-20261008-150031"
+      ]
+    },
+    {
+      "source_commit": "f42b28fcbdf3d3cc2a7c6adc550c693db19ebc2f",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/monitoreo.html.bak-iax-bilateral-20261006-162613"
+      ]
+    },
+    {
+      "source_commit": "97bee265cd433c310267a998cb120f45cb775b75",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/monitoreo.html.bak-iax-nohost-20261006-163628"
+      ]
+    },
+    {
+      "source_commit": "a60512019ec31222113c790a899633fd2c1fb8b8",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/monitoreo.html.bak-iax-ui-20261006-163014"
+      ]
+    },
+    {
+      "source_commit": "b3fb3877277fb07a1af5f3225ef44a5b7c88e2b9",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/monitoreo.html.bak-modal-fix-20261008-151536"
+      ]
+    },
+    {
+      "source_commit": "139db77921d0d476bcb6d8e859827794f9d2c673",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/monitoreo.html.bak-numero-admin-20261009-114155"
+      ]
+    },
+    {
+      "source_commit": "6f263d74ead6e1b300e1a5a4b0704aecd19dc941",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/monitoreo.html.bak-orden-20261008-150113"
+      ]
+    },
+    {
+      "source_commit": "e0f9cc2050e0ca8389732b01fcbf90dec5ff9550",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/monitoreo.html.bak-orden-20261008-150145"
+      ]
+    },
+    {
+      "source_commit": "d3c16faffeec5ff11e1afe6e1565a93e60149283",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/monitoreo.html.bak-password-20261008-150428"
+      ]
+    },
+    {
+      "source_commit": "4581c8cd035bb0adcef71dd072323c34c1792b75",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/monitoreo.html.bak-v9-20261008-151222"
+      ]
+    },
+    {
+      "source_commit": "0bccfe404c580a90e9660c47086f0a9e7a4b888b",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/monitoreo.html.bak-v9-20261008-151249"
+      ]
+    },
+    {
+      "source_commit": "26e3ff8920022d7a8da3041c3cf4dcf669a608a9",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/monitoreo.html.bak.20261008-154912"
+      ]
+    },
+    {
+      "source_commit": "d50743ff4b3895972a1a0018dd3dee3d171c5e85",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/monitoreo.html.bak.20261008-155651"
+      ]
+    },
+    {
+      "source_commit": "6912c34045c16de5d451929f5a5ca3dbe0d6023c",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/monitoreo.html.bak.monitor.20261008_090941"
+      ]
+    },
+    {
+      "source_commit": "28f93e9a90613ccd82c978634a37c5fe285a3941",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/monitoreo.html.bak_20261006_091841"
+      ]
+    },
+    {
+      "source_commit": "7e8b25f4e53089a061d9b576de05b822b7b5b7fe",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/monitoreo.html.bak_20261006_092127"
+      ]
+    },
+    {
+      "source_commit": "a17c65516ab85588639c8bd4ff504514fc65c5b9",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/monitoreo.html.bak_grupos_modal_20261008_142954"
+      ]
+    },
+    {
+      "source_commit": "1c1292275154282fa757ed9453fa26ef92c875ed",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/monitoreo.html.bak_grupos_password_orden_20261008_143712"
+      ]
+    },
+    {
+      "source_commit": "b155235d798c3b1e3803bf47b83b1d8ed4c36dbc",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/monitoreo.html.bak_paginacion_20261013_073016"
+      ]
+    },
+    {
+      "source_commit": "7765668c4d754ec76c6b7b5cc9b9578aff5edd92",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/monitoreo.html.bak_pre_ruta_ipoffice_20261009_145344"
+      ]
+    },
+    {
+      "source_commit": "237c7572fccab41d4a0db757fdb7876351fb31a6",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/monitoreo.html.bak_selector_20261009_125229"
+      ]
+    },
+    {
+      "source_commit": "f55ae5557998c4f5e5b51732239cfe635c0c1edf",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "templates/monitoreo.html.bak_ubic_masiva_20261009_142308"
+      ]
+    },
+    {
+      "source_commit": "b585c7f60f12d53614638a908eea71a340d2f3e8",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github_sync_state.json",
+        ".limpieza_backups_status.json",
+        "backup_admin_internos_20261007_143540/routes.py",
+        "backup_admin_internos_20261007_144046/monitoreo.html",
+        "backup_admin_internos_20261007_144046/routes.py",
+        "backup_grupo_captura_20261007_145736/asterisk.py",
+        "backup_grupo_captura_20261007_145736/monitoreo.html",
+        "backup_grupo_captura_20261007_145736/routes.py",
+        "backup_orden_desvio_20261007_144702/monitoreo.html",
+        "data/Registro_101295.xlsx",
+        "scripts/limpiar_backups.sh"
+      ]
+    },
+    {
+      "source_commit": "cf2be327e4327deaae05baee21b1490764400bb2",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "9cc846dd04762eb01947252a0d874627199c8a75",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github_sync_state.json",
+        "data/Registro_101295.xlsx"
+      ]
+    },
+    {
+      "source_commit": "c7c9ff1f08ff34b627f24a748f3d83c07514a9df",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github_sync_state.json",
+        "app/monitor.py.bak_ip_troncales_v16_20261016_163221",
+        "app/monitor.py.bak_ip_troncales_v17_20261016_164104",
+        "app/monitor.py.bak_sip_status_v14_20261016_161448",
+        "app/routes.py.bak_cos_bloqueo_v10_20261016_152731",
+        "app/routes.py.bak_ruteo_externo_20261016_092612",
+        "app/routes.py.bak_ruteo_externo_v2_20261016_095016",
+        "app/routes.py.bak_ruteo_externo_v3_20261016_101111",
+        "app/routes.py.bak_ruteo_externo_v5_20261016_103807",
+        "app/routes.py.bak_ruteo_externo_v6_20261016_110253",
+        "app/routes.py.bak_ruteo_externo_v8_20261016_130422",
+        "app/routes.py.bak_troncales_existentes_v13_20261016_160752",
+        "app/routes.py.bak_troncales_v11_20261016_155016",
+        "data/Registro_101164880.xlsx",
+        "data/Registro_101184880.xlsx",
+        "data/Registro_101295.xlsx",
+        "data/Registro_105080.xlsx",
+        "data/Registro_503290.xlsx",
+        "data/Registro_503290.xlsx.bak_auto_1792153962",
+        "data/Registro_503290.xlsx.bak_auto_1792156989",
+        "templates/monitoreo.html.bak_fix_jinja_ruteo_20261016_114300",
+        "templates/monitoreo.html.bak_ip_troncales_v16_20261016_163221",
+        "templates/monitoreo.html.bak_ip_troncales_v17_20261016_164104",
+        "templates/monitoreo.html.bak_ruteo_externo_20261016_092612",
+        "templates/monitoreo.html.bak_ruteo_externo_v2_20261016_095016",
+        "templates/monitoreo.html.bak_ruteo_externo_v3_20261016_101111",
+        "templates/monitoreo.html.bak_ruteo_externo_v5_20261016_103807",
+        "templates/monitoreo.html.bak_ruteo_externo_v6_20261016_110253",
+        "templates/monitoreo.html.bak_ruteo_externo_v7_20261016_120251",
+        "templates/monitoreo.html.bak_ruteo_externo_v8_20261016_130422",
+        "templates/monitoreo.html.bak_ruteo_mas_v4_20261016_101944",
+        "templates/monitoreo.html.bak_troncales_existentes_v13_20261016_160752",
+        "templates/monitoreo.html.bak_troncales_v11_20261016_155016"
+      ]
+    },
+    {
+      "source_commit": "8dd992b37eb4bf4dae8471c26a0d4eed46187667",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github_sync_state.json",
+        "app/routes.py.bak_cos_20261019_152539",
+        "app/routes.py.bak_cos_20261019_153347",
+        "app/routes.py.bak_cos_20261019_154144",
+        "app/routes.py.bak_sin_restricciones_20261020_080323",
+        "data/Registro_101164880.xlsx",
+        "data/Registro_101184880.xlsx",
+        "data/Registro_101295.xlsx",
+        "templates/monitoreo.html.bak_cos_20261019_152539",
+        "templates/monitoreo.html.bak_cos_20261019_153347",
+        "templates/monitoreo.html.bak_cos_20261019_154144",
+        "templates/monitoreo.html.bak_fix_jinja_20261019_092438",
+        "templates/monitoreo.html.bak_sin_restricciones_20261020_080323"
+      ]
+    },
+    {
+      "source_commit": "cac481048aaa90ecaf356ae47a0f2a7431bdc99c",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github_sync_state.json",
+        "app/routes.py.bak_clases_issabel_v4_20261020_105750",
+        "app/routes.py.bak_clases_servicio_v2_20261020_094956",
+        "app/routes.py.bak_eliminar_ruteo_20261020_105458",
+        "app/routes.py.bak_hook_integracion_20261020_101131",
+        "data/Registro_101164880.xlsx",
+        "data/Registro_101184880.xlsx",
+        "data/Registro_101295.xlsx",
+        "data/Registro_503290.xlsx",
+        "data/Registro_503290.xlsx.bak_auto_1792501638",
+        "templates/monitoreo.html.bak_clases_issabel_v4_20261020_105750",
+        "templates/monitoreo.html.bak_clases_servicio_v2_20261020_094956",
+        "templates/monitoreo.html.bak_eliminar_ruteo_20261020_105458",
+        "templates/monitoreo.html.bak_fix_jinja_20261020_095632"
+      ]
+    },
+    {
+      "source_commit": "c22381d5c0a35e1eb7af458872a941f1eef9159a",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github_sync_state.json",
+        "app/asterisk.py.bak_nombres_20261020_134812",
+        "data/Registro_101295.xlsx",
+        "data/Registro_101295.xlsx.bak_auto_1792513823",
+        "data/Registro_101295.xlsx.bak_auto_1792514340",
+        "data/Registro_101295.xlsx.bak_auto_1792519306",
+        "data/Registro_101295.xlsx.bak_auto_1792519471",
+        "data/Registro_101295.xlsx.bak_auto_1792520616",
+        "data/Registro_101295.xlsx.bak_auto_1792520729",
+        "data/Registro_101295.xlsx.bak_auto_1792520756",
+        "data/Registro_101295.xlsx.bak_auto_1792523561",
+        "data/Registro_101295.xlsx.bak_auto_1792524335",
+        "data/configs/0c383e64818f.cfg",
+        "data/configs/cfg000b82fcdcec.xml"
+      ]
+    },
+    {
+      "source_commit": "715af7c55e25ae4a2846d096aa04e4e3e363b63c",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github_sync_state.json",
+        "data/Registro_101295.xlsx"
+      ]
+    },
+    {
+      "source_commit": "4fce54de6728a32f7d67a3c3fc24362335639b40",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github_sync_state.json",
+        "data/Registro_101295.xlsx",
+        "data/Registro_101295.xlsx.bak_auto_1792525135",
+        "data/Registro_101295.xlsx.bak_auto_1792578943",
+        "data/Registro_101295.xlsx.bak_auto_1792579222",
+        "data/Registro_101295.xlsx.bak_auto_1792579292"
+      ]
+    },
+    {
+      "source_commit": "19b1602ec0a1346820e692b243869b832ffe2683",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github_sync_state.json",
+        "app/routes.py.bak_mac_doble_fuente_20261021_093404",
+        "data/Registro_101164880.xlsx",
+        "data/Registro_101164880.xlsx.bak_auto_1792585295",
+        "data/Registro_101164880.xlsx.bak_sync_20261021_092142",
+        "data/Registro_101164880.xlsx.bak_sync_20261021_093516",
+        "data/Registro_101184880.xlsx",
+        "data/Registro_101184880.xlsx.bak_sync_20261021_092101",
+        "data/Registro_101295.xlsx",
+        "data/Registro_101295.xlsx.bak_auto_1792586679",
+        "data/Registro_101295.xlsx.bak_auto_1792588549",
+        "data/Registro_101295.xlsx.bak_recuperacion_20261021_094138_646331",
+        "data/Registro_101295.xlsx.bak_sync_20261021_091726",
+        "data/Registro_105080.xlsx",
+        "data/Registro_105080.xlsx.bak_sync_20261021_092213",
+        "data/Registro_105080.xlsx.bak_sync_20261021_092425",
+        "data/Registro_503290.xlsx",
+        "data/Registro_503290.xlsx.bak_sync_20261021_092030",
+        "data/configs/0c383e64818f.cfg",
+        "data/configs/cfg000b82fcdcec.xml"
+      ]
+    },
+    {
+      "source_commit": "eb9b33a9735deaf1d871619b0359bb1e2ec6ceb1",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "1f78ac35238f91f39c34830b7beb4693e1390375",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "4ecdd7d22d517f4484de0ac82a565f8f11a4677c",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "-Dasterisk",
+        "-c",
+        "-e",
+        "-p..voip26",
+        ".gitignore",
+        ".limpieza_backups_status.json",
+        "app/asterisk.py.bak_nombres_20261020_134812",
+        "app/backup.py.vp-backup-fecha-20261005-152638",
+        "app/backup.py.vp-backup-fromisoformat-20261005-152819",
+        "app/monitor.py.bak_ip_troncales_v16_20261016_163221",
+        "app/monitor.py.bak_ip_troncales_v17_20261016_164104",
+        "app/monitor.py.bak_sip_status_v14_20261016_161448",
+        "app/monitor.py.vp-backup-20261005-145640",
+        "app/monitor.py.vp-backup-fecha-20261005-152500",
+        "app/monitor.py.vp-backup-final-20261005-145958",
+        "app/monitor.py.vp-backup-fix-fecha-20261005-152221",
+        "app/monitor.py.vp-backup-synway-20260930-103001",
+        "app/routes.py.bak_clases_issabel_v4_20261020_105750",
+        "app/routes.py.bak_clases_servicio_v2_20261020_094956",
+        "app/routes.py.bak_cos_20261019_152539",
+        "app/routes.py.bak_cos_20261019_153347",
+        "app/routes.py.bak_cos_20261019_154144",
+        "app/routes.py.bak_cos_bloqueo_v10_20261016_152731",
+        "app/routes.py.bak_eliminar_ruteo_20261020_105458",
+        "app/routes.py.bak_hook_integracion_20261020_101131",
+        "app/routes.py.bak_mac_doble_fuente_20261021_093404",
+        "app/routes.py.bak_ruteo_externo_20261016_092612",
+        "app/routes.py.bak_ruteo_externo_v2_20261016_095016",
+        "app/routes.py.bak_ruteo_externo_v3_20261016_101111",
+        "app/routes.py.bak_ruteo_externo_v5_20261016_103807",
+        "app/routes.py.bak_ruteo_externo_v6_20261016_110253",
+        "app/routes.py.bak_ruteo_externo_v8_20261016_130422",
+        "app/routes.py.bak_sin_restricciones_20261020_080323",
+        "app/routes.py.bak_troncales_existentes_v13_20261016_160752",
+        "app/routes.py.bak_troncales_v11_20261016_155016",
+        "app/routes.py.vp-backup-20261005-140129",
+        "app/routes.py.vp-backup-eliminar-troncal-20261005-160717",
+        "backup_admin_internos_20261007_143540/routes.py",
+        "backup_admin_internos_20261007_144046/monitoreo.html",
+        "backup_admin_internos_20261007_144046/routes.py",
+        "backup_grupo_captura_20261007_145736/asterisk.py",
+        "backup_grupo_captura_20261007_145736/monitoreo.html",
+        "backup_grupo_captura_20261007_145736/routes.py",
+        "backup_orden_desvio_20261007_144702/monitoreo.html",
+        "build/VoIP_Provisioner/Analysis-00.toc",
+        "build/VoIP_Provisioner/EXE-00.toc",
+        "build/VoIP_Provisioner/PKG-00.toc",
+        "build/VoIP_Provisioner/PYZ-00.pyz",
+        "build/VoIP_Provisioner/PYZ-00.toc",
+        "build/VoIP_Provisioner/VoIP_Provisioner.pkg",
+        "build/VoIP_Provisioner/base_library.zip",
+        "build/VoIP_Provisioner/warn-VoIP_Provisioner.txt",
+        "build/VoIP_Provisioner/xref-VoIP_Provisioner.html",
+        "cfg000b82fcdcec.xml",
+        "config.json",
+        "data/Registro_101164880.xlsx",
+        "data/Registro_101164880.xlsx.bak_auto_1792585295",
+        "data/Registro_101164880.xlsx.bak_sync_20261021_092142",
+        "data/Registro_101164880.xlsx.bak_sync_20261021_093516",
+        "data/Registro_101184880.xlsx",
+        "data/Registro_101184880.xlsx.bak_sync_20261021_092101",
+        "data/Registro_101295.xlsx",
+        "data/Registro_101295.xlsx.bak_auto_1792513823",
+        "data/Registro_101295.xlsx.bak_auto_1792514340",
+        "data/Registro_101295.xlsx.bak_auto_1792519306",
+        "data/Registro_101295.xlsx.bak_auto_1792519471",
+        "data/Registro_101295.xlsx.bak_auto_1792520616",
+        "data/Registro_101295.xlsx.bak_auto_1792520729",
+        "data/Registro_101295.xlsx.bak_auto_1792520756",
+        "data/Registro_101295.xlsx.bak_auto_1792523561",
+        "data/Registro_101295.xlsx.bak_auto_1792524335",
+        "data/Registro_101295.xlsx.bak_auto_1792525135",
+        "data/Registro_101295.xlsx.bak_auto_1792578943",
+        "data/Registro_101295.xlsx.bak_auto_1792579222",
+        "data/Registro_101295.xlsx.bak_auto_1792579292",
+        "data/Registro_101295.xlsx.bak_auto_1792586679",
+        "data/Registro_101295.xlsx.bak_auto_1792588549",
+        "data/Registro_101295.xlsx.bak_recuperacion_20261021_094138_646331",
+        "data/Registro_101295.xlsx.bak_sync_20261021_091726",
+        "data/Registro_105080.xlsx",
+        "data/Registro_105080.xlsx.bak_sync_20261021_092213",
+        "data/Registro_105080.xlsx.bak_sync_20261021_092425",
+        "data/Registro_503290.xlsx",
+        "data/Registro_503290.xlsx.bak_auto_1792153962",
+        "data/Registro_503290.xlsx.bak_auto_1792156989",
+        "data/Registro_503290.xlsx.bak_auto_1792501638",
+        "data/Registro_503290.xlsx.bak_sync_20261021_092030",
+        "data/cargas_masivas/rango_1000_1010_20261005_082502.csv",
+        "data/cargas_masivas/rango_1001_1010_20261005_082859.csv",
+        "data/cargas_masivas/rango_1001_1010_20261005_084332.csv",
+        "data/cargas_masivas/rango_1001_1099_20261005_105345.csv",
+        "data/cargas_masivas/rango_1099_1190_20261005_105627.csv",
+        "data/cargas_masivas/rango_1189_1299_20261005_105746.csv",
+        "data/cargas_masivas/rango_1300_1400_20261005_105845.csv",
+        "data/cargas_masivas/rango_1400_1500_20261005_105948.csv",
+        "data/cargas_masivas/rango_1500_1699_20261005_110041.csv",
+        "data/cargas_masivas/rango_1608_1608_20261005_130102.csv",
+        "data/cargas_masivas/rango_1700_1899_20261005_110213.csv",
+        "data/cargas_masivas/rango_1900_1999_20261005_110312.csv",
+        "data/cargas_masivas/rango_2001_2002_20261009_080031.csv"
+      ]
+    },
+    {
+      "source_commit": "6b8064f71285183b0f10f76c9e61882fde3968f1",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "VoIP_Provisioner.spec",
+        "ca-key.pem",
+        "cert.pem",
+        "certs/ca-key.pem",
+        "certs/cert.pem",
+        "certs/key.pem",
+        "compilador.bat",
+        "instalador.iss",
+        "key.pem",
+        "localhost.crt"
+      ]
+    },
+    {
+      "source_commit": "7f140c705da7747d2b64ffeb50122794f22e7182",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "-Dasterisk",
+        "-c",
+        "-e",
+        "-p..voip26",
+        ".github_sync_state.json",
+        ".gitignore",
+        ".limpieza_backups_status.json",
+        "VoIP_Provisioner.spec",
+        "app/asterisk.py.bak_nombres_20261020_134812",
+        "app/backup.py.vp-backup-fecha-20261005-152638",
+        "app/backup.py.vp-backup-fromisoformat-20261005-152819",
+        "app/monitor.py.bak_ip_troncales_v16_20261016_163221",
+        "app/monitor.py.bak_ip_troncales_v17_20261016_164104",
+        "app/monitor.py.bak_sip_status_v14_20261016_161448",
+        "app/monitor.py.vp-backup-20261005-145640",
+        "app/monitor.py.vp-backup-fecha-20261005-152500",
+        "app/monitor.py.vp-backup-final-20261005-145958",
+        "app/monitor.py.vp-backup-fix-fecha-20261005-152221",
+        "app/monitor.py.vp-backup-synway-20260930-103001",
+        "app/routes.py.bak_clases_issabel_v4_20261020_105750",
+        "app/routes.py.bak_clases_servicio_v2_20261020_094956",
+        "app/routes.py.bak_cos_20261019_152539",
+        "app/routes.py.bak_cos_20261019_153347",
+        "app/routes.py.bak_cos_20261019_154144",
+        "app/routes.py.bak_cos_bloqueo_v10_20261016_152731",
+        "app/routes.py.bak_eliminar_ruteo_20261020_105458",
+        "app/routes.py.bak_hook_integracion_20261020_101131",
+        "app/routes.py.bak_mac_doble_fuente_20261021_093404",
+        "app/routes.py.bak_ruteo_externo_20261016_092612",
+        "app/routes.py.bak_ruteo_externo_v2_20261016_095016",
+        "app/routes.py.bak_ruteo_externo_v3_20261016_101111",
+        "app/routes.py.bak_ruteo_externo_v5_20261016_103807",
+        "app/routes.py.bak_ruteo_externo_v6_20261016_110253",
+        "app/routes.py.bak_ruteo_externo_v8_20261016_130422",
+        "app/routes.py.bak_sin_restricciones_20261020_080323",
+        "app/routes.py.bak_troncales_existentes_v13_20261016_160752",
+        "app/routes.py.bak_troncales_v11_20261016_155016",
+        "app/routes.py.vp-backup-20261005-140129",
+        "app/routes.py.vp-backup-eliminar-troncal-20261005-160717",
+        "backup_admin_internos_20261007_143540/routes.py",
+        "backup_admin_internos_20261007_144046/monitoreo.html",
+        "backup_admin_internos_20261007_144046/routes.py",
+        "backup_grupo_captura_20261007_145736/asterisk.py",
+        "backup_grupo_captura_20261007_145736/monitoreo.html",
+        "backup_grupo_captura_20261007_145736/routes.py",
+        "backup_orden_desvio_20261007_144702/monitoreo.html",
+        "build/VoIP_Provisioner/Analysis-00.toc",
+        "build/VoIP_Provisioner/EXE-00.toc",
+        "build/VoIP_Provisioner/PKG-00.toc",
+        "build/VoIP_Provisioner/PYZ-00.pyz",
+        "build/VoIP_Provisioner/PYZ-00.toc",
+        "build/VoIP_Provisioner/VoIP_Provisioner.pkg",
+        "build/VoIP_Provisioner/base_library.zip",
+        "build/VoIP_Provisioner/warn-VoIP_Provisioner.txt",
+        "build/VoIP_Provisioner/xref-VoIP_Provisioner.html",
+        "ca-key.pem",
+        "cert.pem",
+        "certs/ca-key.pem",
+        "certs/cert.pem",
+        "certs/key.pem",
+        "cfg000b82fcdcec.xml",
+        "compilador.bat",
+        "config.json",
+        "data/Registro_101164880.xlsx",
+        "data/Registro_101164880.xlsx.bak_auto_1792585295",
+        "data/Registro_101164880.xlsx.bak_sync_20261021_092142",
+        "data/Registro_101164880.xlsx.bak_sync_20261021_093516",
+        "data/Registro_101184880.xlsx",
+        "data/Registro_101184880.xlsx.bak_sync_20261021_092101",
+        "data/Registro_101295.xlsx",
+        "data/Registro_101295.xlsx.bak_auto_1792513823",
+        "data/Registro_101295.xlsx.bak_auto_1792514340",
+        "data/Registro_101295.xlsx.bak_auto_1792519306",
+        "data/Registro_101295.xlsx.bak_auto_1792519471",
+        "data/Registro_101295.xlsx.bak_auto_1792520616",
+        "data/Registro_101295.xlsx.bak_auto_1792520729",
+        "data/Registro_101295.xlsx.bak_auto_1792520756",
+        "data/Registro_101295.xlsx.bak_auto_1792523561",
+        "data/Registro_101295.xlsx.bak_auto_1792524335",
+        "data/Registro_101295.xlsx.bak_auto_1792525135",
+        "data/Registro_101295.xlsx.bak_auto_1792578943",
+        "data/Registro_101295.xlsx.bak_auto_1792579222",
+        "data/Registro_101295.xlsx.bak_auto_1792579292",
+        "data/Registro_101295.xlsx.bak_auto_1792586679",
+        "data/Registro_101295.xlsx.bak_auto_1792588549",
+        "data/Registro_101295.xlsx.bak_recuperacion_20261021_094138_646331",
+        "data/Registro_101295.xlsx.bak_sync_20261021_091726",
+        "data/Registro_101295.xlsx.bak_sync_20261023_131830",
+        "data/Registro_105080.xlsx",
+        "data/Registro_105080.xlsx.bak_sync_20261021_092213",
+        "data/Registro_105080.xlsx.bak_sync_20261021_092425",
+        "data/Registro_503290.xlsx",
+        "data/Registro_503290.xlsx.bak_auto_1792153962",
+        "data/Registro_503290.xlsx.bak_auto_1792156989",
+        "data/Registro_503290.xlsx.bak_auto_1792501638",
+        "data/Registro_503290.xlsx.bak_sync_20261021_092030",
+        "data/cargas_masivas/rango_1000_1010_20261005_082502.csv",
+        "data/cargas_masivas/rango_1001_1010_20261005_082859.csv",
+        "data/cargas_masivas/rango_1001_1010_20261005_084332.csv",
+        "data/cargas_masivas/rango_1001_1099_20261005_105345.csv"
+      ]
+    },
+    {
+      "source_commit": "ba8b2338d610c29477d10bd05baf0fcdc3bdd885",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "6ff4eb93a43f2219a896cdc048eadf3d0effc00b",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "063e8610f4f8784263baf9ab646b570ad8f49277",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "c472cdbae80849dc19a1312dd69067ec90654609",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github_sync_state.json",
+        ".limpieza_backups_status.json",
+        "app/asterisk.py.bak_nombres_20261020_134812",
+        "app/backup.py.vp-backup-fecha-20261005-152638",
+        "app/backup.py.vp-backup-fromisoformat-20261005-152819",
+        "app/monitor.py.bak_ip_troncales_v16_20261016_163221",
+        "app/monitor.py.bak_ip_troncales_v17_20261016_164104",
+        "app/monitor.py.bak_sip_status_v14_20261016_161448",
+        "app/monitor.py.vp-backup-20261005-145640",
+        "app/monitor.py.vp-backup-fecha-20261005-152500",
+        "app/monitor.py.vp-backup-final-20261005-145958",
+        "app/monitor.py.vp-backup-fix-fecha-20261005-152221",
+        "app/monitor.py.vp-backup-synway-20260930-103001",
+        "app/routes.py.bak_clases_issabel_v4_20261020_105750",
+        "app/routes.py.bak_clases_servicio_v2_20261020_094956",
+        "app/routes.py.bak_cos_20261019_152539",
+        "app/routes.py.bak_cos_20261019_153347",
+        "app/routes.py.bak_cos_20261019_154144",
+        "app/routes.py.bak_cos_bloqueo_v10_20261016_152731",
+        "app/routes.py.bak_eliminar_ruteo_20261020_105458",
+        "app/routes.py.bak_hook_integracion_20261020_101131",
+        "app/routes.py.bak_mac_doble_fuente_20261021_093404",
+        "app/routes.py.bak_ruteo_externo_20261016_092612",
+        "app/routes.py.bak_ruteo_externo_v2_20261016_095016",
+        "app/routes.py.bak_ruteo_externo_v3_20261016_101111",
+        "app/routes.py.bak_ruteo_externo_v5_20261016_103807",
+        "app/routes.py.bak_ruteo_externo_v6_20261016_110253",
+        "app/routes.py.bak_ruteo_externo_v8_20261016_130422",
+        "app/routes.py.bak_sin_restricciones_20261020_080323",
+        "app/routes.py.bak_troncales_existentes_v13_20261016_160752",
+        "app/routes.py.bak_troncales_v11_20261016_155016",
+        "app/routes.py.roto.20260908-135726",
+        "app/routes.py.vp-backup-20261005-140129",
+        "app/routes.py.vp-backup-eliminar-troncal-20261005-160717",
+        "backup_admin_internos_20261007_143540/routes.py",
+        "backup_admin_internos_20261007_144046/monitoreo.html",
+        "backup_admin_internos_20261007_144046/routes.py",
+        "backup_grupo_captura_20261007_145736/asterisk.py",
+        "backup_grupo_captura_20261007_145736/monitoreo.html",
+        "backup_grupo_captura_20261007_145736/routes.py",
+        "backup_orden_desvio_20261007_144702/monitoreo.html",
+        "build/VoIP_Provisioner/Analysis-00.toc",
+        "build/VoIP_Provisioner/EXE-00.toc",
+        "build/VoIP_Provisioner/PKG-00.toc",
+        "build/VoIP_Provisioner/PYZ-00.pyz",
+        "build/VoIP_Provisioner/PYZ-00.toc",
+        "build/VoIP_Provisioner/VoIP_Provisioner.pkg",
+        "build/VoIP_Provisioner/base_library.zip",
+        "build/VoIP_Provisioner/warn-VoIP_Provisioner.txt",
+        "build/VoIP_Provisioner/xref-VoIP_Provisioner.html",
+        "ca-key.pem",
+        "cert.pem",
+        "certs/ca-key.pem",
+        "certs/cert.pem",
+        "certs/key.pem",
+        "cfg000b82fcdcec.xml",
+        "config.json",
+        "data/Registro_101164880.xlsx.bak_auto_1792585295",
+        "data/Registro_101164880.xlsx.bak_sync_20261021_092142",
+        "data/Registro_101164880.xlsx.bak_sync_20261021_093516",
+        "data/Registro_101184880.xlsx.bak_sync_20261021_092101",
+        "data/Registro_101295.xlsx.bak_auto_1792513823",
+        "data/Registro_101295.xlsx.bak_auto_1792514340",
+        "data/Registro_101295.xlsx.bak_auto_1792519306",
+        "data/Registro_101295.xlsx.bak_auto_1792519471",
+        "data/Registro_101295.xlsx.bak_auto_1792520616",
+        "data/Registro_101295.xlsx.bak_auto_1792520729",
+        "data/Registro_101295.xlsx.bak_auto_1792520756",
+        "data/Registro_101295.xlsx.bak_auto_1792523561",
+        "data/Registro_101295.xlsx.bak_auto_1792524335",
+        "data/Registro_101295.xlsx.bak_auto_1792525135",
+        "data/Registro_101295.xlsx.bak_auto_1792578943",
+        "data/Registro_101295.xlsx.bak_auto_1792579222",
+        "data/Registro_101295.xlsx.bak_auto_1792579292",
+        "data/Registro_101295.xlsx.bak_auto_1792586679",
+        "data/Registro_101295.xlsx.bak_auto_1792588549",
+        "data/Registro_101295.xlsx.bak_recuperacion_20261021_094138_646331",
+        "data/Registro_101295.xlsx.bak_sync_20261021_091726",
+        "data/Registro_101295.xlsx.bak_sync_20261023_131830",
+        "data/Registro_105080.xlsx.bak_sync_20261021_092213",
+        "data/Registro_105080.xlsx.bak_sync_20261021_092425",
+        "data/Registro_503290.xlsx.bak_auto_1792153962",
+        "data/Registro_503290.xlsx.bak_auto_1792156989",
+        "data/Registro_503290.xlsx.bak_auto_1792501638",
+        "data/Registro_503290.xlsx.bak_sync_20261021_092030",
+        "data/config.json",
+        "data/configs/0c383e64818f.cfg",
+        "data/configs/cfg000b82fcdcec.xml",
+        "data/perfiles.json",
+        "data/provisioner.db",
+        "data/sftp_servers.json",
+        "database.db",
+        "dist/VoIP_Provisioner.exe",
+        "installer_output/VoIP_Provisioner_Setup_2.0.exe",
+        "key.pem",
+        "localhost.crt",
+        "logs/audit.json",
+        "perfiles.json",
+        "plink.exe",
+        "provisioner.db"
+      ]
+    },
+    {
+      "source_commit": "1878171172e989f8cf1a9a8396607664a4a8df03",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "5632b379936b990c5ae870625b4997d7537b069c",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "a55153e8613f715d8dae6ee2d049550d79fedd24",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "0056bb5b29fbbeff95e20a68674c1e2c61fd8985",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "fb0cbe70a09e47dfab86971086749a93a339582c",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "e77040289af6af0da6c07bb4e749781e211b92b7",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github/workflows/android-mobile.yml",
+        ".github/workflows/windows-desktop.yml",
+        "android/.gitignore",
+        "android/app/build.gradle",
+        "android/app/src/main/AndroidManifest.xml",
+        "android/app/src/main/java/ar/com/voipprovisioner/MainActivity.java",
+        "android/app/src/main/python/android_main.py",
+        "android/app/src/main/res/drawable/ic_launcher.xml",
+        "android/app/src/main/res/values/styles.xml",
+        "android/build.gradle",
+        "android/build_android.sh",
+        "android/gradle.properties",
+        "android/settings.gradle",
+        "desktop.py",
+        "requirements-desktop.txt"
+      ]
+    },
+    {
+      "source_commit": "c570ab3bb677aa9857d1595ffa9ce577e1b7a91d",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "config.json",
+        "data/config.json"
+      ]
+    },
+    {
+      "source_commit": "31c526d08d1b7d3147e09a004e9363297e2f5731",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "8a2be463cd77a47192a757903a74eb552f9bf89d",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "android/app/src/main/java/ar/com/voipprovisioner/MainActivity.java"
+      ]
+    },
+    {
+      "source_commit": "f293d96386e0c546905b082db6ca2acf6cb77989",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github/workflows/android-mobile.yml"
+      ]
+    },
+    {
+      "source_commit": "eab5ad83ae715a11e274a18f49065162b0c06b17",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "a41d226dd4ab6f6fd7b1cac5e27913382531f775",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "cbd40cdf6ec37f26c1e627efe5832f0d68824c0a",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "9cb0199b136bb2acb1ed7d7356e976b55027bc64",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "android/app/src/main/java/ar/com/voipprovisioner/MainActivity.java"
+      ]
+    },
+    {
+      "source_commit": "6c0b88f49edd32ce9e3dfd4936a11940bc396fe3",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "android/app/src/main/res/values/styles.xml"
+      ]
+    },
+    {
+      "source_commit": "3e60e6a4996e4f110448428562af111bfc568aea",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github/workflows/android-mobile.yml"
+      ]
+    },
+    {
+      "source_commit": "d9b4edb8dae73535fd54d421c0c6503b4827c06a",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "113625e5c2eca6bc3ce9e9202f63d189da0c069e",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "android/app/src/main/python/android_main.py"
+      ]
+    },
+    {
+      "source_commit": "7719e8f5ac0353cb9a206c6c66048459b890d9ab",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "d481b46fc2c5383061045ab2af77c283892a0836",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "android/app/src/main/python/android_main.py"
+      ]
+    },
+    {
+      "source_commit": "749a31d4a7bd8869e240e702e38bc2b2951ceaec",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "9ce18c064eedc429bdb812b8ffb7bf33dff558de",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "b085641c2425adb613d9fcb65160dd8a55b137c2",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "779eec7694dcec76be6cb2681386dedbd5972ee9",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "plantillas/Fanvil V61G.cfg"
+      ]
+    },
+    {
+      "source_commit": "3b0ab6b6b3d51ad9c6cb5ed9f1747985c0a015d4",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "plantillas/Fanvil_V61G.cfg"
+      ]
+    },
+    {
+      "source_commit": "1a5b4daac2c1218e915cf44bb93eef5dd7845cc2",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "plantillas/Grandstream_GXP1628.cfg"
+      ]
+    },
+    {
+      "source_commit": "31fa6b15c8bd1a4db589ec86de690760d36275f3",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "plantillas/Grandstream_GXP1628.xml"
+      ]
+    },
+    {
+      "source_commit": "f7260ad66748a36ac41d0432496a084e928a5704",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github/workflows/android-mobile.yml"
+      ]
+    },
+    {
+      "source_commit": "75a143200cf451b0349e08c822e9b402b17b6669",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github/workflows/android-mobile.yml"
+      ]
+    },
+    {
+      "source_commit": "b88f0ef4f3756c4fafff51502d491681f6c7f0eb",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "d32f969ef4d5b136f245ec581fec6e91948f8d1e",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "4f9913bafd95ef0dd88fc0e3aa26b8291ee3fd25",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "588cd2933384a890bcd6fd74b0309cd02e39fbc0",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "android/app/src/main/python/android_main.py"
+      ]
+    },
+    {
+      "source_commit": "6c061a9316f93df6acf997556f8c3ae89da7e214",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "desktop.py"
+      ]
+    },
+    {
+      "source_commit": "593a7b751be913230b356455297e6ab410983a80",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "35834e0495f2f4d85e79e0b41bc71deba0147488",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "56f4da176a86790498f09e6e3f989df677acd88c",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "44e65d88bc76a53e1b61814d90d04b5dc2db4dcd",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github/workflows/android-mobile.yml"
+      ]
+    },
+    {
+      "source_commit": "1a3fcdb7f6244b05c15aa2f0b9ae0c99ef331eb7",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github/workflows/android-mobile.yml"
+      ]
+    },
+    {
+      "source_commit": "14fc56575502863b2124f116559b428a3957f168",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "android/app/src/main/java/ar/com/voipprovisioner/MainActivity.java",
+        "android/app/src/main/res/drawable-nodpi/dashboard_configuraciones.jpg",
+        "android/app/src/main/res/drawable-nodpi/dashboard_monitoreo.jpg",
+        "android/app/src/main/res/drawable-nodpi/dashboard_provisionamiento.jpg"
+      ]
+    },
+    {
+      "source_commit": "56493596d83a6787f2a1bb774fd74fa58836e407",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github/workflows/android-mobile.yml"
+      ]
+    },
+    {
+      "source_commit": "c0698395b0ad90139144a42ee59a894378a04e30",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github/workflows/android-mobile.yml"
+      ]
+    },
+    {
+      "source_commit": "6275c1d08a0cc6e7655c014c071304edb2a739d8",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "android/app/src/main/java/ar/com/voipprovisioner/MainActivity.java"
+      ]
+    },
+    {
+      "source_commit": "00a29f6aec3504a30d98965fba51baa9a8f855c2",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "android/app/src/main/java/ar/com/voipprovisioner/MainActivity.java"
+      ]
+    },
+    {
+      "source_commit": "2bfe330c2c2860882d21462a93d6df2a4873a291",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "android/app/src/main/java/ar/com/voipprovisioner/MainActivity.java"
+      ]
+    },
+    {
+      "source_commit": "060161a1e81637a9257dab3585e2e76fee73a4c5",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "7404f8af20701da0efe75ad02aef2fb0ca4235e5",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "android/app/src/main/java/ar/com/voipprovisioner/MainActivity.java"
+      ]
+    },
+    {
+      "source_commit": "8433a37b1ba8579155b786aa619e22f308f80bc6",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "d490b0a816dd08150af44652f05dea71ad896264",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "80dc11cda0a4b5850d8eb5b6a7bdaf5be2a66225",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "382533e8e7f2969ed80b3873cf103aaf5ddc25ec",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "android/app/src/main/java/ar/com/voipprovisioner/MainActivity.java"
+      ]
+    },
+    {
+      "source_commit": "15dfbccd554842d5e5e7c5b212b0c5d657342337",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "ef2f3092b64bee7fa206a190d982e6fd1373ea8c",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "1c03f0dfe60242682d53dc6cc92fa8291a5db855",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "1c3cdabf045617aa67072b70c89e05d709582ade",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "8e2bcd683c4e396662b60e2840cec460b8699a61",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "f76dcfca8f53d87382af0c80307ab6c24cf6be56",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "75c61ce3d1371fadcdf2f6528ecf42b6c7812a3c",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "9c49ecc24dfa32877d970998bb30ba73e5fabc50",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "fc7b25b97d46da006ffefe950e296e3b42fec271",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "f1c57b5c091b49111e02ba3d3d9aa6e16b90086f",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github/workflows/android-mobile.yml",
+        "desktop.py"
+      ]
+    },
+    {
+      "source_commit": "05e22804f1c1c47aebb0a53db5628bfd97656162",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "static/manifest-monitoreo.json",
+        "static/manifest.json"
+      ]
+    },
+    {
+      "source_commit": "f9e1612fb602bed6e699dc69c6e08a63fbac61f4",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "f811b8baf1c50b6ab30c6c5037ad451e094d45ef",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "1f96329fd0e8b16f9d6e678f98e67db1add7e77e",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "android/app/src/main/python/android_main.py"
+      ]
+    },
+    {
+      "source_commit": "af892234d268c44b4bac6f84d6a86eb47310805b",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "0d73277f1d2bb95e35b4ca9bfcc11dd063f858ad",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "118a62eaf646ee65b9144dc8febafdb8c07edeaf",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "741c8b0cf593636416fce7e58e9b8c85f477e1c1",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "1866e1cb9b837c15dde385b07e0d2ea7d035479c",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "8d5bcaad260198b5dde35b9e54668fb8c51dc707",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "7e4a7104a725d0777a4fe1a23663c14771479c90",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "073d27786610bb32a2d91921f088be4a790003cc",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "6ffd7b7721de71d9bf8a5d0a8170d2087ea9db21",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "65fe9a7ab4e47254b0712ac5343c300b0f489fe1",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "e7488af72ceeec461c961442521a4b4a56a58973",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "42255245bbff431035433ca92ffa49a5fc115464",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "c2d57f7f661152b6a8917e80ffe3b765a18517db",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github/workflows/android-mobile.yml"
+      ]
+    },
+    {
+      "source_commit": "0ca6099a22f0438f91ed238443ff5d897789b7c7",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github/workflows/android-mobile.yml"
+      ]
+    },
+    {
+      "source_commit": "38cba8b92469e2a857c141f48546f62afea135b8",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "android/app/src/main/python/android_main.py"
+      ]
+    },
+    {
+      "source_commit": "0e8f1a65993885ae3723f324d30755eeb1ea690e",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "9e18eafcd0074d441834dd33d59228ea8e08e6bf",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github/workflows/android-mobile.yml"
+      ]
+    },
+    {
+      "source_commit": "02dcbb567264fb004217cebe2f392e825ed44819",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "-Dasterisk",
+        "-c",
+        "-e",
+        "-p..voip26",
+        "config.json",
+        "data/Registro_101164880.xlsx",
+        "data/Registro_101184880.xlsx",
+        "data/Registro_101295.xlsx",
+        "data/Registro_105080.xlsx",
+        "data/Registro_503290.xlsx",
+        "data/cargas_masivas/rango_1000_1010_20261005_082502.csv",
+        "data/cargas_masivas/rango_1001_1010_20261005_082859.csv",
+        "data/cargas_masivas/rango_1001_1010_20261005_084332.csv",
+        "data/cargas_masivas/rango_1001_1099_20261005_105345.csv",
+        "data/cargas_masivas/rango_1099_1190_20261005_105627.csv",
+        "data/cargas_masivas/rango_1189_1299_20261005_105746.csv",
+        "data/cargas_masivas/rango_1300_1400_20261005_105845.csv",
+        "data/cargas_masivas/rango_1400_1500_20261005_105948.csv",
+        "data/cargas_masivas/rango_1500_1699_20261005_110041.csv",
+        "data/cargas_masivas/rango_1608_1608_20261005_130102.csv",
+        "data/cargas_masivas/rango_1700_1899_20261005_110213.csv",
+        "data/cargas_masivas/rango_1900_1999_20261005_110312.csv",
+        "data/cargas_masivas/rango_2001_2002_20261009_080031.csv",
+        "data/config.json",
+        "data/ubicaciones_internos.json",
+        "data/ubicaciones_perfiles.json",
+        "ext-findmefollow",
+        "ext-local",
+        "host 10.12.13.84 and udp port 69",
+        "plantillasfanvil.cfg"
+      ]
+    },
+    {
+      "source_commit": "cf92677593b9cbb41bf027f076c89187803ef4fa",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".gitignore"
+      ]
+    },
+    {
+      "source_commit": "d25e6cd8f0152fa2aa3df4f4f1aa768a453a656a",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "d4e363a53ad5ef116873017041daef7f55c4ed96",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "b57a157f2b9774bcc3644b6473f9330f1d73d63e",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "68897151ba6c6e0bdc80c2b2f2068cfa6b3ca7fa",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "c15fdd15956ba6f31ab56d06c090e9812bdc89b2",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "android/app/src/main/python/android_main.py"
+      ]
+    },
+    {
+      "source_commit": "6178cce255f5035fb5e80c483ed14833c594dd08",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "android/app/src/main/python/android_main.py"
+      ]
+    },
+    {
+      "source_commit": "e92411ec81f9023b5502ef19bc165ec6b14f53e4",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "43576448314673088f5384ab09cb184639804e14",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "f21f4b3fcd574caa46d1810ee57f58a17d9a5bc8",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "00bac518650d3e0daf1ccbe6d1144333dd787218",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "d69c477aeae82fc37412278bc59c491c54ac1168",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "c3cee901b62bf40d49ffbebf4648309273d92fea",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "android/app/src/main/java/ar/com/voipprovisioner/MainActivity.java"
+      ]
+    },
+    {
+      "source_commit": "20b2a3c92a5870d8821b3e449e784969db6200d7",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "android/app/build.gradle"
+      ]
+    },
+    {
+      "source_commit": "09dde7a9d471164df93d007147ce310b3ceed561",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github/workflows/android-mobile.yml"
+      ]
+    },
+    {
+      "source_commit": "bc18de545bf6df7120aad1cbc4da034a7df5f817",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "a389929480bc18bf2cf4431486f184c9b8394e4d",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "7c27178c72e6f90ccca332afa7a2d9fc07e4fd98",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "f1d726ec01bf7f44316948014c3e14f3efacb09e",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github/workflows/android-mobile.yml"
+      ]
+    },
+    {
+      "source_commit": "77a2a4629c614b92c43fcfbade6feb23fc878637",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github/workflows/android-mobile.yml"
+      ]
+    },
+    {
+      "source_commit": "235186287149a3d283fc8ea17ce89ab7c5f6426e",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "android/app/build.gradle"
+      ]
+    },
+    {
+      "source_commit": "8b2f1e4b625f5f9e45be59e8d7e9af21e2e39cce",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github/workflows/android-mobile.yml"
+      ]
+    },
+    {
+      "source_commit": "96361ddcd4b38cbdf99cb72dc3f0ff5e6bb7aae4",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "android/app/build.gradle"
+      ]
+    },
+    {
+      "source_commit": "654e903d1d784762bca23b975813998253bb0bf3",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github/workflows/android-mobile.yml"
+      ]
+    },
+    {
+      "source_commit": "437f95670b15ca037c02655838e329536cea7ab8",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "scripts/limpiar_backups.sh"
+      ]
+    },
+    {
+      "source_commit": "2f73b03826b1e548b4314b1a15227dc269e189a3",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "android/app/src/main/java/ar/com/voipprovisioner/MainActivity.java"
+      ]
+    },
+    {
+      "source_commit": "88270525797659c6b4061b75557bbabdd867904d",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "871fbb7783cf7560774f6fc1a62a34c7b684483b",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "f87aa5904911b9e6d1bd190d9cf0b66638d10bd5",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "eaa40df41b987bb74e044f961ed02d9d676c11e2",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "427f6ad4f840d52feb31d5f0502c992db6dcd1d5",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "2001565c916e086d024716d689fe0afc8d0c4c96",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "1909fd9c3b640265505f2c18255986e39f8d328e",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "4eddd3ce8af29c86faa84249b984a07edd057969",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "af0f6c5dc40122cd320d11d67571ca338335b575",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "12d6fc0ae8194a9c5c2c20d70a49388ae6829883",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "7e9f74e444e1e5d0ce34452d69ab40c6456dd135",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "9d266443e6a9926753a68c168e8a647d42a96dbc",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "69c2cea6f411b5b28b7efc5110c9d509ff450608",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "9ee15a4b84fff131501680647d3c62e393fb7eee",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "2171c905a4806a22f38fc54bd1cd081b7638aa62",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "android/app/src/main/java/ar/com/voipprovisioner/MainActivity.java"
+      ]
+    },
+    {
+      "source_commit": "096d930df4f15a86454f60fb9c96a29268528b6a",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "android/app/src/main/res/drawable-nodpi/dashboard_provisionamiento.jpg",
+        "android/app/src/main/res/drawable-nodpi/dashboard_provisionamiento.png"
+      ]
+    },
+    {
+      "source_commit": "3c22cd6bc3ee82e1b5728e009e5a17969dd755d4",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "5c644ac2deff50a3385672b35027ffa40c1ae190",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "0a98e42dac8685c730ffe6320f582905a1166779",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "e93d7c6fd8095754b4f81d483412ff88778447ff",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "6677cb8b7f9d5ceb86c4f4022aec4980536126b5",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "android/app/src/main/java/ar/com/voipprovisioner/MainActivity.java"
+      ]
+    },
+    {
+      "source_commit": "34789a53f97168fd41cc330bad73e1e94adf4475",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "android/app/src/main/res/drawable-nodpi/dashboard_provisionamiento.png"
+      ]
+    },
+    {
+      "source_commit": "e412ebd506b9455d543b7ae83c3705e48baa24c4",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "6a72f30f36f19487e3321ff2b863054e68288d4d",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "4526f1978837a2786e91d6b66bf58441bf6554a9",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "3a39f4a67f3b226f4626de0e2375b9d960f56072",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "android/app/src/main/java/ar/com/voipprovisioner/MainActivity.java"
+      ]
+    },
+    {
+      "source_commit": "540f7a4a196e375f71e3061b377b84b56b9defe2",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "android/app/src/main/res/drawable-nodpi/dashboard_provisionamiento.png"
+      ]
+    },
+    {
+      "source_commit": "abf483a38431a458c02bf99a60e4d0bf5fae2092",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "android/app/src/main/res/drawable-nodpi/dashboard_provisionamiento.png"
+      ]
+    },
+    {
+      "source_commit": "01c3c0b4218ca965c8c3b7bc16b3625eb7215463",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "android/app/src/main/res/drawable-nodpi/dashboard_provisionamiento.png"
+      ]
+    },
+    {
+      "source_commit": "83131de15fb2060e50a82c30cbdd5654439ba3e8",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "android/app/src/main/java/ar/com/voipprovisioner/MainActivity.java"
+      ]
+    },
+    {
+      "source_commit": "58b8f996f23b6429f4d2d85945a45dc8ac15346f",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "8a0c87155ab74bcbe79b3faf98ce91f7bed326fa",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github/workflows/android-mobile.yml"
+      ]
+    },
+    {
+      "source_commit": "5306f165be9f8e63d27851b9a335efe2afcc5772",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "fb60909de66c8307f88cf3700b72cb9759078913",
+      "requires_full_update": true,
+      "full_update_paths": [
+        "android/app/src/main/java/ar/com/voipprovisioner/MainActivity.java"
+      ]
+    },
+    {
+      "source_commit": "296cabc2566e4c089c5aff91e3e7b4c4ac709a68",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "7ea1750d6d995b57fc25d91060d209de473e5af8",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "e346cc275e98cd5d39f5bc6bea0af5ad5edffb31",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "11541dace5875a79aab9d2ee66f8844f933b0bcd",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "37e5488b041574840a7cfb985092787a87ae81dd",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "1b08e53044da21587860796eee2412d47e8d0819",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "1f2540cf05028750d5dc73770d69d3f0a72163e7",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github/workflows/android-mobile.yml"
+      ]
+    },
+    {
+      "source_commit": "5be7dff941de6af1a3aad53f4b03452fdc8d6ca2",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "6af78d9413b9c54a1e355649e017f07da0bb88bf",
+      "requires_full_update": true,
+      "full_update_paths": [
+        ".github/workflows/android-mobile.yml"
+      ]
+    }
+  ]
+}
