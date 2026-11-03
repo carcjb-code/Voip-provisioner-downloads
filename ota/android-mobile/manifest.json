@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "platform": "android-mobile",
-  "source_commit": "d0f5ab5ac90eb17f19891a8231b35471734645f5",
-  "updated_at": "2026-11-03T03:22:10.171500+00:00",
+  "source_commit": "dc60e027987938d229e8780b2052d2bc76aebf71",
+  "updated_at": "2026-11-03T09:20:38.154502+00:00",
   "files": [
     {
       "path": "app/ami_client.py",
@@ -191,8 +191,8 @@
     },
     {
       "path": "templates/index.html",
-      "sha256": "24c1ee0a593025e03f8183013a58975cc29745a7cb313cf9b5e32e559443e316",
-      "size": 171143
+      "sha256": "1548a46462599fb35c35f9639c43ef6b178e9baeca82841e4d5677ba97bf5862",
+      "size": 171259
     },
     {
       "path": "templates/monitoreo.html",
@@ -5272,6 +5272,11 @@
       "full_update_paths": [
         "android/app/src/main/java/ar/com/voipprovisioner/MainActivity.java"
       ]
+    },
+    {
+      "source_commit": "dc60e027987938d229e8780b2052d2bc76aebf71",
+      "requires_full_update": false,
+      "full_update_paths": []
     }
   ]
 }
