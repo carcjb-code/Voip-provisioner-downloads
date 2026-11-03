@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "platform": "android-mobile",
-  "source_commit": "dc60e027987938d229e8780b2052d2bc76aebf71",
-  "updated_at": "2026-11-03T09:20:38.154502+00:00",
+  "source_commit": "f5de741f3483886bd6ce13fd9be8eb81ecae6b10",
+  "updated_at": "2026-11-03T12:03:38.624267+00:00",
   "files": [
     {
       "path": "app/ami_client.py",
@@ -191,8 +191,8 @@
     },
     {
       "path": "templates/index.html",
-      "sha256": "1548a46462599fb35c35f9639c43ef6b178e9baeca82841e4d5677ba97bf5862",
-      "size": 171259
+      "sha256": "68e6183ef246fe7cc0a0b7eda825c444fa7d776fe3b9041ed56ef8d0c3ec3ddb",
+      "size": 171244
     },
     {
       "path": "templates/monitoreo.html",
@@ -5275,6 +5275,11 @@
     },
     {
       "source_commit": "dc60e027987938d229e8780b2052d2bc76aebf71",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "f5de741f3483886bd6ce13fd9be8eb81ecae6b10",
       "requires_full_update": false,
       "full_update_paths": []
     }
