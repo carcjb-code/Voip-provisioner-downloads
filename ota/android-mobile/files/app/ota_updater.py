@@ -157,7 +157,8 @@ def _manifest_url():
     platform = _platform()
     if not platform:
         raise RuntimeError('El actualizador no está habilitado para esta plataforma.')
-    return RAW_ROOT + 'ota/{}/manifest.json'.format(platform)
+    # A fresh URL prevents stale intermediary caches from hiding new manifests.
+    return RAW_ROOT + 'ota/{}/manifest.json?ts={}'.format(platform, int(time.time()))
 
 
 def _request_bytes(url, timeout=30, limit=MAX_TOTAL_BYTES):

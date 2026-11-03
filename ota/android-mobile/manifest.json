@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "platform": "android-mobile",
-  "source_commit": "6af78d9413b9c54a1e355649e017f07da0bb88bf",
-  "updated_at": "2026-11-03T00:41:30.167951+00:00",
+  "source_commit": "027bce57034d7d94b383567bcd64104a65a68773",
+  "updated_at": "2026-11-03T00:45:51.019920+00:00",
   "files": [
     {
       "path": "app/ami_client.py",
@@ -61,8 +61,8 @@
     },
     {
       "path": "app/ota_updater.py",
-      "sha256": "506f145a3415d2bbba97e0b22a5ebd88dfc2ce7c622dc9fa1129743d9cf3eaf1",
-      "size": 19047
+      "sha256": "5abe47d0ae1c892333c4a9a64d220405e6b74bdcab467c32f7708aa1c51d40fd",
+      "size": 19151
     },
     {
       "path": "app/progress.py",
@@ -4353,8 +4353,6 @@
       "source_commit": "e77040289af6af0da6c07bb4e749781e211b92b7",
       "requires_full_update": true,
       "full_update_paths": [
-        ".github/workflows/android-mobile.yml",
-        ".github/workflows/windows-desktop.yml",
         "android/.gitignore",
         "android/app/build.gradle",
         "android/app/src/main/AndroidManifest.xml",
@@ -4392,10 +4390,8 @@
     },
     {
       "source_commit": "f293d96386e0c546905b082db6ca2acf6cb77989",
-      "requires_full_update": true,
-      "full_update_paths": [
-        ".github/workflows/android-mobile.yml"
-      ]
+      "requires_full_update": false,
+      "full_update_paths": []
     },
     {
       "source_commit": "eab5ad83ae715a11e274a18f49065162b0c06b17",
@@ -4428,10 +4424,8 @@
     },
     {
       "source_commit": "3e60e6a4996e4f110448428562af111bfc568aea",
-      "requires_full_update": true,
-      "full_update_paths": [
-        ".github/workflows/android-mobile.yml"
-      ]
+      "requires_full_update": false,
+      "full_update_paths": []
     },
     {
       "source_commit": "d9b4edb8dae73535fd54d421c0c6503b4827c06a",
@@ -4502,17 +4496,13 @@
     },
     {
       "source_commit": "f7260ad66748a36ac41d0432496a084e928a5704",
-      "requires_full_update": true,
-      "full_update_paths": [
-        ".github/workflows/android-mobile.yml"
-      ]
+      "requires_full_update": false,
+      "full_update_paths": []
     },
     {
       "source_commit": "75a143200cf451b0349e08c822e9b402b17b6669",
-      "requires_full_update": true,
-      "full_update_paths": [
-        ".github/workflows/android-mobile.yml"
-      ]
+      "requires_full_update": false,
+      "full_update_paths": []
     },
     {
       "source_commit": "b88f0ef4f3756c4fafff51502d491681f6c7f0eb",
@@ -4560,17 +4550,13 @@
     },
     {
       "source_commit": "44e65d88bc76a53e1b61814d90d04b5dc2db4dcd",
-      "requires_full_update": true,
-      "full_update_paths": [
-        ".github/workflows/android-mobile.yml"
-      ]
+      "requires_full_update": false,
+      "full_update_paths": []
     },
     {
       "source_commit": "1a3fcdb7f6244b05c15aa2f0b9ae0c99ef331eb7",
-      "requires_full_update": true,
-      "full_update_paths": [
-        ".github/workflows/android-mobile.yml"
-      ]
+      "requires_full_update": false,
+      "full_update_paths": []
     },
     {
       "source_commit": "14fc56575502863b2124f116559b428a3957f168",
@@ -4584,17 +4570,13 @@
     },
     {
       "source_commit": "56493596d83a6787f2a1bb774fd74fa58836e407",
-      "requires_full_update": true,
-      "full_update_paths": [
-        ".github/workflows/android-mobile.yml"
-      ]
+      "requires_full_update": false,
+      "full_update_paths": []
     },
     {
       "source_commit": "c0698395b0ad90139144a42ee59a894378a04e30",
-      "requires_full_update": true,
-      "full_update_paths": [
-        ".github/workflows/android-mobile.yml"
-      ]
+      "requires_full_update": false,
+      "full_update_paths": []
     },
     {
       "source_commit": "6275c1d08a0cc6e7655c014c071304edb2a739d8",
@@ -4700,7 +4682,6 @@
       "source_commit": "f1c57b5c091b49111e02ba3d3d9aa6e16b90086f",
       "requires_full_update": true,
       "full_update_paths": [
-        ".github/workflows/android-mobile.yml",
         "desktop.py"
       ]
     },
@@ -4791,17 +4772,13 @@
     },
     {
       "source_commit": "c2d57f7f661152b6a8917e80ffe3b765a18517db",
-      "requires_full_update": true,
-      "full_update_paths": [
-        ".github/workflows/android-mobile.yml"
-      ]
+      "requires_full_update": false,
+      "full_update_paths": []
     },
     {
       "source_commit": "0ca6099a22f0438f91ed238443ff5d897789b7c7",
-      "requires_full_update": true,
-      "full_update_paths": [
-        ".github/workflows/android-mobile.yml"
-      ]
+      "requires_full_update": false,
+      "full_update_paths": []
     },
     {
       "source_commit": "38cba8b92469e2a857c141f48546f62afea135b8",
@@ -4817,10 +4794,8 @@
     },
     {
       "source_commit": "9e18eafcd0074d441834dd33d59228ea8e08e6bf",
-      "requires_full_update": true,
-      "full_update_paths": [
-        ".github/workflows/android-mobile.yml"
-      ]
+      "requires_full_update": false,
+      "full_update_paths": []
     },
     {
       "source_commit": "02dcbb567264fb004217cebe2f392e825ed44819",
@@ -4940,10 +4915,8 @@
     },
     {
       "source_commit": "09dde7a9d471164df93d007147ce310b3ceed561",
-      "requires_full_update": true,
-      "full_update_paths": [
-        ".github/workflows/android-mobile.yml"
-      ]
+      "requires_full_update": false,
+      "full_update_paths": []
     },
     {
       "source_commit": "bc18de545bf6df7120aad1cbc4da034a7df5f817",
@@ -4962,17 +4935,13 @@
     },
     {
       "source_commit": "f1d726ec01bf7f44316948014c3e14f3efacb09e",
-      "requires_full_update": true,
-      "full_update_paths": [
-        ".github/workflows/android-mobile.yml"
-      ]
+      "requires_full_update": false,
+      "full_update_paths": []
     },
     {
       "source_commit": "77a2a4629c614b92c43fcfbade6feb23fc878637",
-      "requires_full_update": true,
-      "full_update_paths": [
-        ".github/workflows/android-mobile.yml"
-      ]
+      "requires_full_update": false,
+      "full_update_paths": []
     },
     {
       "source_commit": "235186287149a3d283fc8ea17ce89ab7c5f6426e",
@@ -4983,10 +4952,8 @@
     },
     {
       "source_commit": "8b2f1e4b625f5f9e45be59e8d7e9af21e2e39cce",
-      "requires_full_update": true,
-      "full_update_paths": [
-        ".github/workflows/android-mobile.yml"
-      ]
+      "requires_full_update": false,
+      "full_update_paths": []
     },
     {
       "source_commit": "96361ddcd4b38cbdf99cb72dc3f0ff5e6bb7aae4",
@@ -4997,10 +4964,8 @@
     },
     {
       "source_commit": "654e903d1d784762bca23b975813998253bb0bf3",
-      "requires_full_update": true,
-      "full_update_paths": [
-        ".github/workflows/android-mobile.yml"
-      ]
+      "requires_full_update": false,
+      "full_update_paths": []
     },
     {
       "source_commit": "437f95670b15ca037c02655838e329536cea7ab8",
@@ -5192,10 +5157,8 @@
     },
     {
       "source_commit": "8a0c87155ab74bcbe79b3faf98ce91f7bed326fa",
-      "requires_full_update": true,
-      "full_update_paths": [
-        ".github/workflows/android-mobile.yml"
-      ]
+      "requires_full_update": false,
+      "full_update_paths": []
     },
     {
       "source_commit": "5306f165be9f8e63d27851b9a335efe2afcc5772",
@@ -5241,10 +5204,8 @@
     },
     {
       "source_commit": "1f2540cf05028750d5dc73770d69d3f0a72163e7",
-      "requires_full_update": true,
-      "full_update_paths": [
-        ".github/workflows/android-mobile.yml"
-      ]
+      "requires_full_update": false,
+      "full_update_paths": []
     },
     {
       "source_commit": "5be7dff941de6af1a3aad53f4b03452fdc8d6ca2",
@@ -5253,10 +5214,13 @@
     },
     {
       "source_commit": "6af78d9413b9c54a1e355649e017f07da0bb88bf",
-      "requires_full_update": true,
-      "full_update_paths": [
-        ".github/workflows/android-mobile.yml"
-      ]
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "027bce57034d7d94b383567bcd64104a65a68773",
+      "requires_full_update": false,
+      "full_update_paths": []
     }
   ]
 }
