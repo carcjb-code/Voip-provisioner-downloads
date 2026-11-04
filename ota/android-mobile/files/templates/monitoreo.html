@@ -4386,6 +4386,24 @@ function vpTrunkOpen(){
 
   }
 
+  async function vpTrunkReadJson(response, accion){
+    const raw=await response.text();
+    try{
+      return JSON.parse(raw);
+    }catch(parseError){
+      const detalle=String(raw||'')
+        .replace(/<[^>]*>/g,' ')
+        .replace(/\s+/g,' ')
+        .trim()
+        .slice(0,220);
+      throw new Error(
+        'El servidor devolvió una respuesta no válida al '+accion+
+        ' (HTTP '+response.status+'). '+
+        (detalle || 'No se recibió un mensaje de error.')
+      );
+    }
+  }
+
   async function vpTrunkCrear(){
 
     const perfil=vpTrunkPerfil();
@@ -4555,8 +4573,7 @@ function vpTrunkOpen(){
         );
 
 
-      const d=
-        await r.json();
+      const d=await vpTrunkReadJson(r,'procesar la troncal');
 
 
       if(
@@ -4656,7 +4673,7 @@ function vpTrunkOpen(){
         }
       );
 
-      const d=await r.json();
+      const d=await vpTrunkReadJson(r,'procesar la troncal');
 
       if(!r.ok || d.status!=='ok'){
         throw new Error(
@@ -4734,7 +4751,7 @@ function vpTrunkOpen(){
         }
       );
 
-      const d=await r.json();
+      const d=await vpTrunkReadJson(r,'procesar la troncal');
 
       if(!r.ok || (
         d.status!=='ok' &&

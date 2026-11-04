@@ -10044,6 +10044,137 @@ def api_monitoreo_troncal_agregar():
                     '. Rutas salientes generadas según el Dial Plan.'
             })
 
+        if tipo in ('SIP', 'OOH323'):
+            # SIP y OOH323 usan archivos custom; no regeneramos archivos
+            # administrados por Issabel ni reiniciamos Asterisk completo.
+            ok_include, salida_include, error_include = _vp_trunk_ensure_include(
+                perfil,
+                tipo
+            )
+            if not ok_include:
+                return jsonify({
+                    'status': 'error',
+                    'message': (
+                        'No se pudo preparar la inclusión de la configuración '
+                        '{}: {}'.format(tipo, error_include or salida_include or '')
+                    )
+                }), 500
+
+            contenido = _vp_trunk_config(
+                nombre,
+                descripcion,
+                tipo,
+                host,
+                port,
+                usuario,
+                clave
+            )
+            if not contenido:
+                return jsonify({
+                    'status': 'error',
+                    'message': 'No se pudo generar la configuración de la troncal {}.'.format(tipo)
+                }), 400
+
+            salida_escritura, error_escritura, codigo_escritura = _vp_trunk_write(
+                perfil,
+                tipo,
+                nombre,
+                contenido
+            )
+            if codigo_escritura != 0 or 'TRONCAL_ESCRITA' not in str(salida_escritura or ''):
+                detalle = str(error_escritura or salida_escritura or '').strip()
+                return jsonify({
+                    'status': 'error',
+                    'message': (
+                        'No se pudo escribir la configuración {}: {}'.format(
+                            tipo,
+                            detalle or 'Asterisk no confirmó la escritura.'
+                        )
+                    )
+                }), 500
+
+            registrada, salida_db, error_db = _vp_trunk_register_issabel(
+                perfil,
+                tipo,
+                nombre,
+                host,
+                port
+            )
+            if not registrada:
+                detalle = str(error_db or salida_db or '').strip()
+                logger.error(
+                    '[TRONCAL ADD] Configuración %s escrita pero no registrada en Issabel: %s',
+                    nombre,
+                    detalle
+                )
+                return jsonify({
+                    'status': 'error',
+                    'message': (
+                        'Se escribió la configuración de {} en el servidor, '
+                        'pero Issabel no confirmó el registro en su base de datos: {}'
+                    ).format(tipo, detalle or 'sin detalle')
+                }), 500
+
+            salida_reload, error_reload, codigo_reload = _vp_trunk_reload(
+                perfil,
+                tipo
+            )
+            if codigo_reload != 0:
+                detalle = str(error_reload or salida_reload or '').strip()
+                logger.warning(
+                    '[TRONCAL ADD] %s creada; no se pudo recargar %s: %s',
+                    nombre,
+                    tipo,
+                    detalle
+                )
+                return jsonify({
+                    'status': 'warning',
+                    'message': (
+                        'La troncal {} fue guardada y registrada en Issabel, '
+                        'pero no se pudo recargar el módulo {}: {}. '
+                        'Podés intentar Recargar desde la lista de troncales.'
+                    ).format(nombre, tipo, detalle or 'sin detalle')
+                })
+
+            verificada, salida_verify, error_verify = _vp_trunk_verify(
+                perfil,
+                tipo,
+                nombre
+            )
+            if not verificada:
+                detalle = str(error_verify or salida_verify or '').strip()
+                logger.warning(
+                    '[TRONCAL ADD] %s creada; no se pudo confirmar su presencia en Asterisk: %s',
+                    nombre,
+                    detalle
+                )
+                return jsonify({
+                    'status': 'warning',
+                    'message': (
+                        'La troncal {} fue guardada, registrada y se solicitó '
+                        'la recarga de {}, pero Asterisk no confirmó su presencia. '
+                        'Verificá el peer y el módulo OOH323. {}'
+                    ).format(nombre, tipo, detalle)
+                })
+
+            logger.info(
+                '[TRONCAL ADD] Troncal %s tipo=%s creada en perfil=%s host=%s puerto=%s',
+                nombre,
+                tipo,
+                perfil_nombre,
+                host,
+                port
+            )
+            return jsonify({
+                'status': 'ok',
+                'message': 'Troncal {} creada correctamente en {} ({}:{}).'.format(
+                    nombre,
+                    perfil_nombre,
+                    tipo,
+                    port
+                )
+            })
+
     except Exception as e:
         logger.exception(
             "[TRONCAL ADD] Error creando troncal"
