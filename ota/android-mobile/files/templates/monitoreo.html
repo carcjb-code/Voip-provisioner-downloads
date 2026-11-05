@@ -641,7 +641,7 @@ body {
 }
 </style>
 
-<style>.th-filtro{cursor:pointer;user-select:none}.th-filtro:hover{color:var(--text)}</style>
+<style>.th-filtro{cursor:pointer;user-select:none}.th-filtro:hover{color:var(--text)}.vp-sort-mini{display:inline-flex;align-items:center;justify-content:center;margin-left:5px;padding:0 3px;border:0;background:transparent;color:var(--muted);font:inherit;line-height:1;cursor:pointer}.vp-sort-mini:hover{color:var(--text)}</style>
 
 <style id="vp-admin-desvio-css">
 /* === VOIP PROVISIONER - ADMIN DESVIO INTERNOS V1 === */
@@ -1632,15 +1632,15 @@ h1.vp-page-title,
                 class="th-filtro"
                 title="Clic para filtrar: Todos / Online / Offline"
                 onclick="cambiarFiltroPeer()"
-              >Estado<span id="peerEstadoInd"> ▾</span></th>
+              >Estado<span id="peerEstadoInd"> ▾</span><button type="button" class="vp-sort-mini" title="Ordenar por estado" aria-label="Ordenar por estado" onclick="vpOrdenarEstadoClick(event)"><span id="peerEstadoSortInd">↕</span></button></th>
               <th
                 id="peerGrupoTh"
                 class="th-filtro"
                 title="Clic para ordenar"
                 onclick="vpCambiarOrdenPeer('grupo')"
               >Grupo de captura <span class="vp-orden-ind">↕</span></th>
-              <th>Clase de servicio</th>
-              <th>Ubicación</th>
+              <th id="vpClaseServicioTh" class="th-filtro" title="Clic para ordenar" onclick="vpCambiarOrdenPeer('claseServicio')">Clase de servicio <span class="vp-orden-ind">↕</span></th>
+              <th id="peerUbicacionTh" class="th-filtro" title="Clic para ordenar" onclick="vpCambiarOrdenPeer('ubicacion')">Ubicación <span class="vp-orden-ind">↕</span></th>
               <th
                 id="vpDesvioTh"
                 class="th-filtro"
@@ -5200,8 +5200,33 @@ function vpValorOrdenPeer(p,columna){
     return String(p && p.ip || '').trim();
   }
 
+  if(columna === 'estado'){
+    return peerEsOnline(p) ? 'Online' : 'Offline';
+  }
+
   if(columna === 'grupo'){
     return String(vpGruposCaptura[interno] || '').trim();
+  }
+
+  if(columna === 'claseServicio'){
+    const ids = Array.isArray(vpPermisosTroncales[interno])
+      ? vpPermisosTroncales[interno]
+      : [];
+    if(!ids.length){
+      return 'Sin restricción (todas)';
+    }
+    return ids.map(function(id){
+      const troncal = vpPermisosTroncalesCatalogo.find(function(x){
+        return String(x.id) === String(id);
+      });
+      return troncal
+        ? String(troncal.nombre || ('Troncal ' + id))
+        : ('Troncal ' + id);
+    }).join(', ').trim();
+  }
+
+  if(columna === 'ubicacion'){
+    return String(vpUbicacionesInternos[interno] || '').trim();
   }
 
   if(columna === 'desvio'){
@@ -5286,11 +5311,20 @@ function vpCambiarOrdenDesvio(){
   vpCambiarOrdenPeer('desvio');
 }
 
+function vpOrdenarEstadoClick(ev){
+  if(ev && ev.stopPropagation){
+    ev.stopPropagation();
+  }
+  vpCambiarOrdenPeer('estado');
+}
+
 function vpActualizarIndicadoresOrden(){
   const columnas = [
     ['peerInternoTh','Interno','interno'],
     ['peerIpTh','IP','ip'],
     ['peerGrupoTh','Grupo de captura','grupo'],
+    ['vpClaseServicioTh','Clase de servicio','claseServicio'],
+    ['peerUbicacionTh','Ubicación','ubicacion'],
     ['vpDesvioTh','Desvío','desvio']
   ];
 
@@ -5321,6 +5355,16 @@ function vpActualizarIndicadoresOrden(){
       flecha +
       '</span>';
   });
+
+  const estadoSort = document.getElementById('peerEstadoSortInd');
+  if(estadoSort){
+    estadoSort.textContent =
+      vpOrdenColumna === 'estado' && vpOrdenDireccion === 1
+        ? '↑'
+        : vpOrdenColumna === 'estado' && vpOrdenDireccion === -1
+          ? '↓'
+          : '↕';
+  }
 }
 
 var vpDesvioInternoActual = '';
