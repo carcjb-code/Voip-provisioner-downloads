@@ -16493,12 +16493,15 @@ def api_vp_call_restrictions_save_v2():
                 raise ValueError('La regla a editar ya no existe. Actualizá la pantalla.')
         else:
             rule_id = uuid.uuid4().hex
+        was_edit = found is not None
         if service_class:
             # Una extensión sólo debe pertenecer a una clase combinada. Al asignarla,
             # quitarla de clases previas y de permisos de troncal individuales.
             filtered_rules = []
             for old_rule in rules:
                 old_mode = str(old_rule.get('modo') or 'bloquear_prefijos')
+                if str(old_rule.get('id') or '') == rule_id:
+                    continue
                 if old_mode not in ('clase_servicio', 'permitir_troncales'):
                     filtered_rules.append(old_rule)
                     continue
@@ -16508,6 +16511,7 @@ def api_vp_call_restrictions_save_v2():
                     copy_rule['internos'] = remaining
                     filtered_rules.append(copy_rule)
             rules = filtered_rules
+            found = None
         rule = {'id': rule_id, 'modo': ('clase_servicio' if service_class else 'bloquear_prefijos'),
                 'nombre': nombre, 'prefijos': prefixes,
                 'internos': sorted(extensions, key=lambda x: (len(x), x)),
@@ -16519,7 +16523,7 @@ def api_vp_call_restrictions_save_v2():
             rules[found] = rule
         applied = _vp_call_restrictions_remote(perfil, {'mode': 'apply', 'reglas': rules}, timeout=90)
         backup_path = applied.get('backup', '') or ''
-        verb = 'Se creó' if found is None else 'Se actualizó'
+        verb = 'Se actualizó' if was_edit else 'Se creó'
         return jsonify({'ok': True, 'id': rule_id, 'mensaje': verb + ' la regla "' + nombre + '". Prefijos: ' + ', '.join(prefixes) + '. Internos afectados: ' + str(len(extensions)) + '.', 'respaldo': backup_path})
     except ValueError as exc:
         return jsonify({'ok': False, 'mensaje': str(exc), 'respaldo': backup_path}), 400

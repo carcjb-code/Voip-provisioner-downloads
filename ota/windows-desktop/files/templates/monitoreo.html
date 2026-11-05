@@ -9598,6 +9598,9 @@ async function vpRuteoV6GuardarRango(){
 #vpCallRestrictionsV2Modal .vpcr2-ext-tools{display:flex;gap:7px;flex-wrap:wrap;margin:7px 0}
 #vpCallRestrictionsV2Modal .vpcr2-ext-list{border:1px solid var(--line);border-radius:8px;max-height:220px;overflow:auto;padding:4px 8px}
 #vpCallRestrictionsV2Modal .vpcr2-ext{display:flex;align-items:center;gap:8px;padding:6px 2px;border-bottom:1px solid var(--line);font-size:12px;margin:0}
+#vpCallRestrictionsV2Modal .vpcr2-trunk-opt{display:flex;align-items:center;gap:8px;padding:6px 2px;border-bottom:1px solid var(--line);font-size:12px;margin:0}
+#vpCallRestrictionsV2Modal .vpcr2-trunk-opt span{font-weight:700;min-width:55px}
+#vpCallRestrictionsV2Modal .vpcr2-trunk-opt small{color:var(--muted);font-weight:400}
 #vpCallRestrictionsV2Modal .vpcr2-ext:last-child{border-bottom:0}#vpCallRestrictionsV2Modal .vpcr2-ext span{font-weight:700;min-width:55px}
 #vpCallRestrictionsV2Modal .vpcr2-ext small{color:var(--muted);font-weight:400}#vpCallRestrictionsV2Modal .vpcr2-error{margin-top:9px;color:var(--red);font-size:12px;white-space:pre-wrap}
 @media(max-width:620px){ #vpCallRestrictionsV2Modal .vpcr2-grid{grid-template-columns:1fr}#vpCallRestrictionsV2Modal .vpcr2-field.full{grid-column:auto}}
@@ -9715,7 +9718,7 @@ async function vpRuteoV6GuardarRango(){
       var ta=m.querySelector('#vpcr2Prefixes');if(ta)ta.placeholder='011\n0341\n15';
       var ph=m.querySelector('#vpcr2Prefixes').parentNode.querySelector('.vpcr2-help');if(ph)ph.textContent='Ingresá prefijos numéricos permitidos (uno por línea o separados por coma). Sólo podrán marcarse destinos que comiencen con alguno de estos prefijos.';
       var grid=m.querySelector('.vpcr2-grid');var internals=m.querySelector('#vpcr2Filter').closest('.vpcr2-field');
-      var selected=(o.troncales_ids||[]).map(String);var opts=(d.troncales||[]).map(function(t){return '<label class="vpcr2-ext"><input type="checkbox" data-vpcr2-trunk="'+esc(t.id)+'"'+(selected.indexOf(String(t.id))>=0?' checked':'')+'><span>'+esc(t.nombre)+'</span><small>ID '+esc(t.id)+'</small></label>';}).join('');
+      var selected=(o.troncales_ids||[]).map(String);var opts=(d.troncales||[]).map(function(t){return '<label class="vpcr2-trunk-opt"><input type="checkbox" data-vpcr2-trunk="'+esc(t.id)+'"'+(selected.indexOf(String(t.id))>=0?' checked':'')+'><span>'+esc(t.nombre)+'</span><small>ID '+esc(t.id)+'</small></label>';}).join('');
       var field=document.createElement('div');field.className='vpcr2-field full';field.innerHTML='<label>Troncales permitidas</label><div class="vpcr2-ext-list" style="max-height:180px">'+(opts||'<div class="vpcr2-help">No se encontraron troncales.</div>')+'</div><div class="vpcr2-help">El interno sólo podrá cursar llamadas por las troncales seleccionadas.</div>';
       if(internals)grid.insertBefore(field,internals);
       ['#vpcr2Scope','#vpcr2TrunkWrap','#vpcr2RouteWrap'].forEach(function(sel){var el=m.querySelector(sel);if(el)el.closest('.vpcr2-field').style.display='none';});
