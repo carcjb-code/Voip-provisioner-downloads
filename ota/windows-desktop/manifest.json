@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "platform": "windows-desktop",
-  "source_commit": "e4f459874e4138a92ce5525305e786a624e2b6a3",
-  "updated_at": "2026-11-05T21:07:14.239609+00:00",
+  "source_commit": "d5183d7b5ab39f2dd516bccfc63acc1efada607b",
+  "updated_at": "2026-11-05T21:15:13.170465+00:00",
   "files": [
     {
       "path": "app/ami_client.py",
@@ -71,8 +71,8 @@
     },
     {
       "path": "app/routes.py",
-      "sha256": "7216873b47b365046cbdc06dd78fd5cb59ae1be773b469f9117a692fb2c7ac44",
-      "size": 643666
+      "sha256": "b3c4025640e80d17f5d30ac0e35634f94ac717c774de1bf36a5950500defd109",
+      "size": 643665
     },
     {
       "path": "app/ssh_client.py",
@@ -5332,6 +5332,11 @@
     },
     {
       "source_commit": "e4f459874e4138a92ce5525305e786a624e2b6a3",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "d5183d7b5ab39f2dd516bccfc63acc1efada607b",
       "requires_full_update": false,
       "full_update_paths": []
     }

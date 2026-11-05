@@ -16985,4 +16985,3 @@ def api_vp_issabel_native_cos_read_v1():
         logger.exception('[COS NATIVO ISSABEL] Error leyendo clases')
         return jsonify({'ok': False, 'mensaje': 'No se pudieron leer las clases nativas de Issabel: ' + str(exc)[:700]}), 500
 # FIN VP_ISSABEL_NATIVE_COS_READ_API_V1
-
