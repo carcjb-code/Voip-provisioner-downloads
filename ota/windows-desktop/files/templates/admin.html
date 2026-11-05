@@ -1,0 +1,3069 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Configuración - VoIP Provisioner</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}body{background:#f4f6f9;color:#333;padding:20px}.container{max-width:1100px;margin:0 auto;background:#fff;padding:25px;border-radius:10px;box-shadow:0 2px 10px rgba(0,0,0,.1)}.header{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:nowrap;margin-bottom:20px}.header h1{color:#4da6ff;font-size:24px;line-height:1.2;font-weight:700;letter-spacing:-.35px;margin:0;flex:0 1 auto;min-width:0}.header .vp-menu-back{flex:0 0 auto;min-height:34px}.back-link{color:#4da6ff;text-decoration:none;font-size:14px}.tabs{display:flex;gap:8px;margin-bottom:15px;border-bottom:2px solid #ddd;padding-bottom:8px;flex-wrap:wrap}.tab{padding:10px 18px;cursor:pointer;border:0;background:#eee;border-radius:6px 6px 0 0;font-weight:600}.tab:hover{background:#ddd}.tab.active{background:#4da6ff;color:#fff}.subtabs{display:flex;gap:7px;margin-bottom:20px;padding:8px;background:#f1f3f5;border-radius:8px;flex-wrap:wrap}.subtab{padding:8px 14px;border:0;background:transparent;border-radius:6px;cursor:pointer;font-weight:600;color:#555}.subtab.active{background:#fff;color:#4da6ff;box-shadow:0 1px 4px rgba(0,0,0,.12)}.panel{display:none}.panel.active{display:block}.subpanel{display:none}.subpanel.active{display:block}.form-group{margin-bottom:15px}label{display:block;margin-bottom:5px;font-weight:500}input,textarea,select{width:100%;padding:10px;border:1px solid #ddd;border-radius:6px;font-size:14px}textarea{min-height:250px;font-family:monospace}.btn{padding:10px 20px;border:0;border-radius:6px;cursor:pointer;color:#fff;font-weight:600;margin-right:8px;transition:.2s}.btn:disabled{opacity:.6;cursor:not-allowed}.btn-primary{background:#4da6ff}.btn-danger{background:#e74c3c}.btn-success{background:#27ae60}.btn-warning{background:#f39c12}.btn-secondary{background:#95a5a6}.btn-sm{padding:6px 12px;font-size:13px}.item{background:#f8f9fa;padding:10px;margin-bottom:8px;border-radius:6px;display:flex;justify-content:space-between;align-items:center;border:1px solid #eee;gap:10px}.backup-item-info{flex:1}.backup-item-info b{color:#2c3e50}.backup-item-info small{color:#7f8c8d;display:block;margin-top:3px}.backup-actions{display:flex;gap:5px;flex-wrap:wrap}.empty-state{text-align:center;color:#999;padding:40px 20px}.empty-state span{font-size:48px;display:block;margin-bottom:10px}.alert{padding:12px;border-radius:6px;margin-bottom:15px;display:none}.alert-ok{background:#d4edda;color:#155724;border:1px solid #c3e6cb}.alert-err{background:#f8d7da;color:#721c24;border:1px solid #f5c6cb}.info-box{background:#e8f4fd;border-left:4px solid #4da6ff;padding:12px;margin:15px 0;border-radius:4px;font-size:13px}.sched-box{background:#f8f9fa;padding:15px;border-radius:8px;border:1px solid #eee;margin-bottom:15px}.sched-info{background:#e8f5e9;border-left:4px solid #27ae60;padding:10px;margin:10px 0;font-size:13px;border-radius:4px}.backup-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-bottom:15px}.grid-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}.color-preview{width:40px;height:40px;border-radius:6px;border:1px solid #ddd;display:inline-block;vertical-align:middle;margin-left:10px}.spinner{display:inline-block;width:14px;height:14px;border:2px solid #fff;border-top-color:transparent;border-radius:50%;animation:spin .8s linear infinite;margin-right:5px;vertical-align:middle}@keyframes spin{to{transform:rotate(360deg)}}.card-danger{margin-top:20px;padding:18px;border:1px solid #e74c3c;border-radius:8px;background:#fffafa}.card-warning{margin-top:20px;padding:18px;border:1px solid #f1c40f;border-radius:8px;background:#fffdf2}.card-neutral{margin-top:20px;padding:18px;border:1px solid #dcdcdc;border-radius:8px;background:#fafafa}.modal-backdrop{display:none;position:fixed;z-index:9999;inset:0;background:rgba(0,0,0,.5);align-items:center;justify-content:center;padding:20px}.modal-backdrop.show{display:flex}.modal{width:100%;max-width:440px;background:#fff;border-radius:10px;padding:22px;box-shadow:0 10px 35px rgba(0,0,0,.25)}.modal h3{margin-bottom:10px}.modal p{color:#666;line-height:1.45;margin-bottom:15px}.modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:15px}.modal-actions .btn{margin:0}@media(max-width:800px){.grid-3,.grid-2{grid-template-columns:1fr}}@media(max-width:600px){body{padding:8px}.container{padding:15px}.header{align-items:center;gap:8px}.header h1{font-size:18px}.header .vp-menu-back{font-size:12px;padding:7px 8px}.tab{flex:1}.subtab{flex:1}}
+</style>
+
+
+
+
+<style id="modal-password-perfil-tpl">
+#tplPass { display:none !important; }
+#perfPassAdmin { display:block !important; visibility:visible !important; opacity:1 !important; }
+#perfPasswordAdmin { display:block !important; }
+</style>
+
+
+<script id="vp-global-theme-init">
+(function () {
+    var modo = "";
+    try {
+        var parametro = new URLSearchParams(window.location.search).get("vp_theme");
+        if (parametro === "claro" || parametro === "oscuro") {
+            modo = parametro;
+            localStorage.setItem("tema_voip", modo);
+            localStorage.setItem("monitoreo-theme", modo === "claro" ? "light" : "dark");
+        } else {
+            modo = localStorage.getItem("tema_voip") || "";
+        }
+    } catch (e) {}
+    if (modo !== "claro" && modo !== "oscuro") modo = "claro";
+    document.documentElement.setAttribute("data-theme", modo);
+    document.documentElement.style.colorScheme = modo === "oscuro" ? "dark" : "light";
+})();
+</script>
+<style id="vp-global-theme-styles">
+html[data-theme="oscuro"] body {
+    background: #0d1421 !important;
+    color: #e4eaf3 !important;
+}
+html[data-theme="oscuro"] .container,
+html[data-theme="oscuro"] .modal {
+    background: #172133 !important;
+    color: #e4eaf3 !important;
+    border-color: #354157 !important;
+    box-shadow: 0 8px 26px rgba(0,0,0,.28) !important;
+}
+html[data-theme="oscuro"] .tabs { border-color: #354157 !important; }
+html[data-theme="oscuro"] .tab {
+    background: #27334a !important;
+    color: #d4ddec !important;
+}
+html[data-theme="oscuro"] .tab:hover { background: #33435d !important; }
+html[data-theme="oscuro"] .tab.active {
+    background: #4da6ff !important;
+    color: #fff !important;
+}
+html[data-theme="oscuro"] .subtabs {
+    background: #202b3f !important;
+}
+html[data-theme="oscuro"] .subtab { color: #c4cede !important; }
+html[data-theme="oscuro"] .subtab.active {
+    background: #303e55 !important;
+    color: #86c1ff !important;
+    box-shadow: 0 1px 5px rgba(0,0,0,.25) !important;
+}
+html[data-theme="oscuro"] input,
+html[data-theme="oscuro"] textarea,
+html[data-theme="oscuro"] select {
+    background-color: #0f1726 !important;
+    color: #e5ebf5 !important;
+    border-color: #3b4860 !important;
+}
+html[data-theme="oscuro"] input::placeholder,
+html[data-theme="oscuro"] textarea::placeholder { color: #9aa8bf !important; }
+html[data-theme="oscuro"] .item,
+html[data-theme="oscuro"] .sched-box,
+html[data-theme="oscuro"] .card-neutral {
+    background: #202b3e !important;
+    border-color: #354157 !important;
+    color: #e1e7f0 !important;
+}
+html[data-theme="oscuro"] .backup-item-info b,
+html[data-theme="oscuro"] .modal h3,
+html[data-theme="oscuro"] h2,
+html[data-theme="oscuro"] h3,
+html[data-theme="oscuro"] h4,
+html[data-theme="oscuro"] label,
+html[data-theme="oscuro"] p,
+html[data-theme="oscuro"] small { color: #e0e7f2; }
+html[data-theme="oscuro"] .back-link { color: #82bdff !important; }
+html[data-theme="oscuro"] .info-box {
+    background: #1c304a !important;
+    border-left-color: #4da6ff !important;
+    color: #dae6f5 !important;
+}
+html[data-theme="oscuro"] .sched-info {
+    background: #18362f !important;
+    border-left-color: #35bb82 !important;
+    color: #d2f5e7 !important;
+}
+html[data-theme="oscuro"] .card-danger {
+    background: #351f2a !important;
+    border-color: #a94b58 !important;
+    color: #f5dce0 !important;
+}
+html[data-theme="oscuro"] .card-warning {
+    background: #382f1b !important;
+    border-color: #a98736 !important;
+    color: #f7edcf !important;
+}
+html[data-theme="oscuro"] .empty-state { color: #9ba7bb !important; }
+html[data-theme="oscuro"] .backup-item-info small,
+html[data-theme="oscuro"] .modal p { color: #aebbd0 !important; }
+html[data-theme="oscuro"] .modal-backdrop { background: rgba(0,0,0,.72) !important; }
+html[data-theme="oscuro"] table,
+html[data-theme="oscuro"] th,
+html[data-theme="oscuro"] td {
+    color: #dfe6f1 !important;
+    border-color: #354157 !important;
+}
+html[data-theme="oscuro"] tr[style*="background:#f8f9fa"],
+html[data-theme="oscuro"] tr[style*="background: #f8f9fa"],
+html[data-theme="oscuro"] [style*="background:#fafafa"],
+html[data-theme="oscuro"] [style*="background: #fafafa"],
+html[data-theme="oscuro"] [style*="background:#f4f6f8"],
+html[data-theme="oscuro"] [style*="background: #f4f6f8"],
+html[data-theme="oscuro"] [style*="background:#fff"],
+html[data-theme="oscuro"] [style*="background: #fff"] {
+    background-color: #202b3e !important;
+}
+html[data-theme="oscuro"] code,
+html[data-theme="oscuro"] pre {
+    color: #dfe6f1;
+}
+</style>
+
+<style id="mac-vendor-theme-styles">
+.mac-vendor-options[hidden]{display:none!important}
+.mac-vendor-options{margin-top:14px;padding:12px;border:1px solid #dce3ea;border-radius:8px;background:#f7f9fc}
+.mac-vendor-choice{padding:12px;border:1px solid #dce3ea;border-radius:8px;background:#fff;margin-top:10px}
+.mac-vendor-choice:first-child{margin-top:0}
+.mac-vendor-choice h4{margin:0 0 8px;color:#2c3e50}
+.mac-vendor-choice p{margin:8px 0 12px;font-size:13px;line-height:1.45}
+.mac-vendor-choice-links{display:flex;gap:7px;flex-wrap:wrap;margin:8px 0 12px}
+.mac-vendor-choice-links a{color:#287fce;font-size:13px}
+.mac-vendor-file-grid{margin-bottom:12px}
+.mac-vendor-help{margin-top:7px;font-size:12px;color:#666;line-height:1.4}
+html[data-theme="claro"] .vp-menu-back{background:#fff!important;color:#287fce!important;border-color:#d0d7e2!important}
+html[data-theme="oscuro"] .vp-menu-back{background:#202b3e!important;color:#86c1ff!important;border-color:#354157!important}
+html[data-theme="oscuro"] .mac-vendor-options{background:#151f31!important;border-color:#354157!important;color:#e1e7f0!important}
+html[data-theme="oscuro"] .mac-vendor-choice{background:#202b3e!important;border-color:#354157!important;color:#e1e7f0!important}
+html[data-theme="oscuro"] .mac-vendor-choice h4{color:#e0e7f2!important}
+html[data-theme="oscuro"] .mac-vendor-choice p{color:#cbd6e6!important}
+html[data-theme="oscuro"] .mac-vendor-choice-links a{color:#86c1ff!important}
+html[data-theme="oscuro"] .mac-vendor-help{color:#aebbd0!important}
+@media(max-width:600px){.mac-vendor-choice{padding:10px}.mac-vendor-choice .btn{margin-right:0}.mac-vendor-file-grid{grid-template-columns:1fr}}
+</style>
+
+<style id="vp-common-menu-back">
+.vp-menu-back{display:none;align-items:center;justify-content:center;gap:6px;background:var(--card-bg, var(--panel2, #fff));color:var(--blue, #4da6ff);border:1px solid var(--border, var(--line, #d0d7e2));border-radius:8px;padding:8px 12px;cursor:pointer;font-size:13px;font-weight:600;line-height:1.25;text-decoration:none;white-space:nowrap}
+.vp-menu-back:hover{border-color:var(--blue, #4da6ff);color:var(--blue, #4da6ff)}
+</style>
+<script id="vp-common-menu-back-script">
+function vpEsShellEscritorio(){
+  try{return localStorage.getItem('vpDesktopShell')==='1';}catch(e){return false;}
+}
+function vpConfigurarBotonMenuPrincipal(){
+  var boton=document.getElementById('btnVolverMenuPrincipal');
+  var android=window.VoipProvisionerAndroid &&
+      typeof window.VoipProvisionerAndroid.volverMenuPrincipal==='function';
+  if(boton && (android || vpEsShellEscritorio())) boton.style.display='inline-flex';
+}
+function vpVolverMenuPrincipal(){
+  try{
+    if(window.VoipProvisionerAndroid &&
+       typeof window.VoipProvisionerAndroid.volverMenuPrincipal==='function'){
+      window.VoipProvisionerAndroid.volverMenuPrincipal();return;
+    }
+    if(vpEsShellEscritorio()) window.location.href='/__desktop_dashboard';
+  }catch(e){console.error('No se pudo volver al menú principal:',e);}
+}
+document.addEventListener('DOMContentLoaded',vpConfigurarBotonMenuPrincipal);
+</script>
+<style id="vp-page-title-unified-v4">
+/* Encabezados unificados */
+.vp-page-title,
+h1.vp-page-title,
+.header h1.vp-page-title,
+.title h1.vp-page-title,
+.titulo-principal.vp-page-title{
+ display:block!important;
+ font-family:"Segoe UI",Arial,sans-serif!important;
+ font-size:24px!important;
+ line-height:1.2!important;
+ font-weight:700!important;
+ letter-spacing:-.35px!important;
+ color:#4da6ff!important;
+ margin:0!important;
+ text-align:left!important;
+ text-transform:none!important;
+}
+.titulo-container{align-items:flex-start!important;text-align:left!important}
+.title .live-dot{display:none!important}
+@media(max-width:560px){
+ .vp-page-title,h1.vp-page-title,.header h1.vp-page-title,.title h1.vp-page-title,.titulo-principal.vp-page-title{font-size:20px!important}
+}
+</style>
+</head>
+<body>
+<div class="container"><div class="header"><h1 class="vp-page-title">Configuración</h1><button type="button" id="btnVolverMenuPrincipal" class="vp-menu-back" onclick="vpVolverMenuPrincipal()" title="Volver al menú principal">← Menú principal</button></div><div id="alertBox" class="alert"></div>
+<div class="tabs"><button class="tab active" onclick="showMain('servidores')">🖥️ Servidores</button><button class="tab" onclick="showMain('sistemas')">🛠️ Sistemas</button><button class="tab" onclick="showMain('seguridad')">🔐 Seguridad</button><button class="tab" onclick="showMain('mantenimiento')">☁️ Mantenimiento</button></div>
+<div id="servidores" class="panel active"><div class="subtabs"><button class="subtab active" onclick="showSub('servidores','ssh')">🖥️ Servidores SSH</button><button class="subtab" onclick="showSub('servidores','plantillas')">📱 Plantillas</button><button class="subtab" onclick="showSub('servidores','ubicaciones')">📍 Ubicaciones</button></div>
+<div id="ssh" class="subpanel active"><h2>🖥️ Gestión de Servidores SSH</h2><div class="info-box">Administra las conexiones a los servidores Asterisk / Issabel. Los perfiles creados aquí aparecerán automáticamente en el Provisionador.</div><h3 style="margin-bottom:10px">Servidores Registrados</h3><div id="listaPerfilesAdmin"><div class="empty-state"><span>🖥️</span>Cargando servidores...</div></div><hr style="margin:20px 0;border-color:#eee"><h3 id="tituloFormPerfil" style="margin-bottom:10px">➕ Agregar / Editar Servidor SSH</h3><input type="hidden" id="perfEditOriginal"><div class="grid-2"><div class="form-group"><label>Nombre del Perfil</label><input id="perfNombreAdmin" placeholder="Ej: PBX Central"></div><div class="form-group"><label>Host IP / Dominio</label><input id="perfHostAdmin" placeholder="192.168.1.100"></div></div><div class="grid-2"><div class="form-group"><label>Puerto SSH</label><input id="perfPuertoAdmin" value="22"></div><div class="form-group"><label>Usuario SSH</label><input id="perfUsuarioAdmin" placeholder="root"></div></div><div class="grid-2"><div class="form-group"><label>Contraseña SSH</label><input type="password" id="perfPasswordAdmin" placeholder="Dejar en blanco para mantener la actual"></div><div class="form-group"><label>Ruta TFTP / Remota</label><input id="perfRutaAdmin" value="/tftpboot"></div></div><div class="form-group"><label>📞 Dial Plan / Internos alcanzables</label><textarea id="perfDialplanAdmin" placeholder="Un patrón por línea&#10;Ej:&#10;1000-1999&#10;2XXX&#10;9XXXXXXX" style="width:100%;min-height:110px;resize:vertical;font-family:monospace;"></textarea><small style="display:block;margin-top:6px;color:#777;">Ingresá un rango o comodín por línea. Ejemplos: 1000-1999, 2XXX, 9XXXXXXX, 0ZXXXXXXXX.</small></div><div class="form-group"><label>🔐 Contraseña Admin (requerida para guardar)</label><input type="password" id="perfPassAdmin"></div><button class="btn btn-success" onclick="savePerfilAdmin()">💾 Guardar Servidor</button><button class="btn btn-secondary" onclick="clearPerfilAdmin()">🗑️ Cancelar / Limpiar</button></div>
+<div id="plantillas" class="subpanel"><h2>📱 Gestión de Plantillas de Teléfonos</h2><div class="info-box">Variables: <code>{interno}</code>, <code>{servidor_sip}</code>, <code>{password}</code>, <code>{base_url}</code></div><div id="listaPlantillas"></div><hr style="margin:20px 0;border-color:#eee"><h3 style="margin-bottom:10px">Agregar / Editar Plantilla</h3><div class="form-group"><label>Nombre del Modelo</label><input id="tplNombre"></div><div class="form-group"><label>Tipo de Plantilla</label><select id="tplTipo"><option value="CFG">CFG</option><option value="XML">XML</option></select></div><div class="form-group"><label>Contenido de la Plantilla</label><textarea id="tplContenido"></textarea></div><button class="btn btn-success" onclick="saveTpl()">💾 Guardar</button><button class="btn btn-primary" onclick="clearTpl()">🗑️ Limpiar</button></div>
+<div id="ubicaciones" class="subpanel"><h2>📍 Edificios, Pisos y Dependencias</h2><div class="info-box">Los catálogos se guardan <b>por perfil de servidor</b>. Al seleccionar ese servidor en el Provisionador, solamente aparecerán sus opciones.</div><div class="form-group"><label>🌐 Perfil del servidor</label><select id="ubicPerfil" onchange="cargarCatalogoUbicaciones()"><option value="">-- Selecciona un perfil --</option></select></div><div id="ubicEditor" style="display:none"><div class="grid-3"><div class="form-group"><label>🏢 Edificios</label><div style="display:flex;gap:6px"><input id="nuevoEdificio" placeholder="Agregar edificio"><button class="btn btn-success btn-sm" onclick="agregarCatalogo('edificio')">➕</button></div><div id="listaEdificiosAdmin" style="margin-top:10px"></div></div><div class="form-group"><label>🏢 Pisos</label><div style="display:flex;gap:6px"><input id="nuevoPiso" placeholder="Agregar piso"><button class="btn btn-success btn-sm" onclick="agregarCatalogo('piso')">➕</button></div><div id="listaPisosAdmin" style="margin-top:10px"></div></div><div class="form-group"><label>⚖️ Dependencias</label><div style="display:flex;gap:6px"><input id="nuevoDependencia" placeholder="Agregar dependencia"><button class="btn btn-success btn-sm" onclick="agregarCatalogo('dependencia')">➕</button></div><div id="listaDependenciasAdmin" style="margin-top:10px"></div></div></div><div class="form-group"><label>🔐 Contraseña Admin</label><input type="password" id="ubicPass"></div><button class="btn btn-primary" onclick="guardarCatalogoUbicaciones()">💾 Guardar catálogo</button><button class="btn btn-secondary" onclick="cargarCatalogoUbicaciones()">🔄 Recargar</button></div></div></div>
+<div id="sistemas" class="panel"><div class="subtabs"><button class="subtab" onclick="showSub('sistemas','terminal')">💻 Terminal</button><button class="subtab" onclick="showSub('sistemas','backup')">💾 Backup</button></div>
+
+<div id="terminal" class="subpanel">
+
+<!-- VOIP-EXPLORER-SSH -->
+
+<h2>💻 Terminal SSH Web</h2>
+
+<div class="info-box" style="background:#fff3cd;border-left-color:#f39c12">
+<b>⚠️ Seguridad:</b> La contraseña SSH se utiliza únicamente para establecer la conexión.
+</div>
+
+<div class="grid-2">
+
+<div class="form-group">
+<label>Seleccionar Servidor</label>
+<select id="termPerfil" onchange="explorerReset()">
+<option value="">-- Cargando... --</option>
+</select>
+</div>
+
+<div class="form-group">
+<label>Contraseña SSH</label>
+<input type="password" id="termPassword" autocomplete="off"
+       onkeydown="if(event.key==='Enter') abrirTerminal()">
+</div>
+
+</div>
+
+<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px">
+
+<button class="btn btn-primary" onclick="abrirTerminal()">
+🚀 Abrir Terminal
+</button>
+
+<button class="btn btn-success" onclick="explorerAbrir()">
+📁 Abrir Explorador SSH
+</button>
+
+</div>
+
+<div id="sshExplorer"
+     style="display:none;border:1px solid #d8dde3;border-radius:10px;background:#fff;overflow:hidden">
+
+<div style="padding:12px 15px;background:#f4f6f8;border-bottom:1px solid #ddd">
+
+<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+
+<button class="btn btn-secondary btn-sm"
+        onclick="explorerSubirNivel()">
+⬆️
+</button>
+
+<button class="btn btn-secondary btn-sm"
+        onclick="explorerIrRaiz()">
+🏠
+</button>
+
+<button class="btn btn-secondary btn-sm"
+        onclick="explorerCargar()">
+🔄
+</button>
+
+<div id="explorerRuta"
+     style="flex:1;min-width:250px;background:#fff;border:1px solid #ddd;border-radius:6px;padding:8px 10px;font-family:monospace">
+/
+</div>
+
+<button class="btn btn-success btn-sm"
+        onclick="explorerNuevaCarpeta()">
+➕ Carpeta
+</button>
+
+<button class="btn btn-primary btn-sm"
+        onclick="explorerSubirArchivo()">
+⬆️ Subir
+</button>
+
+<input type="file"
+       id="explorerFileInput"
+       style="display:none"
+       onchange="explorerProcesarUpload(this)">
+
+</div>
+
+</div>
+
+<div style="padding:10px 12px;background:#fafafa;border-bottom:1px solid #eee">
+
+<div id="explorerEstado"
+     style="font-size:13px;color:#666">
+Seleccione un servidor y abra el explorador.
+</div>
+
+</div>
+
+<div style="overflow:auto;max-height:480px">
+
+<table style="width:100%;border-collapse:collapse;font-size:14px">
+
+<thead>
+<tr style="background:#f8f9fa;border-bottom:1px solid #ddd">
+
+<th style="text-align:left;padding:10px;width:45%">Nombre</th>
+<th style="text-align:left;padding:10px;width:15%">Tipo</th>
+<th style="text-align:right;padding:10px;width:15%">Tamaño</th>
+<th style="text-align:left;padding:10px;width:15%">Permisos</th>
+<th style="text-align:center;padding:10px;width:10%">Acciones</th>
+
+</tr>
+</thead>
+
+<tbody id="explorerLista">
+
+<tr>
+<td colspan="5"
+    style="padding:30px;text-align:center;color:#999">
+📁 Explorador sin iniciar
+</td>
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+<div id="explorerEditor"
+     style="display:none;margin-top:15px;border:1px solid #d8dde3;border-radius:10px;overflow:hidden">
+
+<div style="padding:10px 12px;background:#f4f6f8;border-bottom:1px solid #ddd;display:flex;align-items:center;gap:8px">
+
+<b style="flex:1">✏️ Editor de archivo</b>
+
+<span id="explorerEditorPath"
+      style="font-family:monospace;font-size:12px;color:#666">
+</span>
+
+<button class="btn btn-success btn-sm"
+        onclick="explorerGuardarArchivo()">
+💾 Guardar
+</button>
+
+<button class="btn btn-secondary btn-sm"
+        onclick="explorerCerrarEditor()">
+✖️ Cerrar
+</button>
+
+</div>
+
+<textarea id="explorerEditorText"
+          spellcheck="false"
+          style="width:100%;height:430px;border:0;border-radius:0;padding:14px;font-family:monospace;font-size:13px;resize:vertical"></textarea>
+
+</div>
+
+</div>
+<div id="backup" class="subpanel"><div class="backup-header"><h2>💾 Backups del Sistema</h2><button class="btn btn-success" onclick="crearBackup()" id="btnCrearBackup">➕ Crear Backup Ahora</button></div><div class="info-box"><b>🎯 Opciones de Backup</b><br>Los backups de Issabel incluyen: <b>DB asterisk</b>, <b>/etc/asterisk</b>, sonidos y grabaciones.</div><div class="sched-box"><div class="grid-2"><div class="form-group"><label>📦 ¿Qué respaldar?</label><select id="backupTipo" onchange="actualizarOpcionesBackup()"><option value="provisioner">🖥️ VoIP Provisioner</option><option value="issabel">☎️ Issabel / Asterisk</option></select></div><div class="form-group" id="grupoPerfilBackup"><label>🌐 Servidor Issabel</label><select id="backupPerfil" onchange="actualizarUbicacionInfo()"><option value="">-- Selecciona --</option></select></div></div><div class="grid-2" id="grupoDestinoBackup"><div class="form-group"><label>📍 ¿Dónde guardar?</label><select id="backupDestino" onchange="actualizarUbicacionInfo()"><option value="local">💾 En este servidor (Provisioner)</option><option value="remoto">🌐 En el servidor remoto (Issabel)</option></select></div><div class="form-group"><label>ℹ️ Ubicación</label><input id="backupUbicacionInfo" readonly></div></div></div><h3 style="margin:20px 0 10px">Backups disponibles</h3><div id="listaBackups"><div class="empty-state"><span>📦</span>Cargando...</div></div><hr style="margin:30px 0;border-color:#eee"><h3 style="margin-bottom:10px">📥 Restaurar desde Backup</h3><div class="info-box" style="background:#fff3cd;border-left-color:#f39c12"><b>⚠️ Advertencia:</b> Restaurar reemplazará la configuración actual.</div><div class="form-group"><label>Subir archivo (.tar.gz)</label><input type="file" id="fileRestore" accept=".tar.gz,.tgz" style="padding:8px"></div><button class="btn btn-warning" onclick="restaurarBackup()">🔐 Restaurar</button><hr style="margin:30px 0;border-color:#eee"><h3 style="margin-bottom:10px">⏰ Backup Automático Programado</h3><div class="info-box" style="background:#e8f5e9;border-left-color:#27ae60"><b>Automatiza tus backups</b> con las mismas opciones que el manual.</div><div id="schedEstadoInfo" class="sched-info" style="display:none"></div><div class="sched-box"><h4 style="margin-bottom:10px">📋 Configuración del Backup Programado</h4><div class="grid-2"><div class="form-group"><label>📦 ¿Qué respaldar?</label><select id="schedTipo" onchange="actualizarOpcionesSched()"><option value="provisioner">🖥️ VoIP Provisioner</option><option value="issabel">☎️ Issabel / Asterisk</option></select></div><div class="form-group" id="grupoPerfilSched"><label>🌐 Servidor Issabel</label><select id="schedPerfil"><option value="">-- Selecciona --</option></select></div></div><div class="grid-2"><div class="form-group" id="grupoDestinoSched"><label>📍 ¿Dónde guardar?</label><select id="schedDestino"><option value="local">💾 En este servidor</option><option value="remoto">🌐 En el servidor remoto</option></select></div><div class="form-group"><label>🔁 Frecuencia</label><select id="schedFrecuencia"><option value="diario">📅 Diario</option><option value="semanal">📆 Semanal (Lunes)</option><option value="mensual">🗓️ Mensual (Día 1)</option></select></div></div><div class="grid-2"><div class="form-group"><label>🕐 Hora de ejecución</label><input type="time" id="schedHora" value="02:00"></div><div class="form-group"><label>🗑️ Retención (días)</label><input type="number" id="schedRetencion" value="30" min="1" max="365"></div></div><div class="form-group"><label>⚡ Estado</label><select id="schedActivo"><option value="false">❌ Desactivado</option><option value="true">✅ Activado</option></select></div></div><button class="btn btn-success" onclick="guardarProgramacion()">🔐 Guardar Programación</button><button class="btn btn-secondary" onclick="ejecutarAhora()">🔐 Ejecutar Ahora (prueba)</button></div></div>
+
+<div id="mantenimiento" class="panel">
+    <h2 style="margin-bottom:15px;">☁️ Mantenimiento</h2>
+
+    <div class="info-box">
+        Desde aquí podés realizar tareas administrativas del
+        VoIP Provisioner que requieren la contraseña de administrador.
+    </div>
+
+
+    <div class="card-neutral" id="appUpdateCard" style="display:none;">
+        <h3>🔄 Actualizar la aplicación desde el repositorio público</h3>
+        <p id="appUpdateDescription" style="margin:10px 0 12px;">
+            Busca automáticamente las novedades publicadas y descarga solamente los archivos compatibles que cambiaron.
+            <b>Los servidores, contraseñas, ubicaciones y datos guardados se conservan.</b>
+        </p>
+        <div id="appUpdateBuildInfo" style="font-size:12px;color:#666;margin-bottom:12px;">Comprobando estado...</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;">
+            <button type="button" class="btn btn-primary" id="btnAppUpdateCheck" onclick="comprobarActualizacionApp()">
+                🔎 Buscar actualizaciones
+            </button>
+            <button type="button" class="btn btn-success" id="btnAppUpdateApply" onclick="aplicarActualizacionApp()" style="display:none;">
+                ⬇️ Descargar y aplicar cambios
+            </button>
+        </div>
+        <div id="desktopAppUpdateActions" style="display:none;gap:8px;flex-wrap:wrap;margin:12px 0;">
+            <a class="btn btn-success" href="https://github.com/carcjb-code/Voip-provisioner-downloads/releases/download/preview-current/VoIPProvisioner-Setup-Windows-64-bit.exe">⬇️ Instalador Windows 64 bits</a>
+            <a class="btn btn-primary" href="https://github.com/carcjb-code/Voip-provisioner-downloads/releases/download/preview-current/VoIPProvisioner-Setup-Windows-32-bit.exe">⬇️ Instalador Windows 32 bits</a>
+            <a class="btn btn-secondary" href="https://github.com/carcjb-code/Voip-provisioner-downloads/releases/tag/preview-current">Ver publicación</a>
+        </div>
+        <div id="androidAppUpdateActions" style="display:none;gap:8px;flex-wrap:wrap;margin:12px 0;">
+            <a class="btn btn-success" href="https://github.com/carcjb-code/Voip-provisioner-downloads/releases/download/preview-current/VoIPProvisioner-Android-64bit.apk">⬇️ APK Android 64 bits</a>
+            <a class="btn btn-primary" href="https://github.com/carcjb-code/Voip-provisioner-downloads/releases/download/preview-current/VoIPProvisioner-Android-32bit.apk">⬇️ APK Android 32 bits</a>
+            <a class="btn btn-secondary" href="https://github.com/carcjb-code/Voip-provisioner-downloads/releases/tag/preview-current">Ver publicación</a>
+        </div>
+        <div id="appUpdateMessage" role="status" aria-live="polite"
+             style="display:none;margin-top:12px;white-space:pre-wrap;overflow-wrap:anywhere;font-size:13px;line-height:1.45;"></div>
+        <small style="display:block;margin-top:10px;color:#777;line-height:1.45;">
+            Los cambios incrementales se activan al cerrar completamente y volver a abrir la app.
+            Solo los cambios nativos o componentes que no admiten reemplazo seguro requerirán instalar una versión completa.
+        </small>
+    </div>
+
+<div class="card-neutral" id="appServerBackupCard" style="display:none;">
+        <h3>🛡️ Respaldo de servidores guardados</h3>
+        <p style="margin:10px 0 12px;">
+            Exportá los perfiles SSH y sus contraseñas a un archivo JSON antes de reinstalar o migrar la aplicación.
+            El archivo contiene credenciales: guardalo en un lugar seguro. Al importar, se reemplaza la lista actual y se crea automáticamente una copia previa.
+        </p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <button type="button" class="btn btn-secondary" onclick="exportarRespaldoServidoresUI()">
+                📤 Exportar servidores
+            </button>
+            <button type="button" class="btn btn-primary" onclick="document.getElementById('appServerBackupFile').click()">
+                📥 Seleccionar respaldo JSON
+            </button>
+            <input type="file" id="appServerBackupFile" accept=".json,application/json" style="display:none;" onchange="importarRespaldoServidores()">
+        </div>
+        <div id="appServerBackupMessage" role="status" aria-live="polite" style="display:none;margin-top:12px;white-space:pre-wrap;overflow-wrap:anywhere;font-size:13px;line-height:1.45;"></div>
+    </div>
+
+    
+
+    <div class="card-neutral" id="macVendorMaintenanceCard">
+        <h3>📡 Actualizar modelos de teléfonos</h3>
+        <p style="margin:10px 0 15px;">
+            Actualiza la base de fabricantes por MAC para reconocer el modelo de los teléfonos.
+            Solo se completan celdas <b>Modelo</b> vacías de los Excel locales; no se cambian los valores escritos manualmente ni las plantillas.
+        </p>
+        <button type="button" class="btn btn-primary" id="btnMacVendorOptions"
+                onclick="toggleMacVendorOptions()" aria-expanded="false" aria-controls="macVendorOptions">
+            📡 Actualizar modelos de teléfonos
+        </button>
+        <div id="macVendorOptions" class="mac-vendor-options" hidden>
+            <div class="mac-vendor-choice">
+                <h4>🌐 Actualizar online</h4>
+                <p>Descarga los registros oficiales IEEE MA-L, MA-M y MA-S directamente desde el servidor Issabel. Esta opción requiere que el servidor tenga acceso a Internet.</p>
+                <button type="button" class="btn btn-success" id="btnMacVendorRefresh" onclick="actualizarBaseFabricantesMac()">
+                    🌐 Actualizar desde Internet
+                </button>
+            </div>
+            <div class="mac-vendor-choice">
+                <h4>📂 Cargar archivos CSV desde esta PC</h4>
+                <p>Si Issabel no tiene Internet, descarga estos tres archivos desde una PC conectada y luego selecciónalos aquí:</p>
+                <div class="mac-vendor-choice-links">
+                    <a href="https://standards-oui.ieee.org/oui/oui.csv" target="_blank" rel="noopener noreferrer">Descargar MA-L (oui.csv)</a>
+                    <a href="https://standards-oui.ieee.org/oui28/mam.csv" target="_blank" rel="noopener noreferrer">Descargar MA-M (mam.csv)</a>
+                    <a href="https://standards-oui.ieee.org/oui36/oui36.csv" target="_blank" rel="noopener noreferrer">Descargar MA-S (oui36.csv)</a>
+                </div>
+                <div class="grid-3 mac-vendor-file-grid">
+                    <div class="form-group"><label for="macVendorFileMal">MA-L · oui.csv</label><input type="file" id="macVendorFileMal" accept=".csv,text/csv"></div>
+                    <div class="form-group"><label for="macVendorFileMam">MA-M · mam.csv</label><input type="file" id="macVendorFileMam" accept=".csv,text/csv"></div>
+                    <div class="form-group"><label for="macVendorFileMas">MA-S · oui36.csv</label><input type="file" id="macVendorFileMas" accept=".csv,text/csv"></div>
+                </div>
+                <button type="button" class="btn btn-primary" id="btnMacVendorUpload" onclick="importarBaseFabricantesMacDesdePC()">
+                    📥 Importar CSV y completar modelos
+                </button>
+                <div class="mac-vendor-help">La base anterior se conserva si los archivos están incompletos o no superan las validaciones.</div>
+            </div>
+        </div>
+        <div id="macVendorEstado" style="display:none;margin-top:12px;font-size:13px;line-height:1.45;"></div>
+    </div>
+
+    
+
+    
+</div>
+
+<div id="seguridad" class="panel"><h2>🔐 Cambiar Contraseña</h2><div class="form-group"><label>Contraseña Actual</label><input type="password" id="secActual"></div><div class="form-group"><label>Nueva Contraseña</label><input type="password" id="secNueva"></div><div class="form-group"><label>Confirmar</label><input type="password" id="secConf"></div><button class="btn btn-danger" onclick="changePass()">🔐 Cambiar</button></div></div>
+<div id="modalBackdrop" class="modal-backdrop"><div class="modal"><h3 id="modalTitle">🔐 Confirmación</h3><p id="modalMessage"></p><div id="modalPasswordWrap"><label>Contraseña Admin</label><input type="password" id="modalPassword" autocomplete="off" placeholder="Contraseña de administración"></div><div id="modalError" style="display:none;margin-top:10px;padding:10px 12px;border-radius:6px;background:#f8d7da;color:#721c24;border:1px solid #f5c6cb;font-weight:600;"></div><div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal()">Cancelar</button><button class="btn btn-danger" id="modalConfirmBtn" onclick="confirmModalAction()">Continuar</button></div></div></div>
+<script>
+const $=id=>document.getElementById(id);function showAlert(m,ok){const a=$('alertBox');a.textContent=m;a.className='alert '+(ok?'alert-ok':'alert-err');a.style.display='block';setTimeout(()=>a.style.display='none',4000)}
+function showMain(id){document.querySelectorAll('.tabs>.tab').forEach(b=>b.classList.remove('active'));document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));event.currentTarget.classList.add('active');$(id).classList.add('active');if(id==='servidores')loadPerfilesAdmin();if(id==='sistemas'){loadBackupPerfiles();loadBackups();loadProgramacion()}}
+function showSub(main,id){const box=$(main);box.querySelectorAll('.subtab').forEach(b=>b.classList.remove('active'));box.querySelectorAll('.subpanel').forEach(p=>p.classList.remove('active'));event.currentTarget.classList.add('active');$(id).classList.add('active');if(id==='plantillas')loadPlts();if(id==='ubicaciones')loadUbicPerfiles();if(id==='terminal')loadTermPerfiles();if(id==='backup'){loadBackups();loadProgramacion()}}
+function updateColorPreview(){$('colorPreview').style.backgroundColor=$('cfgColor').value}if($('cfgColor'))$('cfgColor').addEventListener('input',updateColorPreview);function formatBytes(n){if(!n)return'0 B';const k=1024,s=['B','KB','MB','GB'],i=Math.floor(Math.log(n)/Math.log(k));return parseFloat((n/Math.pow(k,i)).toFixed(2))+' '+s[i]}function formatDate(v){return new Date(v).toLocaleString('es-AR',{year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'})}function escapeHtmlAdmin(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+async function loadPerfilesAdmin(){try{const d=await(await fetch('/api/perfiles',{cache:'no-store'})).json();$('listaPerfilesAdmin').innerHTML=Array.isArray(d)&&d.length?d.map(p=>`<div class="item"><div class="backup-item-info"><b>🖥️ ${escapeHtmlAdmin(p.nombre)}</b><small>🌐 ${escapeHtmlAdmin(p.host)}:${p.puerto||22} · 👤 ${escapeHtmlAdmin(p.usuario||'root')} · 📁 ${escapeHtmlAdmin(p.ruta_remota||'/tftpboot')} · 📞 ${Array.isArray(p.dialplan)&&p.dialplan.length?escapeHtmlAdmin(p.dialplan.join(', ')):'Sin dial plan'}</small></div><div class="backup-actions"><button class="btn btn-primary btn-sm" onclick="editPerfilAdmin('${escapeHtmlAdmin(p.nombre)}')">✏️ Editar</button><button class="btn btn-danger btn-sm" onclick="delPerfilAdmin('${escapeHtmlAdmin(p.nombre)}')">🗑️ Eliminar</button></div></div>`).join(''):'<div class="empty-state"><span>🖥️</span>No hay servidores SSH configurados.</div>'}catch(e){$('listaPerfilesAdmin').innerHTML='<div class="empty-state"><span>❌</span>Error al cargar servidores</div>'}}
+
+async function loadTermPerfiles() {
+    var sel = document.getElementById('termPerfil');
+    if (!sel) return;
+
+    var anterior = sel.value;
+    sel.innerHTML = '<option value="">Cargando servidores...</option>';
+    sel.disabled = true;
+
+    try {
+        var r = await fetch('/api/perfiles', {
+            cache: 'no-store'
+        });
+
+        var texto = await r.text();
+        var perfiles;
+
+        try {
+            perfiles = JSON.parse(texto);
+        } catch (e) {
+            throw new Error(
+                'Respuesta no valida de /api/perfiles (HTTP ' +
+                r.status + ').'
+            );
+        }
+
+        if (!r.ok) {
+            throw new Error('HTTP ' + r.status);
+        }
+
+        if (!Array.isArray(perfiles)) {
+            throw new Error('La API no devolvio una lista de perfiles.');
+        }
+
+        sel.innerHTML = '';
+
+        var opcion = document.createElement('option');
+        opcion.value = '';
+        opcion.textContent = perfiles.length
+            ? '-- Selecciona un servidor --'
+            : 'No hay servidores configurados';
+        sel.appendChild(opcion);
+
+        perfiles.forEach(function(p) {
+            if (!p || !p.nombre) return;
+
+            var opt = document.createElement('option');
+            opt.value = p.nombre;
+            opt.textContent = p.nombre +
+                (p.host ? ' (' + p.host + ')' : '');
+
+            sel.appendChild(opt);
+        });
+
+        if (anterior && Array.from(sel.options).some(function(o) {
+            return o.value === anterior;
+        })) {
+            sel.value = anterior;
+        }
+
+    } catch (e) {
+        sel.innerHTML =
+            '<option value="">Error al cargar perfiles</option>';
+
+        console.error('loadTermPerfiles:', e);
+
+        if (typeof showAlert === 'function') {
+            showAlert(
+                'Error cargando perfiles de Terminal: ' + e.message,
+                false
+            );
+        }
+    } finally {
+        sel.disabled = false;
+    }
+}
+
+async function editPerfilAdmin(n){try{const d=await(await fetch('/api/perfiles',{cache:'no-store'})).json(),p=d.find(x=>x.nombre===n);if(!p)return;$('perfEditOriginal').value=p.nombre;$('perfNombreAdmin').value=p.nombre;$('perfHostAdmin').value=p.host;$('perfPuertoAdmin').value=p.puerto||22;$('perfUsuarioAdmin').value=p.usuario||'root';$('perfPasswordAdmin').value='';$('perfRutaAdmin').value=p.ruta_remota||'/tftpboot';$('perfDialplanAdmin').value=Array.isArray(p.dialplan)?p.dialplan.join('\n'):'';$('tituloFormPerfil').textContent='✏️ Editar Servidor SSH: '+p.nombre;showAlert('Perfil cargado para edición',true)}catch(e){showAlert('Error: '+e.message,false)}}
+function clearPerfilAdmin(){$('perfEditOriginal').value='';$('perfNombreAdmin').value='';$('perfHostAdmin').value='';$('perfPuertoAdmin').value='22';$('perfUsuarioAdmin').value='';$('perfPasswordAdmin').value='';$('perfRutaAdmin').value='/tftpboot';$('perfDialplanAdmin').value='';$('perfPassAdmin').value='';$('tituloFormPerfil').textContent='➕ Agregar / Editar Servidor SSH'}
+
+
+async function savePerfilAdmin() {
+    var adminPassword = $('perfPassAdmin') ? $('perfPassAdmin').value : '';
+    var passField = $('perfPassAdmin');
+    if (!adminPassword) {
+        showAlert('Ingresá la contraseña de administrador para guardar el servidor.', false);
+        if (passField) passField.focus();
+        return;
+    }
+    var botonGuardar = document.querySelector('button[onclick="savePerfilAdmin()"]');
+    if (botonGuardar) {
+        botonGuardar.disabled = true;
+        botonGuardar.textContent = 'Guardando servidor...';
+    }
+    try {
+        var vr = await fetch('/api/verificar_password', {
+            method: 'POST', headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({password: adminPassword})
+        });
+        var vd;
+        try { vd = await vr.json(); }
+        catch (e) { throw new Error('Respuesta inválida al verificar la contraseña administrativa.'); }
+        if (!vr.ok || !vd || vd.status !== 'ok') {
+            showAlert((vd && vd.message) || 'Contraseña de administrador incorrecta.', false);
+            if (passField) passField.focus();
+            return;
+        }
+        var nombre = $('perfNombreAdmin') ? $('perfNombreAdmin').value.trim() : '';
+        var host = $('perfHostAdmin') ? $('perfHostAdmin').value.trim() : '';
+        var puerto = $('perfPuertoAdmin') ? $('perfPuertoAdmin').value : '22';
+        var usuario = $('perfUsuarioAdmin') ? $('perfUsuarioAdmin').value.trim() : '';
+        var passwordSSH = $('perfPasswordAdmin') ? $('perfPasswordAdmin').value : '';
+        var ruta = $('perfRutaAdmin') ? $('perfRutaAdmin').value.trim() : '/tftpboot';
+        var dialplanTexto = $('perfDialplanAdmin') ? $('perfDialplanAdmin').value : '';
+        var dialplan = dialplanTexto.split(/\r?\n/).map(function(x) { return x.trim(); }).filter(function(x) { return !!x; });
+        var original = $('perfEditOriginal') ? $('perfEditOriginal').value.trim() : '';
+        if (!nombre) throw new Error('El nombre del servidor es obligatorio.');
+        if (!host) throw new Error('El host/IP del servidor es obligatorio.');
+        if (!usuario) throw new Error('El usuario SSH es obligatorio.');
+        var payload = {nombre:nombre, host:host, usuario:usuario, password:passwordSSH,
+            ruta_remota:ruta || '/tftpboot', dialplan:dialplan, puerto:puerto || '22', original_nombre:original};
+        var resp = await fetch('/api/perfiles', {
+            method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload)
+        });
+        var texto = await resp.text();
+        var d;
+        try { d = JSON.parse(texto); }
+        catch (e) { throw new Error('El servidor devolvió una respuesta no válida (HTTP ' + resp.status + ').'); }
+        if (!resp.ok || !d || d.status !== 'ok') {
+            throw new Error((d && (d.message || d.error)) || 'No se pudo guardar el perfil del servidor.');
+        }
+        showAlert(d.message || (original ? 'Perfil del servidor actualizado correctamente.' : 'Perfil del servidor guardado correctamente.'), true);
+        await loadPerfilesAdmin();
+        if (typeof loadTermPerfiles === 'function') await loadTermPerfiles();
+        if (typeof loadBackupPerfiles === 'function') await loadBackupPerfiles();
+        if (typeof loadUbicPerfiles === 'function') await loadUbicPerfiles();
+        if (typeof clearPerfilAdmin === 'function') clearPerfilAdmin();
+    } catch (e) {
+        console.error('Error guardando perfil del servidor:', e);
+        showAlert('No se pudo guardar el servidor: ' + (e.message || e), false);
+    } finally {
+        if (botonGuardar) {
+            botonGuardar.disabled = false;
+            botonGuardar.textContent = '💾 Guardar Servidor';
+        }
+    }
+}
+
+async function delPerfilAdmin(n) {
+
+    var esPerfilVacio = !String(n || '').trim();
+
+    var descripcion = esPerfilVacio
+        ? '⚠️ Este es un perfil vacío o mal creado.'
+        : 'Se eliminará el servidor SSH "' + n + '".';
+
+    if (!confirm(
+        '¿Eliminar este perfil?\n\n' +
+        descripcion
+    )) {
+        return;
+    }
+
+    openPasswordModal(
+        'Eliminar servidor',
+        esPerfilVacio
+            ? 'Ingrese la contraseña de administrador para eliminar el perfil vacío.'
+            : 'Ingrese la contraseña de administrador para eliminar "' + n + '".',
+        async function(password) {
+
+            try {
+
+                var resp = await fetch('/api/perfiles/eliminar', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        nombre: n,
+                        password: password
+                    })
+                });
+
+                var texto = await resp.text();
+                var data;
+
+                try {
+                    data = JSON.parse(texto);
+                } catch (e) {
+                    throw new Error(
+                        'El servidor devolvió una respuesta inválida (HTTP ' +
+                        resp.status + ').'
+                    );
+                }
+
+                if (!resp.ok || data.status !== 'ok') {
+
+                    if (resp.status === 401 ||
+                        resp.status === 403) {
+
+                        showAlert(
+                            data.message ||
+                            'Contraseña de administrador incorrecta.',
+                            false
+                        );
+
+                        return false;
+                    }
+
+                    throw new Error(
+                        data.message ||
+                        'No se pudo eliminar el servidor.'
+                    );
+                }
+
+                showAlert(
+                    data.message ||
+                    'Servidor eliminado correctamente.',
+                    true
+                );
+
+                await loadPerfilesAdmin();
+
+                if (typeof loadTermPerfiles === 'function') {
+                    loadTermPerfiles();
+                }
+
+                if (typeof loadBackupPerfiles === 'function') {
+                    loadBackupPerfiles();
+                }
+
+                if (typeof loadUbicPerfiles === 'function') {
+                    loadUbicPerfiles();
+                }
+
+                return true;
+
+            } catch (e) {
+
+                console.error(
+                    'Error eliminando perfil:',
+                    e
+                );
+
+                showAlert(
+                    'Error: ' + e.message,
+                    false
+                );
+
+                return false;
+            }
+        },
+        '🗑️ Eliminar'
+    );
+}
+
+async function loadPlts(){
+    try{
+        const p = await (await fetch('/api/plantillas')).json();
+
+        $('listaPlantillas').innerHTML = p.length
+            ? p.map(x => `
+                <div class="item">
+                    <span>
+                        <b>${escapeHtmlAdmin(x.nombre)}</b>
+                        <span style="margin-left:8px;padding:3px 7px;border-radius:4px;background:${x.tipo === 'XML' ? '#e8f5e9' : '#e3f2fd'};color:${x.tipo === 'XML' ? '#2e7d32' : '#1565c0'};font-weight:bold">
+                            ${x.tipo}
+                        </span>
+                        (${x.tamano} bytes)
+                    </span>
+                    <div>
+                        <button class="btn btn-primary btn-sm" onclick="editPlt('${escapeHtmlAdmin(x.nombre)}','${x.tipo}')">✏️ Editar</button>
+                        <button class="btn btn-danger btn-sm" onclick="delPlt('${escapeHtmlAdmin(x.nombre)}','${x.tipo}')">🗑️ Eliminar</button>
+                    </div>
+                </div>
+            `).join('')
+            : '<p style="text-align:center;color:#999;padding:20px">No hay plantillas.</p>';
+
+    }catch(e){
+        console.error(e);
+    }
+}
+
+async function editPlt(n,tipo){
+    $('tplNombre').value = n;
+    $('tplTipo').value = tipo || 'CFG';
+
+    const r = await (
+        await fetch(
+            '/api/plantillas/' +
+            encodeURIComponent(n) +
+            '?tipo=' +
+            encodeURIComponent(tipo || 'CFG')
+        )
+    ).json();
+
+    if(r.status === 'ok'){
+        $('tplContenido').value = r.contenido;
+        $('tplTipo').value = r.tipo || tipo || 'CFG';
+        showAlert('Plantilla cargada',true);
+    }
+}
+
+async function delPlt(n,tipo){
+    if(!confirm('¿Eliminar "'+n+'" ('+(tipo || 'CFG')+')?')) return;
+
+    openPasswordModal(
+        'Eliminar plantilla',
+        'Ingrese la contraseña de administrador.',
+        async function(p){
+            const r = await (
+                await fetch(
+                    '/api/plantillas/' + encodeURIComponent(n),
+                    {
+                        method:'DELETE',
+                        headers:{'Content-Type':'application/json'},
+                        body:JSON.stringify({
+                            password:p,
+                            tipo:tipo || 'CFG'
+                        })
+                    }
+                )
+            ).json();
+
+            showAlert(r.message,r.status==='ok');
+
+            if(r.status==='ok'){
+                loadPlts();
+                clearTpl();
+            }
+        }
+    );
+}
+
+function clearTpl(){
+    $('tplNombre').value='';
+    $('tplTipo').value='CFG';
+    $('tplContenido').value='';
+}
+
+async function saveTpl(){
+
+    const n = $('tplNombre').value.trim();
+    const tipo = $('tplTipo').value || 'CFG';
+    const c = $('tplContenido').value;
+
+    if(!n || !c){
+        return showAlert(
+            'Nombre y contenido obligatorios',
+            false
+        );
+    }
+
+    openPasswordModal(
+        'Guardar plantilla',
+        'Ingrese la contraseña de administrador para guardar la plantilla.',
+        async function(p){
+
+            try {
+
+                const r = await (
+                    await fetch(
+                        '/api/plantillas',
+                        {
+                            method:'POST',
+                            headers:{
+                                'Content-Type':'application/json'
+                            },
+                            body:JSON.stringify({
+                                nombre:n,
+                                contenido:c,
+                                tipo:tipo,
+                                password:p
+                            })
+                        }
+                    )
+                ).json();
+
+                showAlert(
+                    r.message ||
+                    'Plantilla guardada correctamente.',
+                    r.status === 'ok'
+                );
+
+                if(r.status === 'ok'){
+                    clearTpl();
+                    loadPlts();
+                }
+
+                return r.status === 'ok';
+
+            }catch(e){
+
+                console.error(
+                    'Error guardando plantilla:',
+                    e
+                );
+
+                showAlert(
+                    'Error: ' + e.message,
+                    false
+                );
+
+                return false;
+            }
+        },
+        '💾 Guardar'
+    );
+}
+
+async function changePass(){const a=$('secActual').value,n=$('secNueva').value,c=$('secConf').value;if(!a||!n||!c)return showAlert('Completa todos los campos',false);if(n!==c)return showAlert('No coinciden',false);if(n.length<6)return showAlert('Mínimo 6 caracteres',false);const r=await(await fetch('/api/config',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:a,seguridad:{admin_password:n}})})).json();showAlert(r.message,r.status==='ok');if(r.status==='ok'){$('secActual').value='';$('secNueva').value='';$('secConf').value=''}}
+async function loadBackups(perfil=''){try{const d=await(await fetch(perfil?`/api/backups?perfil_nombre=${encodeURIComponent(perfil)}`:'/api/backups')).json();$('listaBackups').innerHTML=d.status==='ok'&&d.backups?.length?d.backups.map(b=>`<div class="item"><div class="backup-item-info"><b>📦 ${escapeHtmlAdmin(b.nombre)}</b><small>🖥️ ${escapeHtmlAdmin(b.perfil)} · 📅 ${formatDate(b.fecha)} · 💾 ${formatBytes(b.tamano)}</small></div><div class="backup-actions"><button class="btn btn-primary btn-sm" onclick="descargarBackup('${escapeHtmlAdmin(b.nombre)}','${escapeHtmlAdmin(b.perfil)}')">⬇️ Descargar</button><button class="btn btn-danger btn-sm" onclick="eliminarBackup('${escapeHtmlAdmin(b.nombre)}','${escapeHtmlAdmin(b.perfil)}')">🗑️ Eliminar</button></div></div>`).join(''):'<div class="empty-state"><span>📭</span>No hay backups disponibles.</div>'}catch(e){$('listaBackups').innerHTML='<div class="empty-state"><span>❌</span>Error</div>'}}async function crearBackup(){const b=$('btnCrearBackup'),o=b.innerHTML;b.disabled=true;b.innerHTML='<span class="spinner"></span>Creando...';const tipo=$('backupTipo').value,perfil=$('backupPerfil').value,destino=$('backupDestino').value;if(tipo==='issabel'&&!perfil){showAlert('Selecciona un servidor Issabel',false);b.disabled=false;b.innerHTML=o;return}try{const r=await fetch('/api/backup/crear',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({tipo,perfil_nombre:tipo==='issabel'?perfil:'',destino:tipo==='issabel'?destino:'local'})}),t=await r.text();let d;try{d=JSON.parse(t)}catch(e){throw new Error('El servidor no devolvió JSON (HTTP '+r.status+').')}showAlert(d.message||(d.status==='ok'?'Guardado':'Error'),d.status==='ok');if(d.status==='ok')loadBackups()}catch(e){showAlert('Error: '+e.message,false)}finally{b.disabled=false;b.innerHTML=o}}function descargarBackup(n,p=''){window.location.href='/api/backup/descargar/'+encodeURIComponent(n)+(p&&p!=='Provisioner'?'?perfil='+encodeURIComponent(p):'')}async function eliminarBackup(n,p=''){
+    if(!confirm('¿Eliminar "'+n+'"?'))return;
+
+    openPasswordModal(
+        'Eliminar backup',
+        'Ingrese la contraseña de administrador.',
+        async pw=>{
+
+            const error=$('modalError');
+
+            try{
+
+                const resp=await fetch(
+                    '/api/backup/eliminar/'+encodeURIComponent(n),
+                    {
+                        method:'POST',
+                        headers:{
+                            'Content-Type':'application/json'
+                        },
+                        body:JSON.stringify({
+                            password:pw,
+                            perfil_nombre:p!=='Provisioner'?p:''
+                        }),
+                        cache:'no-store'
+                    }
+                );
+
+                const texto=await resp.text();
+
+                let data=null;
+
+                try{
+                    data=texto?JSON.parse(texto):null;
+                }catch(e){
+                    data=null;
+                }
+
+                /*
+                 * CONTRASEÑA INCORRECTA
+                 */
+                if(
+                    resp.status===401 ||
+                    resp.status===403 ||
+                    (
+                        data &&
+                        data.status==='error' &&
+                        /contraseña|password/i.test(
+                            String(data.message||'')
+                        )
+                    )
+                ){
+
+                    if(error){
+                        error.textContent=
+                            '❌ Contraseña de administrador incorrecta.';
+                        error.style.display='block';
+                    }
+
+                    $('modalPassword').value='';
+                    $('modalPassword').focus();
+
+                    return false;
+                }
+
+                /*
+                 * OTRO ERROR
+                 */
+                if(!data || data.status!=='ok'){
+
+                    if(error){
+                        error.textContent=
+                            '❌ '+
+                            (
+                                data && data.message
+                                ? data.message
+                                : 'No se pudo eliminar el backup.'
+                            );
+
+                        error.style.display='block';
+                    }
+
+                    return false;
+                }
+
+                /*
+                 * ÉXITO
+                 */
+                showAlert(
+                    data.message ||
+                    '✅ Backup eliminado correctamente.',
+                    true
+                );
+
+                loadBackups();
+
+                return true;
+
+            }catch(e){
+
+                if(error){
+                    error.textContent=
+                        '❌ '+(e.message||'Error al eliminar el backup.');
+
+                    error.style.display='block';
+                }
+
+                return false;
+            }
+
+        },
+        '🗑️ Eliminar'
+    );
+}
+
+
+async function restaurarBackup() {
+    var f = $('fileRestore');
+
+    if (!f || !f.files || !f.files.length) {
+        showAlert('Selecciona un archivo de backup.', false);
+        return;
+    }
+
+    openPasswordModal(
+        'Restaurar backup',
+        'Esta operación reemplazará la configuración actual. Ingrese la contraseña de administrador para continuar.',
+        async function(password) {
+
+            var fd = new FormData();
+            fd.append('backup', f.files[0]);
+            fd.append('password', password);
+
+            var resp = await fetch('/api/backup/restaurar', {
+                method: 'POST',
+                body: fd
+            });
+
+            var d;
+
+            try {
+                d = await resp.json();
+            } catch (e) {
+                throw new Error('Respuesta inválida del servidor.');
+            }
+
+            /*
+             * IMPORTANTE:
+             * 401/403 o status distinto de ok mantienen
+             * abierto el modal.
+             */
+            if (resp.status === 401 || resp.status === 403 ||
+                d.status === 'error' || d.status === 'unauthorized') {
+
+                return false;
+            }
+
+            if (d.status !== 'ok') {
+                throw new Error(
+                    d.message || 'No se pudo restaurar el backup.'
+                );
+            }
+
+            showAlert(
+                d.message || 'Backup restaurado correctamente.',
+                true
+            );
+
+            f.value = '';
+
+            if (typeof loadBackups === 'function') {
+                loadBackups();
+            }
+
+            return true;
+        },
+        '🔄 Restaurar'
+    );
+}
+
+async function loadProgramacion(){try{const d=await(await fetch('/api/backup/programacion')).json();if(d.status==='ok'&&d.schedule){const s=d.schedule;$('schedTipo').value=s.tipo||'provisioner';$('schedPerfil').value=s.perfil_nombre||'';$('schedDestino').value=s.destino||'local';$('schedActivo').value=s.activo?'true':'false';$('schedFrecuencia').value=s.frecuencia||'diario';$('schedHora').value=s.hora||'02:00';$('schedRetencion').value=s.retencion_dias||30;actualizarOpcionesSched();const i=$('schedEstadoInfo');if(s.activo){i.innerHTML=`<b>✅ Programación activa</b><br>📦 Tipo: <b>${s.tipo==='issabel'?'Issabel ('+s.perfil_nombre+')':'Provisioner'}</b><br>📍 Destino: <b>${s.destino==='remoto'?'Servidor remoto':'Este servidor'}</b><br>🔁 Frecuencia: <b>${s.frecuencia}</b> a las <b>${s.hora}</b>`+(s.proximo_ejecutado?`<br>⏰ Próximo backup: <b>${formatDate(s.proximo_ejecutado)}</b>`:'')+(s.ultimo_ejecutado?`<br>✅ Último ejecutado: <b>${formatDate(s.ultimo_ejecutado)}</b>`:'')}else i.innerHTML='<b>❌ Programación desactivada</b>';i.style.display='block'}}catch(e){console.error(e)}}
+async function guardarProgramacion() {
+
+    var tipo = $('schedTipo').value;
+    var perfil = $('schedPerfil').value;
+
+    if (tipo === 'issabel' && !perfil) {
+        openPasswordModal(
+            'Guardar programación',
+            'Seleccione primero el servidor Issabel.',
+            async function() {
+                return false;
+            },
+            'Continuar'
+        );
+        return;
+    }
+
+    openPasswordModal(
+        'Guardar programación',
+        'Ingrese la contraseña de administrador para guardar la programación del backup.',
+        async function(password) {
+
+            var destino = $('schedDestino').value;
+            var activo = $('schedActivo').value === 'true';
+            var frecuencia = $('schedFrecuencia').value;
+            var hora = $('schedHora').value;
+            var retencion = parseInt(
+                $('schedRetencion').value || '30',
+                10
+            );
+
+            var resp = await fetch('/api/backup/programacion', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    tipo: tipo,
+                    perfil_nombre: perfil,
+                    destino: destino,
+                    activo: activo,
+                    frecuencia: frecuencia,
+                    hora: hora,
+                    retencion_dias: retencion,
+                    password: password
+                })
+            });
+
+            var d;
+
+            try {
+                d = await resp.json();
+            } catch (e) {
+                throw new Error('Respuesta inválida del servidor.');
+            }
+
+            if (resp.status === 401 || resp.status === 403 ||
+                d.status === 'error' ||
+                d.status === 'unauthorized') {
+
+                return false;
+            }
+
+            if (d.status !== 'ok') {
+                throw new Error(
+                    d.message ||
+                    'No se pudo guardar la programación.'
+                );
+            }
+
+            showAlert(
+                d.message ||
+                'Programación guardada correctamente.',
+                true
+            );
+
+            if (typeof loadProgramacion === 'function') {
+                loadProgramacion();
+            }
+
+            return true;
+        },
+        '💾 Guardar'
+    );
+}
+
+async function ejecutarAhora() {
+
+    openPasswordModal(
+        'Ejecutar backup ahora',
+        'Ingrese la contraseña de administrador para ejecutar el backup inmediatamente.',
+        async function(password) {
+
+            var resp = await fetch('/api/backup/ejecutar-ahora', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    password: password
+                })
+            });
+
+            var d;
+
+            try {
+                d = await resp.json();
+            } catch (e) {
+                throw new Error('Respuesta inválida del servidor.');
+            }
+
+            if (resp.status === 401 || resp.status === 403 ||
+                d.status === 'error' ||
+                d.status === 'unauthorized') {
+
+                return false;
+            }
+
+            if (d.status !== 'ok') {
+                throw new Error(
+                    d.message ||
+                    'No se pudo ejecutar el backup.'
+                );
+            }
+
+            showAlert(
+                d.message || 'Backup ejecutado correctamente.',
+                true
+            );
+
+            if (typeof loadBackups === 'function') {
+                loadBackups();
+            }
+
+            return true;
+        },
+        '▶️ Ejecutar'
+    );
+}
+function actualizarOpcionesBackup(){const t=$('backupTipo'),ip=$('grupoPerfilBackup'),gd=$('grupoDestinoBackup');if(t.value==='issabel'){ip.style.display='block';gd.style.display='grid'}else{ip.style.display='none';gd.style.display='none';$('backupDestino').value='local'}actualizarUbicacionInfo()}function actualizarOpcionesSched(){const t=$('schedTipo'),ip=$('grupoPerfilSched'),gd=$('grupoDestinoSched');if(t.value==='issabel'){ip.style.display='block';gd.style.display='block'}else{ip.style.display='none';gd.style.display='none';$('schedDestino').value='local'}}function actualizarUbicacionInfo(){const t=$('backupTipo').value,p=$('backupPerfil').value,d=$('backupDestino').value;if(t==='provisioner')$('backupUbicacionInfo').value='/opt/voip-provisioner/backups/_provisioner/';else if(d==='local')$('backupUbicacionInfo').value=p?`/opt/voip-provisioner/backups/${p}/`:'/opt/voip-provisioner/backups/<perfil>/';else $('backupUbicacionInfo').value='/root/backups_issabel/ (en servidor remoto)'}
+let modalAction=null;function openPasswordModal(title,message,action,buttonText='Continuar'){
+    modalAction=action;
+
+    const titleEl=$('modalTitle');
+    const messageEl=$('modalMessage');
+    const passwordEl=$('modalPassword');
+    const buttonEl=$('modalConfirmBtn');
+    const errorEl=$('modalError');
+
+    if(titleEl){
+        titleEl.textContent='🔐 '+title;
+    }
+
+    if(messageEl){
+        messageEl.textContent=message;
+    }
+
+    if(passwordEl){
+        passwordEl.value='';
+    }
+
+    if(buttonEl){
+        buttonEl.textContent=buttonText;
+        buttonEl.disabled=false;
+    }
+
+    /*
+     * MUY IMPORTANTE:
+     * cada vez que se abre el modal se borra
+     * completamente cualquier error anterior.
+     */
+    if(errorEl){
+        errorEl.textContent='';
+        errorEl.style.display='none';
+    }
+
+    $('modalBackdrop').classList.add('show');
+
+    setTimeout(function(){
+        if(passwordEl){
+            passwordEl.focus();
+        }
+    },100);
+}
+
+function closeModal(){
+
+    modalAction=null;
+
+    const passwordEl=$('modalPassword');
+    const errorEl=$('modalError');
+
+    if(passwordEl){
+        passwordEl.value='';
+    }
+
+    if(errorEl){
+        errorEl.textContent='';
+        errorEl.style.display='none';
+    }
+
+    $('modalBackdrop').classList.remove('show');
+}
+
+async function confirmModalAction(){
+
+    const passwordEl = $('modalPassword');
+    const errorEl = $('modalError');
+    const buttonEl = $('modalConfirmBtn');
+
+    const password = passwordEl ? passwordEl.value : '';
+
+    // Limpiar error anterior antes de una nueva validación
+    if(errorEl){
+        errorEl.textContent = '';
+        errorEl.style.display = 'none';
+    }
+
+    // Sin contraseña
+    if(!password){
+
+        if(errorEl){
+            errorEl.textContent = '⚠️ Ingresa la contraseña de administrador.';
+            errorEl.style.display = 'block';
+        }
+
+        if(passwordEl){
+            passwordEl.focus();
+        }
+
+        return;
+    }
+
+    const action = modalAction;
+
+    if(!action){
+        closeModal();
+        return;
+    }
+
+    if(buttonEl){
+        buttonEl.disabled = true;
+        buttonEl.textContent = 'Verificando...';
+    }
+
+    try{
+
+        const resultado = await action(password);
+
+        /*
+         * La acción puede devolver:
+         *
+         *   false
+         *   {status:'error', message:'...'}
+         *   {ok:false, message:'...'}
+         *
+         * En cualquiera de esos casos dejamos
+         * el modal abierto y mostramos el error.
+         */
+
+        let fallo = false;
+        let mensaje = '❌ Contraseña incorrecta.';
+
+        if(resultado === false){
+            fallo = true;
+        }
+
+        if(resultado && typeof resultado === 'object'){
+
+            if(
+                resultado.status === 'error' ||
+                resultado.ok === false ||
+                resultado.success === false
+            ){
+                fallo = true;
+
+                if(resultado.message){
+                    mensaje = '❌ ' + resultado.message;
+                }else if(resultado.error){
+                    mensaje = '❌ ' + resultado.error;
+                }
+            }
+        }
+
+        if(fallo){
+
+            if(errorEl){
+                errorEl.textContent = mensaje;
+                errorEl.style.display = 'block';
+            }
+
+            if(buttonEl){
+                buttonEl.disabled = false;
+                buttonEl.textContent = 'Continuar';
+            }
+
+            if(passwordEl){
+                passwordEl.select();
+                passwordEl.focus();
+            }
+
+            return;
+        }
+
+        /*
+         * Si la operación terminó correctamente,
+         * cerrar el modal.
+         */
+        closeModal();
+
+    }catch(e){
+
+        if(errorEl){
+            errorEl.textContent =
+                '❌ ' + (e.message || 'Error durante la operación.');
+            errorEl.style.display = 'block';
+        }
+
+        if(buttonEl){
+            buttonEl.disabled = false;
+            buttonEl.textContent = 'Continuar';
+        }
+
+        if(passwordEl){
+            passwordEl.focus();
+        }
+    }
+}
+
+
+
+$('modalBackdrop').addEventListener('click',e=>{if(e.target===$('modalBackdrop'))closeModal()});$('modalPassword').addEventListener('keydown',e=>{if(e.key==='Enter')confirmModalAction()});window.catalogoUbicaciones = {edificio: [], piso: [], dependencia: []};
+loadPerfilesAdmin();loadCfg();loadPlts();loadBackupPerfiles();actualizarOpcionesBackup();actualizarOpcionesSched();
+
+
+async function loadUbicPerfiles() {
+    try {
+        const r = await fetch('/api/perfiles', {cache:'no-store'});
+        const data = await r.json();
+        const sel = document.getElementById('ubicPerfil');
+
+        if (!sel) return;
+
+        sel.innerHTML = '<option value="">-- Selecciona un perfil --</option>';
+
+        data.forEach(p => {
+            const opt = document.createElement('option');
+            opt.value = p.nombre;
+            opt.textContent = `${p.nombre} (${p.host})`;
+            sel.appendChild(opt);
+        });
+
+        const editor = document.getElementById('ubicEditor');
+        if (editor) editor.style.display = 'none';
+
+    } catch(e) {
+        showAlert('Error cargando perfiles: ' + e.message, false);
+    }
+}
+
+async function cargarCatalogoUbicaciones() {
+    const perfil = document.getElementById('ubicPerfil').value;
+    const editor = document.getElementById('ubicEditor');
+
+    if (!perfil) {
+        editor.style.display = 'none';
+        return;
+    }
+
+    try {
+        const r = await fetch(
+            '/api/opciones/admin?perfil_nombre=' +
+            encodeURIComponent(perfil),
+            {cache:'no-store'}
+        );
+
+        const texto = await r.text();
+
+        let data;
+        try {
+            data = JSON.parse(texto);
+        } catch (e) {
+            throw new Error(
+                'El servidor no devolvió JSON (HTTP ' + r.status + ').'
+            );
+        }
+
+        if (!r.ok || data.status === 'error') {
+            throw new Error(data.message || ('HTTP ' + r.status));
+        }
+
+        window.catalogoUbicaciones = data;
+
+        ['edificio','piso','dependencia'].forEach(c => {
+            if (!Array.isArray(window.catalogoUbicaciones[c])) {
+                window.catalogoUbicaciones[c] = [];
+            }
+        });
+
+        renderCatalogoUbicaciones();
+        editor.style.display = 'block';
+
+    } catch(e) {
+        showAlert(
+            'Error cargando catálogo: ' + e.message,
+            false
+        );
+    }
+}
+
+function renderCatalogoUbicaciones() {
+    const mapas = {
+        edificio: 'listaEdificiosAdmin',
+        piso: 'listaPisosAdmin',
+        dependencia: 'listaDependenciasAdmin'
+    };
+
+    Object.entries(mapas).forEach(([campo, id]) => {
+        const cont = document.getElementById(id);
+        if (!cont) return;
+
+        const lista = window.catalogoUbicaciones[campo] || [];
+
+        cont.innerHTML = lista.length
+            ? lista.map((v,i) => `
+                <div class="item" style="padding:7px 10px;">
+                    <span>${escapeHtmlAdmin(v)}</span>
+                    <button
+                        class="btn btn-danger btn-sm"
+                        onclick="quitarCatalogo('${campo}', ${i})">
+                        🗑️
+                    </button>
+                </div>
+            `).join('')
+            : '<div style="color:#999;padding:8px;">Sin valores cargados.</div>';
+    });
+}
+
+function agregarCatalogo(campo) {
+    const ids = {
+        edificio: 'nuevoEdificio',
+        piso: 'nuevoPiso',
+        dependencia: 'nuevoDependencia'
+    };
+
+    const el = document.getElementById(ids[campo]);
+    if (!el) return;
+
+    const valor = (el.value || '').trim();
+    if (!valor) return;
+
+    if (!window.catalogoUbicaciones[campo].some(
+        v => v.toLowerCase() === valor.toLowerCase()
+    )) {
+        window.catalogoUbicaciones[campo].push(valor);
+
+        window.catalogoUbicaciones[campo].sort(
+            (a,b) => a.localeCompare(
+                b,
+                'es',
+                {
+                    numeric: true,
+                    sensitivity: 'base'
+                }
+            )
+        );
+
+        renderCatalogoUbicaciones();
+    }
+
+    el.value = '';
+    el.focus();
+}
+
+function quitarCatalogo(campo, indice) {
+    window.catalogoUbicaciones[campo].splice(indice, 1);
+    renderCatalogoUbicaciones();
+}
+
+async function guardarCatalogoUbicaciones() {
+    const perfil = document.getElementById('ubicPerfil').value;
+    const pass = document.getElementById('ubicPass').value;
+
+    if (!perfil) {
+        return showAlert('Selecciona un perfil', false);
+    }
+
+    if (!pass) {
+        return showAlert('Ingresa la contraseña admin', false);
+    }
+
+    try {
+        const r = await fetch('/api/opciones/admin', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                password: pass,
+                perfil_nombre: perfil,
+                opciones: window.catalogoUbicaciones
+            })
+        });
+
+        const data = await r.json();
+
+        showAlert(
+            data.message,
+            data.status === 'ok'
+        );
+
+        if (data.status === 'ok') {
+            document.getElementById('ubicPass').value = '';
+        }
+
+    } catch(e) {
+        showAlert(
+            'Error: ' + e.message,
+            false
+        );
+    }
+}
+
+</script>
+<script>
+/* FIX-LIMPIEZA-BOTON-20260908 */
+
+
+
+</script>
+
+
+
+
+
+<style id="voip-explorer-style">
+
+#explorerLista tr.explorer-row:hover {
+    background:#eef6ff;
+}
+
+#explorerLista td {
+    border-bottom:1px solid #eee;
+}
+
+.explorer-name {
+    display:flex;
+    align-items:center;
+    gap:8px;
+    cursor:pointer;
+}
+
+.explorer-name:hover {
+    color:#2980b9;
+}
+
+.explorer-actions {
+    display:flex;
+    justify-content:center;
+    gap:4px;
+    flex-wrap:wrap;
+}
+
+.explorer-action {
+    border:0;
+    background:#eee;
+    border-radius:5px;
+    padding:5px 7px;
+    cursor:pointer;
+}
+
+.explorer-action:hover {
+    background:#ddd;
+}
+
+</style>
+
+<script id="voip-explorer-js">
+
+var explorerPath = '/';
+var explorerEditPath = null;
+
+function explorerPerfil() {
+    var el = document.getElementById('termPerfil');
+    return el ? el.value : '';
+}
+
+function explorerPassword() {
+    var el = document.getElementById('termPassword');
+    return el ? el.value : '';
+}
+
+function explorerReset() {
+    explorerPath = '/';
+
+    var box = document.getElementById('sshExplorer');
+    var editor = document.getElementById('explorerEditor');
+
+    if (box) box.style.display = 'none';
+    if (editor) editor.style.display = 'none';
+}
+
+function explorerSetEstado(texto, error) {
+    var el = document.getElementById('explorerEstado');
+
+    if (!el) return;
+
+    el.innerHTML = escapeHtmlAdmin(texto || '');
+
+    el.style.color = error ? '#c0392b' : '#666';
+}
+
+function explorerEscape(value) {
+    return escapeHtmlAdmin(String(value || ''));
+}
+
+function explorerFormatoBytes(bytes) {
+
+    bytes = Number(bytes || 0);
+
+    if (bytes < 1024)
+        return bytes + ' B';
+
+    if (bytes < 1024 * 1024)
+        return (bytes / 1024).toFixed(1) + ' KB';
+
+    if (bytes < 1024 * 1024 * 1024)
+        return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+
+    return (bytes / (1024 * 1024 * 1024)).toFixed(1) + ' GB';
+}
+
+function explorerFecha(ts) {
+
+    if (!ts) return '-';
+
+    try {
+        return new Date(Number(ts) * 1000).toLocaleString();
+    } catch(e) {
+        return '-';
+    }
+}
+
+async function explorerApi(url, data) {
+
+    var response = await fetch(
+        url + '?t=' + Date.now(),
+        {
+            method:'POST',
+            headers:{
+                'Content-Type':'application/json'
+            },
+            cache:'no-store',
+            body:JSON.stringify(data)
+        }
+    );
+
+    var text = await response.text();
+
+    var json;
+
+    try {
+        json = JSON.parse(text);
+    } catch(e) {
+        throw new Error(
+            'El servidor devolvió una respuesta no válida (HTTP ' +
+            response.status + ').'
+        );
+    }
+
+    if (!response.ok || json.status !== 'ok') {
+        throw new Error(
+            json.message || 'Operación SSH fallida.'
+        );
+    }
+
+    return json;
+}
+
+async function explorerAbrir() {
+
+    var perfil = explorerPerfil();
+    var password = explorerPassword();
+
+    if (!perfil) {
+        showAlert('Seleccione primero un servidor SSH.', false);
+        return;
+    }
+
+    if (!password) {
+        showAlert('Ingrese la contraseña SSH.', false);
+        document.getElementById('termPassword').focus();
+        return;
+    }
+
+    document.getElementById('sshExplorer').style.display = 'block';
+
+    explorerPath = '/';
+
+    await explorerCargar();
+}
+
+async function explorerCargar() {
+
+    var perfil = explorerPerfil();
+    var password = explorerPassword();
+
+    if (!perfil || !password) {
+        explorerSetEstado(
+            'Seleccione servidor e ingrese la contraseña SSH.',
+            true
+        );
+        return;
+    }
+
+    explorerSetEstado(
+        '⏳ Conectando por SSH/SFTP...'
+    );
+
+    var tbody = document.getElementById('explorerLista');
+
+    tbody.innerHTML =
+        '<tr><td colspan="5" style="padding:30px;text-align:center">' +
+        '⏳ Cargando...' +
+        '</td></tr>';
+
+    try {
+
+        var d = await explorerApi(
+            '/api/terminal/explorer/list',
+            {
+                perfil:perfil,
+                password:password,
+                path:explorerPath
+            }
+        );
+
+        explorerPath = d.path || explorerPath;
+
+        document.getElementById('explorerRuta').textContent =
+            explorerPath;
+
+        explorerSetEstado(
+            '🟢 Conectado a ' +
+            (d.usuario || '') +
+            '@' +
+            (d.host || '') +
+            ' — ' +
+            (d.items || []).length +
+            ' elementos'
+        );
+
+        explorerRender(d.items || []);
+
+    } catch(e) {
+
+        tbody.innerHTML =
+            '<tr><td colspan="5" style="padding:30px;text-align:center;color:#c0392b">' +
+            '❌ ' + explorerEscape(e.message) +
+            '</td></tr>';
+
+        explorerSetEstado(
+            '❌ ' + e.message,
+            true
+        );
+    }
+}
+
+function explorerRender(items) {
+
+    var tbody = document.getElementById('explorerLista');
+
+    if (!items.length) {
+
+        tbody.innerHTML =
+            '<tr><td colspan="5" style="padding:35px;text-align:center;color:#999">' +
+            '📂 Directorio vacío' +
+            '</td></tr>';
+
+        return;
+    }
+
+    var html = '';
+
+    items.forEach(function(item) {
+
+        var dir = item.type === 'directory';
+
+        var icon =
+            dir ? '📁' :
+            item.type === 'symlink' ? '🔗' :
+            '📄';
+
+        var encoded =
+            encodeURIComponent(item.path);
+
+        var nombre =
+            explorerEscape(item.name);
+
+        html +=
+            '<tr class="explorer-row">' +
+
+            '<td style="padding:9px">' +
+            '<div class="explorer-name" ' +
+            'ondblclick="explorerAbrirElemento(decodeURIComponent(\'' +
+            encoded +
+            '\'),\'' +
+            item.type +
+            '\')">' +
+            '<span style="font-size:20px">' +
+            icon +
+            '</span>' +
+            '<span>' + nombre + '</span>' +
+            '</div>' +
+            '</td>' +
+
+            '<td style="padding:9px;color:#777">' +
+            (dir ? 'Carpeta' :
+             item.type === 'symlink' ? 'Enlace' : 'Archivo') +
+            '</td>' +
+
+            '<td style="padding:9px;text-align:right;color:#777">' +
+            (dir ? '-' : explorerFormatoBytes(item.size)) +
+            '</td>' +
+
+            '<td style="padding:9px;font-family:monospace;color:#777">' +
+            explorerEscape(item.permissions || '-') +
+            '</td>' +
+
+            '<td style="padding:7px">' +
+            '<div class="explorer-actions">' +
+
+            (
+                dir
+                ? ''
+                :
+                '<button class="explorer-action" title="Editar" ' +
+                'onclick="explorerEditar(decodeURIComponent(\'' +
+                encoded +
+                '\'))">✏️</button>'
+            ) +
+
+            (
+                dir
+                ? ''
+                :
+                '<button class="explorer-action" title="Descargar" ' +
+                'onclick="explorerDescargar(decodeURIComponent(\'' +
+                encoded +
+                '\'))">⬇️</button>'
+            ) +
+
+            '<button class="explorer-action" title="Renombrar" ' +
+            'onclick="explorerRenombrar(decodeURIComponent(\'' +
+            encoded +
+            '\'),\'' +
+            encoded +
+            '\')">✏️</button>' +
+
+            '<button class="explorer-action" title="Eliminar" ' +
+            'onclick="explorerEliminar(decodeURIComponent(\'' +
+            encoded +
+            '\'))">🗑️</button>' +
+
+            '</div>' +
+            '</td>' +
+
+            '</tr>';
+    });
+
+    tbody.innerHTML = html;
+}
+
+async function explorerAbrirElemento(path, type) {
+
+    if (type === 'directory') {
+
+        explorerPath = path;
+
+        await explorerCargar();
+
+        return;
+    }
+
+    await explorerEditar(path);
+}
+
+function explorerSubirNivel() {
+
+    if (explorerPath === '/') {
+        return;
+    }
+
+    var partes =
+        explorerPath.replace(/\/+$/,'').split('/');
+
+    partes.pop();
+
+    explorerPath =
+        partes.join('/') || '/';
+
+    explorerCargar();
+}
+
+function explorerIrRaiz() {
+
+    explorerPath = '/';
+
+    explorerCargar();
+}
+
+function explorerNuevaCarpeta() {
+
+    var nombre = prompt(
+        'Nombre de la nueva carpeta:'
+    );
+
+    if (!nombre) return;
+
+    nombre = nombre.trim();
+
+    if (!nombre || nombre.indexOf('/') >= 0) {
+        showAlert(
+            'Nombre de carpeta no válido.',
+            false
+        );
+        return;
+    }
+
+    explorerApi(
+        '/api/terminal/explorer/mkdir',
+        {
+            perfil:explorerPerfil(),
+            password:explorerPassword(),
+            path:explorerPath,
+            name:nombre
+        }
+    )
+    .then(function() {
+
+        showAlert(
+            'Carpeta creada correctamente.',
+            true
+        );
+
+        explorerCargar();
+
+    })
+    .catch(function(e) {
+
+        showAlert(
+            'Error: ' + e.message,
+            false
+        );
+
+    });
+}
+
+function explorerSubirArchivo() {
+
+    document.getElementById(
+        'explorerFileInput'
+    ).click();
+}
+
+async function explorerProcesarUpload(input) {
+
+    if (!input.files || !input.files.length)
+        return;
+
+    var archivo = input.files[0];
+
+    var form = new FormData();
+
+    form.append(
+        'perfil',
+        explorerPerfil()
+    );
+
+    form.append(
+        'password',
+        explorerPassword()
+    );
+
+    form.append(
+        'path',
+        explorerPath
+    );
+
+    form.append(
+        'file',
+        archivo
+    );
+
+    explorerSetEstado(
+        '⏳ Subiendo ' + archivo.name + '...'
+    );
+
+    try {
+
+        var r = await fetch(
+            '/api/terminal/explorer/upload?t=' +
+            Date.now(),
+            {
+                method:'POST',
+                body:form
+            }
+        );
+
+        var text = await r.text();
+
+        var d;
+
+        try {
+            d = JSON.parse(text);
+        } catch(e) {
+            throw new Error(
+                'Respuesta no válida del servidor.'
+            );
+        }
+
+        if (!r.ok || d.status !== 'ok') {
+            throw new Error(
+                d.message || 'No se pudo subir el archivo.'
+            );
+        }
+
+        showAlert(
+            'Archivo subido correctamente.',
+            true
+        );
+
+        input.value = '';
+
+        explorerCargar();
+
+    } catch(e) {
+
+        showAlert(
+            'Error al subir: ' + e.message,
+            false
+        );
+
+        explorerSetEstado(
+            '❌ ' + e.message,
+            true
+        );
+    }
+}
+
+async function explorerDescargar(path) {
+
+    explorerSetEstado(
+        '⏳ Preparando descarga...'
+    );
+
+    try {
+
+        var response = await fetch(
+            '/api/terminal/explorer/download?t=' +
+            Date.now(),
+            {
+                method:'POST',
+                headers:{
+                    'Content-Type':'application/json'
+                },
+                body:JSON.stringify({
+                    perfil:explorerPerfil(),
+                    password:explorerPassword(),
+                    path:path
+                })
+            }
+        );
+
+        if (!response.ok) {
+
+            var txt = await response.text();
+
+            try {
+
+                var err = JSON.parse(txt);
+
+                throw new Error(
+                    err.message ||
+                    'No se pudo descargar el archivo.'
+                );
+
+            } catch(e) {
+
+                if (e.message)
+                    throw e;
+
+                throw new Error(
+                    'No se pudo descargar el archivo.'
+                );
+            }
+        }
+
+        var blob = await response.blob();
+
+        var a = document.createElement('a');
+
+        a.href = URL.createObjectURL(blob);
+
+        a.download =
+            path.split('/').pop();
+
+        document.body.appendChild(a);
+
+        a.click();
+
+        setTimeout(function() {
+
+            URL.revokeObjectURL(a.href);
+
+            a.remove();
+
+        }, 1000);
+
+        explorerSetEstado(
+            '⬇️ Descarga iniciada.'
+        );
+
+    } catch(e) {
+
+        showAlert(
+            'Error al descargar: ' + e.message,
+            false
+        );
+
+        explorerSetEstado(
+            '❌ ' + e.message,
+            true
+        );
+    }
+}
+
+async function explorerEditar(path) {
+
+    explorerSetEstado(
+        '⏳ Abriendo archivo...'
+    );
+
+    try {
+
+        var d = await explorerApi(
+            '/api/terminal/explorer/read',
+            {
+                perfil:explorerPerfil(),
+                password:explorerPassword(),
+                path:path
+            }
+        );
+
+        explorerEditPath = path;
+
+        document.getElementById(
+            'explorerEditor'
+        ).style.display = 'block';
+
+        document.getElementById(
+            'explorerEditorPath'
+        ).textContent = path;
+
+        document.getElementById(
+            'explorerEditorText'
+        ).value = d.content || '';
+
+        document.getElementById(
+            'explorerEditorText'
+        ).focus();
+
+        explorerSetEstado(
+            '✏️ Editando ' + path
+        );
+
+    } catch(e) {
+
+        showAlert(
+            'No se pudo abrir el archivo: ' +
+            e.message,
+            false
+        );
+
+        explorerSetEstado(
+            '❌ ' + e.message,
+            true
+        );
+    }
+}
+
+async function explorerGuardarArchivo() {
+
+    if (!explorerEditPath)
+        return;
+
+    if (!confirm(
+        '¿Guardar los cambios en\\n\\n' +
+        explorerEditPath +
+        '\\n\\n?'
+    ))
+        return;
+
+    try {
+
+        var contenido =
+            document.getElementById(
+                'explorerEditorText'
+            ).value;
+
+        await explorerApi(
+            '/api/terminal/explorer/write',
+            {
+                perfil:explorerPerfil(),
+                password:explorerPassword(),
+                path:explorerEditPath,
+                content:contenido
+            }
+        );
+
+        showAlert(
+            'Archivo guardado correctamente.',
+            true
+        );
+
+        explorerSetEstado(
+            '💾 Archivo guardado: ' +
+            explorerEditPath
+        );
+
+    } catch(e) {
+
+        showAlert(
+            'Error al guardar: ' +
+            e.message,
+            false
+        );
+    }
+}
+
+function explorerCerrarEditor() {
+
+    explorerEditPath = null;
+
+    document.getElementById(
+        'explorerEditor'
+    ).style.display = 'none';
+}
+
+async function explorerRenombrar(path) {
+
+    var actual =
+        path.split('/').pop();
+
+    var nuevo = prompt(
+        'Nuevo nombre:',
+        actual
+    );
+
+    if (!nuevo || nuevo === actual)
+        return;
+
+    nuevo = nuevo.trim();
+
+    if (!nuevo || nuevo.indexOf('/') >= 0) {
+
+        showAlert(
+            'Nombre no válido.',
+            false
+        );
+
+        return;
+    }
+
+    try {
+
+        await explorerApi(
+            '/api/terminal/explorer/rename',
+            {
+                perfil:explorerPerfil(),
+                password:explorerPassword(),
+                old:path,
+                new_name:nuevo
+            }
+        );
+
+        showAlert(
+            'Elemento renombrado.',
+            true
+        );
+
+        explorerCargar();
+
+    } catch(e) {
+
+        showAlert(
+            'Error: ' + e.message,
+            false
+        );
+    }
+}
+
+async function explorerEliminar(path) {
+
+    var nombre =
+        path.split('/').pop();
+
+    if (!confirm(
+        '¿Eliminar "' +
+        nombre +
+        '"?\\n\\n' +
+        'Esta operación no se puede deshacer.'
+    ))
+        return;
+
+    try {
+
+        await explorerApi(
+            '/api/terminal/explorer/delete',
+            {
+                perfil:explorerPerfil(),
+                password:explorerPassword(),
+                path:path
+            }
+        );
+
+        showAlert(
+            'Elemento eliminado.',
+            true
+        );
+
+        explorerCargar();
+
+    } catch(e) {
+
+        showAlert(
+            'Error al eliminar: ' +
+            e.message,
+            false
+        );
+    }
+}
+
+</script>
+
+
+
+
+<style id="pwEyeAutoStyle">
+.pw-eye-wrap{position:relative;display:block;width:100%}
+.pw-eye-wrap>input{width:100%;padding-right:42px !important}
+.pw-eye-btn{position:absolute;right:4px;top:50%;transform:translateY(-50%);background:none !important;border:none !important;box-shadow:none !important;cursor:pointer;font-size:18px;line-height:1;padding:6px 8px !important;margin:0 !important;width:auto !important;min-width:0 !important;color:inherit;opacity:.75}
+.pw-eye-btn:hover{opacity:1}
+</style>
+<script id="pwEyeAuto">
+(function(){
+    function envolver(inp){
+        if(!inp || inp.dataset.pwEye==='1' || !inp.parentNode) return;
+        inp.dataset.pwEye='1';
+        var wrap=document.createElement('span');
+        wrap.className='pw-eye-wrap';
+        inp.parentNode.insertBefore(wrap,inp);
+        wrap.appendChild(inp);
+        var b=document.createElement('button');
+        b.type='button';
+        b.className='pw-eye-btn';
+        b.tabIndex=-1;
+        b.title='Mostrar/ocultar contraseña';
+        b.setAttribute('aria-label','Mostrar u ocultar contraseña');
+        b.textContent='\uD83D\uDC41\uFE0F';
+        b.addEventListener('click',function(e){
+            e.preventDefault(); e.stopPropagation();
+            var ver=inp.type==='password';
+            inp.type=ver?'text':'password';
+            b.textContent=ver?'\uD83D\uDE48':'\uD83D\uDC41\uFE0F';
+            inp.focus();
+        });
+        wrap.appendChild(b);
+        /* si el código vuelve a dejar el campo en 'password', reiniciar el icono */
+        inp.addEventListener('input',function(){});
+    }
+    function escanear(raiz){
+        (raiz||document).querySelectorAll('input[type="password"]:not([data-pw-eye])').forEach(envolver);
+    }
+    function iniciar(){
+        escanear(document);
+        new MutationObserver(function(ms){
+            for(var i=0;i<ms.length;i++){
+                var n=ms[i].addedNodes;
+                for(var j=0;j<n.length;j++){
+                    if(n[j].nodeType===1){
+                        if(n[j].matches && n[j].matches('input[type="password"]')) envolver(n[j]);
+                        else if(n[j].querySelectorAll) escanear(n[j]);
+                    }
+                }
+            }
+        }).observe(document.body,{childList:true,subtree:true});
+        /* al abrir/cerrar un modal, volver a ocultar los campos */
+        document.addEventListener('click',function(e){
+            var t=e.target;
+            if(t && t.closest && !t.closest('.pw-eye-wrap')){
+                document.querySelectorAll('.pw-eye-wrap>input[data-pw-eye]').forEach(function(i){
+                    if(i.type==='text' && i.offsetParent===null){
+                        i.type='password';
+                        var bb=i.parentNode.querySelector('.pw-eye-btn');
+                        if(bb) bb.textContent='\uD83D\uDC41\uFE0F';
+                    }
+                });
+            }
+        },true);
+    }
+    if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',iniciar); else iniciar();
+})();
+</script>
+
+<script id="mac-vendor-maintenance">
+function toggleMacVendorOptions(){
+    var options=document.getElementById('macVendorOptions');
+    var button=document.getElementById('btnMacVendorOptions');
+    if(!options||!button)return;
+    var abrir=options.hidden;
+    options.hidden=!abrir;
+    button.setAttribute('aria-expanded',abrir?'true':'false');
+    button.textContent=abrir?'✕ Cerrar opciones':'📡 Actualizar modelos de teléfonos';
+    if(abrir && typeof options.scrollIntoView==='function'){
+        options.scrollIntoView({behavior:'smooth',block:'nearest'});
+    }
+}
+async function actualizarBaseFabricantesMac() {
+    openPasswordModal(
+        'Actualizar fabricantes por MAC',
+        'Se descargarán los registros públicos IEEE MA-L, MA-M y MA-S. La consulta posterior queda offline. Solo se completarán celdas Modelo vacías; los valores manuales y las plantillas no se cambian.',
+        async function(password) {
+            var b = $('btnMacVendorRefresh');
+            var estado = $('macVendorEstado');
+            adminButtonProgressStart(
+                b,'🌐 Descargando registros IEEE...'
+            );
+            if (estado) {
+                estado.style.display = 'block';
+                estado.textContent = 'Descargando y validando los tres registros oficiales. No cierres esta página.';
+            }
+            try {
+                var r = await fetch('/api/admin/mac-vendors/refresh?t=' + Date.now(), {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Cache-Control': 'no-cache'
+                    },
+                    body: JSON.stringify({password: password})
+                });
+                var raw = await r.text();
+                var d;
+                try {
+                    d = JSON.parse(raw);
+                } catch (e) {
+                    throw new Error('El servidor devolvió HTTP ' + r.status + ' en lugar de JSON.');
+                }
+                if (!r.ok || d.status !== 'ok') {
+                    adminButtonProgressFinish(
+                        b,
+                        '❌ Error al actualizar la base IEEE',
+                        'error',
+                        5000
+                    );
+
+                    return {status: 'error', message: d.message || 'No se pudo actualizar la base de fabricantes.'};
+                }
+                if (estado) {
+                    estado.style.display = 'block';
+                    estado.textContent = d.message + ' Última actualización: ' + (d.updated_at || 'sin fecha') + '.';
+                }
+                adminButtonProgressFinish(
+                    b,'✅ Base IEEE actualizada','success',3500
+                );
+
+                showAlert(d.message, true);
+                return true;
+            } catch (e) {
+                adminButtonProgressFinish(
+                    b,'❌ Error al actualizar la base IEEE','error',5000
+                );
+
+                if (estado) {
+                    estado.style.display = 'block';
+                    estado.textContent = 'Error: ' + (e.message || 'No se pudo actualizar la base.');
+                }
+                return {status: 'error', message: e.message || 'No se pudo actualizar la base.'};
+            } finally {
+                /* El helper restaura el texto cuando finaliza. */
+            }
+        },
+        'Actualizar base'
+    );
+}
+</script>
+
+
+<script id="mac-vendor-upload-from-pc">
+async function importarBaseFabricantesMacDesdePC() {
+    var mal = $('macVendorFileMal');
+    var mam = $('macVendorFileMam');
+    var mas = $('macVendorFileMas');
+    if (!mal || !mam || !mas || !mal.files.length || !mam.files.length || !mas.files.length) {
+        showAlert('Seleccioná los tres CSV: MA-L, MA-M y MA-S.', false);
+        return;
+    }
+    openPasswordModal(
+        'Importar base IEEE desde esta PC',
+        'Se validarán los tres CSV seleccionados. Solo si todos son válidos se actualizará la base local y se completarán celdas Modelo vacías.',
+        async function(password) {
+            var b = $('btnMacVendorUpload');
+            var estado = $('macVendorEstado');
+            var form = new FormData();
+            form.append('password', password);
+            form.append('ma_l', mal.files[0]);
+            form.append('ma_m', mam.files[0]);
+            form.append('ma_s', mas.files[0]);
+            adminButtonProgressStart(
+                b,'📥 Validando e importando CSV...'
+            );
+            if (estado) { estado.style.display = 'block'; estado.textContent = 'Validando los tres registros IEEE cargados desde esta PC...'; }
+            try {
+                var r = await fetch('/api/admin/mac-vendors/refresh?t=' + Date.now(), {
+                    method: 'POST',
+                    headers: {'Cache-Control': 'no-cache'},
+                    body: form
+                });
+                var raw = await r.text();
+                var d;
+                try { d = JSON.parse(raw); }
+                catch (e) { throw new Error('El servidor devolvió HTTP ' + r.status + ' en lugar de JSON.'); }
+                if (!r.ok || d.status !== 'ok') {
+                    var msg = d.message || 'No se pudo importar la base IEEE.';
+
+                    adminButtonProgressFinish(
+                        b,'❌ Error al importar CSV','error',5000
+                    );
+
+                    if (estado) estado.textContent = 'Error: ' + msg;
+                    return {status: 'error', message: msg};
+                }
+                if (estado) estado.textContent = d.message + ' Última actualización: ' + (d.updated_at || 'sin fecha') + '.';
+                adminButtonProgressFinish(
+                    b,'✅ Base IEEE importada','success',3500
+                );
+
+                showAlert(d.message, true);
+                return true;
+            } catch (e) {
+                adminButtonProgressFinish(
+                    b,'❌ Error al importar CSV','error',5000
+                );
+
+                var msg = e.message || 'No se pudo importar la base.';
+                if (estado) estado.textContent = 'Error: ' + msg;
+                return {status: 'error', message: msg};
+            } finally {
+                /* El helper restaura el texto cuando finaliza. */
+            }
+        },
+        'Importar CSV'
+    );
+}
+</script>
+
+<style id="admin-button-progress-style">
+.btn.admin-btn-progress{
+  position:relative!important;
+  overflow:hidden!important;
+  isolation:isolate;
+  vertical-align:middle;
+}
+.btn.admin-btn-progress .admin-btn-progress-fill{
+  position:absolute;
+  z-index:0;
+  top:0;
+  bottom:0;
+  left:0;
+  width:var(--admin-btn-progress-pct,0%);
+  border-radius:inherit;
+  background:rgba(255,255,255,.30);
+  pointer-events:none;
+  transition:width .30s ease,background .20s ease;
+}
+.btn.admin-btn-progress-indeterminate .admin-btn-progress-fill{
+  width:34%;
+  animation:adminButtonProgressSweep 1.25s ease-in-out infinite;
+}
+.btn.admin-btn-progress-success .admin-btn-progress-fill{
+  width:100%;
+  background:rgba(25,135,84,.48);
+}
+.btn.admin-btn-progress-error .admin-btn-progress-fill{
+  width:100%;
+  background:rgba(220,53,69,.48);
+}
+.btn.admin-btn-progress .admin-btn-progress-label{
+  position:relative;
+  z-index:1;
+  display:block;
+  width:100%;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  text-align:center;
+}
+@keyframes adminButtonProgressSweep{
+  0%{transform:translateX(-115%)}
+  100%{transform:translateX(315%)}
+}
+@media(prefers-reduced-motion:reduce){
+  .btn.admin-btn-progress-indeterminate .admin-btn-progress-fill{
+    animation:none;
+    width:65%;
+  }
+}
+</style>
+
+<script id="admin-button-progress-helper">
+function adminButtonProgressResolve(target){
+  return typeof target === 'string'
+    ? document.getElementById(target)
+    : target;
+}
+
+function adminButtonProgressStart(target,label){
+  var btn=adminButtonProgressResolve(target);
+  if(!btn)return;
+
+  if(typeof btn._adminProgressOriginalHTML === 'undefined'){
+    btn._adminProgressOriginalHTML=btn.innerHTML;
+    btn._adminProgressOriginalWidth=btn.style.width;
+    btn._adminProgressOriginalMinWidth=btn.style.minWidth;
+    btn._adminProgressFixedWidth=Math.ceil(
+      btn.getBoundingClientRect().width
+    );
+  }
+
+  if(btn._adminProgressTimer){
+    clearTimeout(btn._adminProgressTimer);
+    btn._adminProgressTimer=null;
+  }
+
+  if(!btn.classList.contains('admin-btn-progress')){
+    btn.classList.add('admin-btn-progress');
+    btn.innerHTML=
+      '<span class="admin-btn-progress-fill"></span>' +
+      '<span class="admin-btn-progress-label"></span>';
+  }
+
+  if(btn._adminProgressFixedWidth>0){
+    btn.style.width=btn._adminProgressFixedWidth+'px';
+  }
+
+  btn.disabled=true;
+  btn.setAttribute('aria-busy','true');
+  btn.style.setProperty('--admin-btn-progress-pct','0%');
+  btn.classList.add('admin-btn-progress-indeterminate');
+
+  var el=btn.querySelector('.admin-btn-progress-label');
+  if(el)el.textContent=String(label||'Procesando...');
+}
+
+function adminButtonProgressUpdate(target,percent,label,state){
+  var btn=adminButtonProgressResolve(target);
+  if(!btn)return;
+
+  if(!btn.classList.contains('admin-btn-progress')){
+    adminButtonProgressStart(btn,label);
+  }
+
+  if(btn._adminProgressTimer){
+    clearTimeout(btn._adminProgressTimer);
+    btn._adminProgressTimer=null;
+  }
+
+  btn.classList.remove(
+    'admin-btn-progress-success',
+    'admin-btn-progress-error'
+  );
+
+  if(state==='success'){
+    btn.classList.add('admin-btn-progress-success');
+  }else if(state==='error'){
+    btn.classList.add('admin-btn-progress-error');
+  }
+
+  if(typeof percent==='number' && isFinite(percent)){
+    var pct=Math.max(0,Math.min(100,percent));
+    btn.style.setProperty('--admin-btn-progress-pct',pct+'%');
+    btn.classList.remove('admin-btn-progress-indeterminate');
+  }else{
+    btn.classList.add('admin-btn-progress-indeterminate');
+  }
+
+  var el=btn.querySelector('.admin-btn-progress-label');
+  if(el && label!==undefined && label!==null){
+    el.textContent=String(label);
+  }
+
+  btn.disabled=true;
+  btn.setAttribute('aria-busy','true');
+}
+
+function adminButtonProgressFinish(target,label,state,delay){
+  var btn=adminButtonProgressResolve(target);
+  if(!btn)return;
+
+  adminButtonProgressUpdate(
+    btn,100,label,state==='error'?'error':'success'
+  );
+
+  btn._adminProgressTimer=setTimeout(function(){
+    adminButtonProgressReset(btn);
+  },Math.max(1000,Number(delay)||3000));
+}
+
+function adminButtonProgressReset(target){
+  var btn=adminButtonProgressResolve(target);
+  if(!btn)return;
+
+  if(btn._adminProgressTimer){
+    clearTimeout(btn._adminProgressTimer);
+  }
+
+  if(typeof btn._adminProgressOriginalHTML!=='undefined'){
+    btn.innerHTML=btn._adminProgressOriginalHTML;
+    btn.style.width=btn._adminProgressOriginalWidth||'';
+    btn.style.minWidth=btn._adminProgressOriginalMinWidth||'';
+
+    delete btn._adminProgressOriginalHTML;
+    delete btn._adminProgressOriginalWidth;
+    delete btn._adminProgressOriginalMinWidth;
+    delete btn._adminProgressFixedWidth;
+  }
+
+  btn.classList.remove(
+    'admin-btn-progress',
+    'admin-btn-progress-indeterminate',
+    'admin-btn-progress-success',
+    'admin-btn-progress-error'
+  );
+
+  btn.style.removeProperty('--admin-btn-progress-pct');
+  btn.removeAttribute('aria-busy');
+  btn.disabled=false;
+  btn._adminProgressTimer=null;
+}
+</script>
+
+
+
+
+
+
+
+<script id="android-app-ota-updater">
+(function () {
+    var preview = null;
+
+    function el(id) { return document.getElementById(id); }
+
+    function setMensaje(texto, tipo) {
+        var area = el('appUpdateMessage');
+        if (!area) return;
+        area.style.display = 'block';
+        area.style.color = tipo === 'error' ? '#b42318' :
+            (tipo === 'success' ? '#18794e' : '#4b5563');
+        area.textContent = String(texto || '');
+    }
+
+    async function pedirJson(url, options) {
+        var resp = await fetch(url, Object.assign({
+            cache: 'no-store',
+            headers: {'Cache-Control': 'no-cache'}
+        }, options || {}));
+        var raw = await resp.text();
+        var data;
+        try { data = JSON.parse(raw); }
+        catch (e) { throw new Error('El servidor devolvió una respuesta inválida (HTTP ' + resp.status + ').'); }
+        if (!resp.ok || (data.status && !['ok'].includes(data.status))) {
+            throw new Error(data.message || data.error || ('Error HTTP ' + resp.status));
+        }
+        return data;
+    }
+
+    function actualizarEstadoBotones() {
+        var token = el('appUpdateToken');
+        var save = el('btnAppUpdateSaveToken');
+        var check = el('btnAppUpdateCheck');
+        if (save) save.style.display = token && token.dataset.configured === '1' ? 'none' : '';
+        if (check) check.disabled = false;
+    }
+
+
+    window.exportarRespaldoServidoresUI = function () {
+        try {
+            if (window.VoipProvisionerAndroid &&
+                typeof window.VoipProvisionerAndroid.exportarRespaldoServidores === 'function') {
+                window.VoipProvisionerAndroid.exportarRespaldoServidores();
+                return;
+            }
+            window.location.href = '/api/mantenimiento/servidores/exportar';
+        } catch (e) {
+            var area = el('appServerBackupMessage');
+            if (area) {
+                area.style.display = 'block';
+                area.style.color = '#b42318';
+                area.textContent = e.message || 'No se pudo exportar el respaldo.';
+            }
+        }
+    };
+
+    window.importarRespaldoServidores = async function () {
+        var input = el('appServerBackupFile');
+        var area = el('appServerBackupMessage');
+        var file = input && input.files && input.files.length ? input.files[0] : null;
+        if (!file) return;
+        if (area) {
+            area.style.display = 'block';
+            area.style.color = '#4b5563';
+            area.textContent = 'Validando respaldo JSON e importando los perfiles...';
+        }
+        try {
+            var form = new FormData();
+            form.append('file', file, file.name);
+            var d = await pedirJson('/api/mantenimiento/servidores/importar', {
+                method: 'POST',
+                body: form,
+                headers: {'Cache-Control': 'no-cache'}
+            });
+            if (area) {
+                area.style.color = '#18794e';
+                area.textContent = d.message || 'Respaldo importado correctamente.';
+            }
+            input.value = '';
+            if (typeof loadPerfilesAdmin === 'function') loadPerfilesAdmin(); else if (typeof cargarPerfiles === 'function') cargarPerfiles();
+        } catch (e) {
+            if (area) {
+                area.style.color = '#b42318';
+                area.textContent = e.message || 'No se pudo importar el respaldo.';
+            }
+        }
+    };
+
+    window.inicializarActualizadorApp = async function () {
+        var card = el('appUpdateCard');
+        if (!card) return;
+        try {
+            var d = await pedirJson('/api/mantenimiento/actualizacion-app/estado');
+            if (!d.enabled) {
+                card.style.display = 'none';
+                var backupCardUnavailable = el('appServerBackupCard');
+                if (backupCardUnavailable) backupCardUnavailable.style.display = 'none';
+                return;
+            }
+            card.style.display = 'block';
+            var backupCard = el('appServerBackupCard');
+            if (backupCard) backupCard.style.display = 'block';
+            var build = el('appUpdateBuildInfo');
+            if (build) build.textContent =
+                'Plataforma: ' + (d.platform === 'android-mobile' ? 'Android' : 'Windows') +
+                ' · Versión instalada: ' + (d.installed_commit ? d.installed_commit.slice(0, 7) : 'no identificada') +
+                ' · Fuente: repositorio público';
+            var descripcion = el('appUpdateDescription');
+            if (descripcion) descripcion.textContent =
+                'Consulta la publicación pública de VoIP Provisioner y descarga únicamente los archivos compatibles que cambiaron. Los servidores y las contraseñas se mantienen en el almacenamiento privado.';
+            var fullWindows = el('desktopAppUpdateActions');
+            var fullAndroid = el('androidAppUpdateActions');
+            if (fullWindows) fullWindows.style.display = 'none';
+            if (fullAndroid) fullAndroid.style.display = 'none';
+            actualizarEstadoBotones();
+            setMensaje('Listo para consultar actualizaciones públicas. No hace falta configurar tokens ni credenciales de GitHub.', 'info');
+        } catch (e) {
+            card.style.display = 'none';
+        }
+    };
+
+    window.comprobarActualizacionApp = async function () {
+        var btn = el('btnAppUpdateCheck');
+        var apply = el('btnAppUpdateApply');
+        var fullWindows = el('desktopAppUpdateActions');
+        var fullAndroid = el('androidAppUpdateActions');
+        preview = null;
+        if (apply) apply.style.display = 'none';
+        if (fullWindows) fullWindows.style.display = 'none';
+        if (fullAndroid) fullAndroid.style.display = 'none';
+        if (btn) { btn.disabled = true; btn.textContent = 'Consultando publicación...'; }
+        setMensaje('Conectando al repositorio público y verificando la versión instalada...', 'info');
+        try {
+            var d = await pedirJson('/api/mantenimiento/actualizacion-app/comprobar', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json', 'Cache-Control': 'no-cache'},
+                body: '{}'
+            });
+            preview = d;
+            var build = el('appUpdateBuildInfo');
+            if (build) build.textContent =
+                'Instalada: ' + (d.installed_commit || 'desconocida').slice(0, 7) +
+                ' · Pública: ' + (d.latest_commit || 'desconocida').slice(0, 7);
+            var fullRequired = !!d.requires_full_update ||
+                Number(d.requires_full_update_count || d.requires_apk_count || 0) > 0;
+            if (fullRequired) {
+                var platform = d.platform || '';
+                if (platform === 'windows-desktop' && fullWindows) fullWindows.style.display = 'flex';
+                if (platform === 'android-mobile' && fullAndroid) fullAndroid.style.display = 'flex';
+                var motivos = d.requires_full_update_paths || d.requires_apk || [];
+                var detalleCompleto = 'La versión instalada necesita una actualización completa mediante ' +
+                    (platform === 'windows-desktop' ? 'el instalador de Windows' : 'un APK de Android') +
+                    '. No se aplicó ningún cambio parcial.';
+                if (motivos.length) detalleCompleto += '\n\nMotivo:\n' + motivos.slice(0, 8).join('\n');
+                setMensaje(detalleCompleto, 'error');
+                return;
+            }
+            if (!d.update_available) {
+                setMensaje(d.message || 'La aplicación ya está actualizada.', 'success');
+                return;
+            }
+            var nombres = (d.files || []).slice(0, 14);
+            var detalle = 'Se encontraron ' + (d.file_count || 0) +
+                ' archivo(s) modificados para actualizar sin reinstalar la aplicación.';
+            if (d.deleted_count) detalle += '\nArchivos obsoletos a retirar: ' + d.deleted_count + '.';
+            if (nombres.length) detalle += '\n\n' + nombres.join('\n');
+            if ((d.files || []).length > 14) detalle += '\n…y más archivos.';
+            setMensaje(detalle, 'success');
+            if (apply) apply.style.display = '';
+        } catch (e) {
+            setMensaje(e.message || 'No se pudieron comprobar las actualizaciones.', 'error');
+        } finally {
+            if (btn) { btn.disabled = false; btn.textContent = '🔎 Buscar actualizaciones'; }
+        }
+    };
+
+    window.aplicarActualizacionApp = async function () {
+        var btn = el('btnAppUpdateApply');
+        if (!preview || !preview.update_available) {
+            setMensaje('Primero buscá actualizaciones.', 'error');
+            return;
+        }
+        if (preview.requires_full_update || preview.requires_full_update_count || preview.requires_apk_count) {
+            setMensaje('Estos cambios requieren una actualización completa. No se modificó la aplicación.', 'error');
+            return;
+        }
+        if (!window.confirm(
+            'Se descargarán y verificarán solamente los archivos modificados.\n\n' +
+            'Los servidores, contraseñas y configuraciones guardadas no se modifican.\n\n' +
+            'Al terminar, cerrá la aplicación por completo y volvé a abrirla. ¿Continuar?'
+        )) return;
+
+        if (btn) { btn.disabled = true; btn.textContent = 'Descargando y verificando...'; }
+        setMensaje('Descargando los cambios desde el repositorio público, verificando sus hashes y preparando una versión reversible...', 'info');
+        try {
+            var d = await pedirJson('/api/mantenimiento/actualizacion-app/aplicar', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: '{}'
+            });
+            if (btn) btn.style.display = 'none';
+            preview = null;
+            setMensaje(
+                (d.message || 'Actualización preparada.') +
+                '\nArchivos descargados: ' + (d.downloaded_count || 0) +
+                '.\nVersión preparada: ' + String(d.latest_commit || '').slice(0, 7) +
+                '.\n\nLos servidores SSH y sus contraseñas permanecen intactos.',
+                'success'
+            );
+        } catch (e) {
+            setMensaje(e.message || 'No se pudo preparar la actualización. La versión activa no se reemplazó.', 'error');
+        } finally {
+            if (btn) { btn.disabled = false; btn.textContent = '⬇️ Descargar y aplicar cambios'; }
+        }
+    };
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', window.inicializarActualizadorApp);
+    } else {
+        window.inicializarActualizadorApp();
+    }
+})();
+</script>
+
+</body></html>

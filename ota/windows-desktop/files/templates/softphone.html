@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Softphone Judicial con TekSIP + NGINX</title>
+    <style>
+        :root {
+            --bg-body: #1a1a2e;
+            --text-color: #e0e0e0;
+            --input-bg: #16213e;
+            --input-border: #2a2a4a;
+            --btn-bg: #334155;
+            --card-bg: #1e293b;
+            --green: #27ae60;
+            --red: #e74c3c;
+        }
+        body.tema-claro {
+            --bg-body: #f0f2f5;
+            --text-color: #1a1a2e;
+            --input-bg: #ffffff;
+            --input-border: #d0d0d0;
+            --btn-bg: #e0e0e0;
+            --card-bg: #ffffff;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: Arial, sans-serif;
+            background: var(--bg-body);
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            transition: background 0.3s;
+            overflow: hidden;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 15px;
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--input-border);
+        }
+        .header h1 { font-size: 18px; color: #4da6ff; }
+        .internal-badge {
+            background: #555;
+            color: #ccc;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        .internal-badge.online { background: var(--green); color: white; }
+        .internal-badge.registering { background: #f59e0b; }
+        .tema-switch { margin-left: 10px; cursor: pointer; }
+        .main { display: flex; flex: 1; overflow: hidden; }
+        .sidebar {
+            width: 60px;
+            background: var(--card-bg);
+            border-right: 1px solid var(--input-border);
+            display: flex;
+            flex-direction: column;
+            padding: 8px 4px;
+            gap: 6px;
+        }
+        .tab-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 10px 4px;
+            border-radius: 8px;
+            cursor: pointer;
+            background: transparent;
+            color: var(--text-color);
+            border: none;
+            opacity: 0.7;
+        }
+        .tab-btn.active { background: #667eea; color: white; opacity: 1; }
+        .content { flex: 1; overflow-y: auto; padding: 15px; }
+        .phone-panel { max-width: 380px; margin: 0 auto; }
+        .phone-screen {
+            background: var(--input-bg);
+            border-radius: 10px;
+            padding: 16px;
+            text-align: center;
+            margin-bottom: 16px;
+            border: 2px solid var(--input-border);
+        }
+        .phone-number { font-size: 24px; font-family: monospace; color: #4da6ff; }
+        .keypad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+        .key {
+            padding: 16px;
+            font-size: 20px;
+            font-weight: bold;
+            background: var(--btn-bg);
+            border: 1px solid var(--input-border);
+            color: var(--text-color);
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: center;
+        }
+        .key:active { transform: scale(0.95); }
+        .action-bar {
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        .btn-call { background: var(--green); color: white; padding: 14px; border-radius: 8px; font-weight: bold; border: none; cursor: pointer; }
+        .btn-end { background: var(--red); color: white; padding: 14px; border-radius: 8px; font-weight: bold; border: none; cursor: pointer; }
+        .btn-action { background: var(--btn-bg); color: var(--text-color); padding: 14px; border-radius: 8px; border: none; cursor: pointer; }
+        .setting-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background: var(--card-bg);
+            border-radius: 6px;
+            margin-bottom: 6px;
+        }
+        .setting-row input {
+            background: var(--input-bg);
+            border: 2px solid var(--input-border);
+            color: var(--text-color);
+            padding: 6px 10px;
+            border-radius: 5px;
+        }
+        .contact-card {
+            background: var(--card-bg);
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 6px;
+            display: flex;
+            justify-content: space-between;
+            cursor: pointer;
+        }
+        .log-item {
+            background: var(--card-bg);
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 4px;
+        }
+        @media (max-width: 360px) {
+            .key { padding: 14px; font-size: 18px; }
+        }
+    </style>
+    <!-- SIP.js versión 0.20.0 (compatible con el código) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sip.js/0.20.0/sip.min.js"></script>
+</head>
+<body>
+<div class="header">
+    <h1>⚖️ Softphone Judicial (TekSIP + NGINX)</h1>
+    <div style="display: flex; align-items: center;">
+        <div id="statusBadge" class="internal-badge">⚪ Desconectado</div>
+        <div class="tema-switch" onclick="alternarTema()">🌓</div>
+    </div>
+</div>
+<div class="main">
+    <div class="sidebar">
+        <button class="tab-btn active" data-tab="phone">📞 Tel.</button>
+        <button class="tab-btn" data-tab="directory">📖 Dir.</button>
+        <button class="tab-btn" data-tab="history">🕐 Hist.</button>
+        <button class="tab-btn" data-tab="recordings">🔴 Rec.</button>
+        <button class="tab-btn" data-tab="settings">⚙️ Conf.</button>
+        <div style="flex:1;"></div>
+        <a href="/" class="tab-btn" style="text-decoration: none;">🏠 Inicio</a>
+    </div>
+    <div class="content" id="tabContent"></div>
+</div>
+
+<!-- Elemento de audio para flujo remoto -->
+<audio id="remoteAudio" autoplay></audio>
+
+<script>
+    // -------------------- CONFIGURACIÓN --------------------
+    let sipConfig = {
+        extension: localStorage.getItem('sip_ext') || '',
+        password: localStorage.getItem('sip_pass') || '',
+        // El servidor ahora es la IP pública donde está NGINX (5.0.32.80)
+        // El puerto lo maneja NGINX (443 para wss). No necesitamos puerto en la URI.
+        server: localStorage.getItem('sip_server') || '5.0.32.80',
+        // El puerto WebSocket ya no es necesario porque usamos wss:// y la ruta /ws/
+        wsPort: localStorage.getItem('sip_ws_port') || ''  // Se ignora
+    };
+
+    let userAgent = null;
+    let registerer = null;
+    let currentSession = null;
+    let registered = false;
+    let callState = 'idle';   // idle, dialing, active, incoming
+    let dialNumber = '';
+    let callSeconds = 0;
+    let callTimer = null;
+    let isMuted = false, isHolding = false, isRecording = false;
+    let callHistory = JSON.parse(localStorage.getItem('softphone_history') || '[]');
+    let recordings = JSON.parse(localStorage.getItem('softphone_recordings') || '[]');
+
+    // Directorio de ejemplo
+    const DIRECTORY = [
+        { name: 'Mesa de Entradas', ext: '101', dept: 'Administrativo', status: 'disp' },
+        { name: 'Juzgado Nº1', ext: '102', dept: 'Juzgados', status: 'oc' },
+        { name: 'Fiscalía', ext: '106', dept: 'Ministerio Público', status: 'disp' },
+        { name: 'Alcaidía', ext: '108', dept: 'Seguridad', status: 'disp' }
+    ];
+
+    // -------------------- TEMA OSCURO/CLARO --------------------
+    function aplicarTema(modo) {
+        if (modo === 'claro') document.body.classList.add('tema-claro');
+        else document.body.classList.remove('tema-claro');
+        localStorage.setItem('tema', modo);
+    }
+    function alternarTema() {
+        const nuevo = document.body.classList.contains('tema-claro') ? 'oscuro' : 'claro';
+        aplicarTema(nuevo);
+    }
+    aplicarTema(localStorage.getItem('tema') || 'oscuro');
+
+    // -------------------- REGISTRO SIP CON TEKSIP A TRAVÉS DE NGINX --------------------
+    async function registerSip() {
+        const ext = sipConfig.extension.trim();
+        const pass = sipConfig.password.trim();
+        const server = sipConfig.server.trim();   // Debe ser 5.0.32.80 o el dominio público
+
+        if (!ext || !pass || !server) {
+            updateStatus('Faltan datos en configuración', false);
+            return;
+        }
+
+        // La URI WebSocket apunta a NGINX en el puerto 443 (HTTPS) con la ruta /ws/
+        // El proxy NGINX redirigirá a ws://127.0.0.1:5062
+        const wsUri = `wss://${server}/ws/`;
+
+        updateStatus('Registrando...', false, 'registering');
+
+        // Limpieza de instancias previas
+        if (registerer) {
+            try { await registerer.unregister(); } catch(e) {}
+            registerer = null;
+        }
+        if (userAgent) {
+            try { await userAgent.stop(); } catch(e) {}
+            userAgent = null;
+        }
+
+        // Configuración para SIP.js v0.20.0
+        const userAgentOptions = {
+            transportOptions: {
+                server: wsUri
+            },
+            uri: SIP.UserAgent.makeURI(`sip:${ext}@${server}`),
+            authorizationUsername: ext,
+            authorizationPassword: pass,
+            displayName: `Interno ${ext}`,
+            logLevel: 'debug'
+        };
+
+        try {
+            userAgent = new SIP.UserAgent(userAgentOptions);
+
+            // Delegado para llamadas entrantes
+            userAgent.delegate = {
+                onInvite: (invitation) => {
+                    console.log("Llamada entrante recibida de:", invitation.remoteIdentity.uri.user);
+                    if (currentSession) {
+                        invitation.reject();
+                        return;
+                    }
+                    callState = 'incoming';
+                    currentSession = invitation;
+                    setupSessionDelegate(invitation);
+                    renderCurrentTab();
+                }
+            };
+
+            await userAgent.start();
+
+            registerer = new SIP.Registerer(userAgent);
+            registerer.stateChange.addListener((newState) => {
+                if (newState === SIP.RegistererState.Registered) {
+                    registered = true;
+                    updateStatus(`Registrado en TekSIP como ${ext}`, true);
+                    renderCurrentTab();
+                } else if (newState === SIP.RegistererState.Unregistered) {
+                    registered = false;
+                    updateStatus('Desconectado de TekSIP', false);
+                    renderCurrentTab();
+                }
+            });
+
+            await registerer.register();
+        } catch (err) {
+            console.error("Fallo en inicialización de SIP.js:", err);
+            registered = false;
+            updateStatus(`Error: ${err.message}`, false);
+        }
+    }
+
+    function updateStatus(text, isOnline, extraClass = '') {
+        const badge = document.getElementById('statusBadge');
+        badge.textContent = text;
+        badge.classList.remove('online', 'registering');
+        if (isOnline) badge.classList.add('online');
+        else if (extraClass === 'registering') badge.classList.add('registering');
+    }
+
+    // -------------------- ASIGNACIÓN DE EVENTOS DE SESIÓN (MEDIA) --------------------
+    function setupSessionDelegate(session) {
+        session.delegate = {
+            onSessionDescriptionHandlerCreation: (handler) => {
+                handler.on('userMediaSuccess', (stream) => {
+                    console.log("User media exitoso");
+                });
+            },
+            onAccepted: () => {
+                console.log("Llamada aceptada.");
+                callState = 'active';
+                callSeconds = 0;
+                startTimer();
+                setupRemoteAudio(session);
+                renderCurrentTab();
+            },
+            onRejected: () => {
+                console.log("Llamada rechazada/fallida.");
+                hangup();
+            },
+            onTerminated: () => {
+                console.log("Llamada terminada remotamente.");
+                hangup();
+            }
+        };
+    }
+
+    function setupRemoteAudio(session) {
+        const remoteStream = new MediaStream();
+        const receivers = session.sessionDescriptionHandler.peerConnection.getReceivers();
+        receivers.forEach(receiver => {
+            if (receiver.track) {
+                remoteStream.addTrack(receiver.track);
+            }
+        });
+        const audioElement = document.getElementById('remoteAudio');
+        if (audioElement) {
+            audioElement.srcObject = remoteStream;
+            audioElement.play().catch(err => console.error("Error reproduciendo audio remoto:", err));
+        }
+    }
+
+    // -------------------- FUNCIONES DE LLAMADA (INVITE / BYE) --------------------
+    async function startCall() {
+        if (!registered || !userAgent) {
+            alert('No estás registrado en TekSIP. Verifica tu pestaña de configuración.');
+            return;
+        }
+        if (currentSession) {
+            alert('Ya cuentas con una sesión de llamada en curso.');
+            return;
+        }
+        const destino = dialNumber.trim();
+        if (!destino) return;
+
+        const server = sipConfig.server.trim();
+        const target = SIP.UserAgent.makeURI(`sip:${destino}@${server}`);
+
+        console.log(`Enviando INVITE hacia: sip:${destino}@${server}`);
+
+        const inviter = new SIP.Inviter(userAgent, target, {
+            sessionDescriptionHandlerOptions: {
+                constraints: { audio: true, video: false }
+            }
+        });
+
+        callState = 'dialing';
+        renderCurrentTab();
+
+        currentSession = inviter;
+        setupSessionDelegate(inviter);
+
+        try {
+            await inviter.invite();
+        } catch (err) {
+            console.error("Error al disparar la invitación SIP:", err);
+            alert('No se pudo establecer el canal: ' + err.message);
+            hangup();
+        }
+    }
+
+    async function hangup() {
+        if (currentSession) {
+            if (callState === 'active' && currentSession.remoteIdentity) {
+                const ext = currentSession.remoteIdentity.uri.user;
+                const nombre = DIRECTORY.find(c => c.ext === ext)?.name || `Externo (${ext})`;
+                callHistory.unshift({
+                    name: nombre,
+                    ext: ext,
+                    type: 'saliente',
+                    time: new Date().toLocaleString(),
+                    duration: formatTime(callSeconds)
+                });
+                if (isRecording) {
+                    recordings.unshift({
+                        name: `Grabación - ${nombre}`,
+                        ext: ext,
+                        date: new Date().toLocaleDateString(),
+                        duration: formatTime(callSeconds),
+                        file: `REC-${ext}-${Date.now()}.mp3`
+                    });
+                    localStorage.setItem('softphone_recordings', JSON.stringify(recordings.slice(0,50)));
+                }
+                localStorage.setItem('softphone_history', JSON.stringify(callHistory.slice(0,100)));
+            }
+
+            try {
+                if (callState === 'incoming') {
+                    await currentSession.reject();
+                } else {
+                    await currentSession.bye();
+                }
+            } catch (e) {
+                console.warn("La sesión ya había cerrado:", e);
+            }
+            currentSession = null;
+        }
+        stopTimer();
+        callState = 'idle';
+        isMuted = isHolding = isRecording = false;
+        callSeconds = 0;
+
+        const audioElement = document.getElementById('remoteAudio');
+        if (audioElement) audioElement.srcObject = null;
+
+        renderCurrentTab();
+    }
+
+    async function acceptCall() {
+        if (currentSession && callState === 'incoming') {
+            try {
+                await currentSession.accept({
+                    sessionDescriptionHandlerOptions: {
+                        constraints: { audio: true, video: false }
+                    }
+                });
+            } catch(e) {
+                console.error("No se pudo aceptar la llamada entrante:", e);
+            }
+        }
+    }
+
+    // -------------------- TIMER Y MISC --------------------
+    function startTimer() {
+        stopTimer();
+        callTimer = setInterval(() => {
+            if (callState === 'active') {
+                callSeconds++;
+                const durElem = document.querySelector('.phone-duration');
+                if (durElem) durElem.textContent = formatTime(callSeconds);
+            }
+        }, 1000);
+    }
+    function stopTimer() { if (callTimer) clearInterval(callTimer); callTimer = null; }
+    function formatTime(s) {
+        const m = Math.floor(s / 60);
+        const sec = s % 60;
+        return `${m.toString().padStart(2,'0')}:${sec.toString().padStart(2,'0')}`;
+    }
+
+    function toggleMute() {
+        isMuted = !isMuted;
+        if (currentSession && currentSession.sessionDescriptionHandler) {
+            const pc = currentSession.sessionDescriptionHandler.peerConnection;
+            pc.getSenders().forEach(sender => {
+                if (sender.track && sender.track.kind === 'audio') {
+                    sender.track.enabled = !isMuted;
+                }
+            });
+        }
+        renderCurrentTab();
+    }
+
+    function toggleHold() { isHolding = !isHolding; renderCurrentTab(); }
+    function toggleRecord() { isRecording = !isRecording; renderCurrentTab(); }
+    function transferCall() { alert('Función de transferencia no disponible en esta versión'); }
+
+    // -------------------- UI Y NAVEGACIÓN --------------------
+    let currentTab = 'phone';
+    function switchTab(tab) {
+        currentTab = tab;
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        const activeBtn = document.querySelector(`.tab-btn[data-tab="${tab}"]`);
+        if (activeBtn) activeBtn.classList.add('active');
+        renderCurrentTab();
+    }
+    function renderCurrentTab() {
+        const container = document.getElementById('tabContent');
+        if (!container) return;
+        switch(currentTab) {
+            case 'phone': container.innerHTML = renderPhone(); break;
+            case 'directory': container.innerHTML = renderDirectory(); break;
+            case 'history': container.innerHTML = renderHistory(); break;
+            case 'recordings': container.innerHTML = renderRecordings(); break;
+            case 'settings': container.innerHTML = renderSettings(); break;
+        }
+        attachPhoneEvents();
+    }
+    function attachPhoneEvents() {
+        if (currentTab !== 'phone') return;
+        document.querySelectorAll('.key').forEach(key => {
+            key.onclick = () => { if (callState === 'idle') pressKey(key.innerText); };
+        });
+        const callBtn = document.querySelector('.btn-call');
+        if (callBtn) callBtn.onclick = startCall;
+        const endBtn = document.querySelector('.btn-end');
+        if (endBtn) endBtn.onclick = hangup;
+        const acceptBtn = document.querySelector('.accept-call');
+        if (acceptBtn) acceptBtn.onclick = acceptCall;
+        const clearBtn = document.querySelector('.clear-dial');
+        if (clearBtn) clearBtn.onclick = () => { dialNumber = ''; renderCurrentTab(); };
+        const backspaceBtn = document.querySelector('.backspace-dial');
+        if (backspaceBtn) backspaceBtn.onclick = () => { dialNumber = dialNumber.slice(0, -1); renderCurrentTab(); };
+        const muteBtn = document.querySelector('.btn-mute');
+        if (muteBtn) muteBtn.onclick = toggleMute;
+        const holdBtn = document.querySelector('.btn-hold');
+        if (holdBtn) holdBtn.onclick = toggleHold;
+        const recBtn = document.querySelector('.btn-record');
+        if (recBtn) recBtn.onclick = toggleRecord;
+        const transferBtn = document.querySelector('.btn-transfer');
+        if (transferBtn) transferBtn.onclick = transferCall;
+    }
+    function pressKey(k) { dialNumber += k; renderCurrentTab(); }
+
+    function renderPhone() {
+        if (callState === 'incoming') {
+            return `
+                <div class="phone-panel">
+                    <div class="phone-screen">
+                        <div style="color: #f59e0b;">📞 Llamada entrante</div>
+                        <div>${currentSession?.remoteIdentity?.uri?.user || 'Desconocido'}</div>
+                    </div>
+                    <button class="btn-call accept-call" style="background: #27ae60; width:100%; margin-bottom: 8px;">✅ Responder</button>
+                    <button class="btn-end" style="background: var(--red); width:100%;">❌ Rechazar</button>
+                </div>`;
+        }
+        return `
+            <div class="phone-panel">
+                <div class="phone-screen">
+                    ${callState === 'idle' ? `<div class="phone-number">${dialNumber || 'Marcar...'}</div><div style="font-size: 12px;">${registered ? '✅ Conectado a TekSIP' : '⚠️ Sin registrar'}</div>` : ''}
+                    ${callState === 'dialing' ? `<div>🔵 Llamando a ${dialNumber}...</div>` : ''}
+                    ${callState === 'active' ? `<div>${currentSession?.remoteIdentity?.uri?.user || ''}</div><div class="phone-duration" style="font-size: 20px; color: #4ade80;">${formatTime(callSeconds)}</div><div>${isMuted ? '🔇 Silencio ' : ''}${isHolding ? '⏸ Espera ' : ''}${isRecording ? '🔴 Grabando' : ''}</div>` : ''}
+                </div>
+                ${callState === 'idle' ? `
+                    <div class="keypad">
+                        ${[1,2,3,4,5,6,7,8,9,'*',0,'#'].map(k => `<div class="key">${k}</div>`).join('')}
+                    </div>
+                    <div class="action-bar">
+                        <button class="btn-action clear-dial">C</button>
+                        <button class="btn-call" ${!dialNumber ? 'disabled style="opacity:0.5"' : ''}>📞 Llamar</button>
+                        <button class="btn-action backspace-dial">⌫</button>
+                    </div>
+                ` : callState === 'active' ? `
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                        <button class="btn-action btn-mute">${isMuted ? '🔇 Activar Mic' : '🎤 Silenciar'}</button>
+                        <button class="btn-action btn-hold">${isHolding ? '⏸ Retomar' : '⏸ Espera'}</button>
+                        <button class="btn-action btn-record">${isRecording ? '🔴 Grabando' : '🔴 Grabar'}</button>
+                        <button class="btn-action btn-transfer">🔄 Transferir</button>
+                    </div>
+                    <button class="btn-end" style="width:100%; margin-top:10px;">🔴 Colgar</button>
+                ` : callState === 'dialing' ? `
+                    <button class="btn-end" style="width:100%;">🔴 Cancelar</button>
+                ` : ''}
+            </div>`;
+    }
+
+    function renderDirectory() {
+        return `
+            <h2>📖 Directorio</h2>
+            ${DIRECTORY.map(c => `
+                <div class="contact-card" onclick="quickCall('${c.ext}')">
+                    <div><b>${c.name}</b><br><small>${c.dept}</small></div>
+                    <div>📞 ${c.ext}</div>
+                </div>
+            `).join('')}
+        `;
+    }
+    function renderHistory() {
+        return `
+            <h2>🕐 Historial</h2>
+            ${callHistory.length === 0 ? '<p>Vacío</p>' : callHistory.slice(0,30).map(h => `
+                <div class="log-item">
+                    <div><b>${h.name}</b> (${h.ext})<br><small>${h.time}</small></div>
+                    <div>${h.duration}</div>
+                    <button onclick="quickCall('${h.ext}')">📞</button>
+                </div>
+            `).join('')}
+        `;
+    }
+    function renderRecordings() {
+        return `
+            <h2>🔴 Grabaciones simuladas</h2>
+            ${recordings.length === 0 ? '<p>Ninguna</p>' : recordings.map(r => `
+                <div class="log-item">
+                    <div><b>${r.name}</b><br><small>${r.date} - ${r.duration}</small></div>
+                    <button onclick="alert('Reproducir ${r.file}')">▶</button>
+                </div>
+            `).join('')}
+        `;
+    }
+    function renderSettings() {
+        return `
+            <h2>⚙️ Configuración TekSIP + NGINX</h2>
+            <div class="setting-row"><label>Extensión:</label><input type="text" id="cfgExt" value="${sipConfig.extension}"></div>
+            <div class="setting-row"><label>Contraseña:</label><input type="password" id="cfgPass" value="${sipConfig.password}"></div>
+            <div class="setting-row"><label>Servidor (IP pública / dominio):</label><input type="text" id="cfgServer" value="${sipConfig.server}"></div>
+            <div class="setting-row"><label style="opacity:0.6;">Puerto WebSocket (ignorado):</label><input type="text" disabled value="Usa wss://443/ws/"></div>
+            <button class="btn-call" style="width:100%;" onclick="saveAndRegister()">💾 Guardar y registrar</button>
+            <button class="btn-action" style="width:100%; margin-top:8px;" onclick="clearHistoryLocal()">🗑️ Limpiar historial</button>
+        `;
+    }
+    window.saveAndRegister = async function() {
+        sipConfig.extension = document.getElementById('cfgExt').value;
+        sipConfig.password = document.getElementById('cfgPass').value;
+        sipConfig.server = document.getElementById('cfgServer').value;
+        localStorage.setItem('sip_ext', sipConfig.extension);
+        localStorage.setItem('sip_pass', sipConfig.password);
+        localStorage.setItem('sip_server', sipConfig.server);
+        // No guardamos el puerto porque se usará fijo wss://{server}/ws/
+        await registerSip();
+        renderCurrentTab();
+    };
+    window.clearHistoryLocal = function() {
+        if (confirm('¿Borrar todo el historial?')) {
+            callHistory = [];
+            localStorage.setItem('softphone_history', '[]');
+            renderCurrentTab();
+        }
+    };
+    window.quickCall = function(ext) {
+        dialNumber = ext;
+        if (currentTab !== 'phone') switchTab('phone');
+        startCall();
+    };
+
+    // Inicialización
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        const tab = btn.getAttribute('data-tab');
+        if (tab) btn.addEventListener('click', () => switchTab(tab));
+    });
+    switchTab('phone');
+    registerSip();
+</script>
+</body>
+</html>

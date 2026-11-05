@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Terminal SSH - VoIP Provisioner</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/xterm@5.3.0/css/xterm.min.css">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body {
+    background: #0a0e27;
+    color: #e8eaf6;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    height: 100%;
+    overflow: hidden;
+    width: 100%;
+}
+body { display: flex; flex-direction: column; }
+
+/* HEADER - padding SOLO en el contenido interno */
+.header {
+    background: #1e2749;
+    width: 100%;
+    flex-shrink: 0;
+    border-bottom: 1px solid #2a3459;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+}
+.header-inner {
+    width: 100%;
+    padding: 10px 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+}
+.header h1 {
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex: 1;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+}
+.header h1 .target {
+    font-size: 11px;
+    color: #9fa8da;
+    font-weight: 400;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.header-controls {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.btn {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 13px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    min-height: 36px;
+    min-width: 36px;
+    user-select: none;
+}
+.btn-primary { background: linear-gradient(135deg, #667eea, #764ba2); color: #fff; }
+.btn-secondary { background: #2a3459; color: #e8eaf6; border: 1px solid #3a4a6b; }
+.btn:active { transform: scale(0.95); opacity: 0.85; }
+
+.status {
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+.status-connected { background: rgba(102,187,106,.2); color: #66bb6a; }
+.status-disconnected { background: rgba(239,83,80,.2); color: #ef5350; }
+.status-connecting { background: rgba(255,167,38,.2); color: #ffa726; }
+
+/* TERMINAL - ocupa EXACTAMENTE el mismo ancho que el header */
+#terminal-container {
+    flex: 1;
+    width: 100%;
+    min-height: 0;
+    background: #0a0e27;
+    overflow: hidden;
+    position: relative;
+}
+#terminal-container .xterm {
+    width: 100%;
+    height: 100%;
+}
+
+/* BARRA DE TECLAS ESPECIALES (solo móvil) */
+.special-keys {
+    display: none;
+    background: #1a2238;
+    border-top: 1px solid #2a3459;
+    width: 100%;
+    flex-shrink: 0;
+    padding: 6px;
+    gap: 4px;
+    flex-wrap: wrap;
+}
+.special-keys button {
+    flex: 1;
+    min-width: 44px;
+    padding: 10px 6px;
+    background: #2a3459;
+    border: 1px solid #3a4a6b;
+    border-radius: 6px;
+    color: #e8eaf6;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'Consolas', monospace;
+    user-select: none;
+}
+.special-keys button:active { background: #667eea; transform: scale(0.95); }
+.special-keys button.wide { flex: 2; }
+
+.login-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(10,14,39,.98);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    padding: 20px;
+    overflow-y: auto;
+}
+.login-box {
+    background: #1e2749;
+    padding: 24px;
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0,0,0,.5);
+    max-width: 440px;
+    width: 100%;
+    margin: auto;
+}
+.login-box h2 { margin-bottom: 8px; text-align: center; font-size: 20px; }
+.login-box p { color: #9fa8da; margin-bottom: 18px; font-size: 13px; text-align: center; line-height: 1.5; }
+.login-box label { display: block; color: #9fa8da; font-size: 12px; margin-bottom: 6px; font-weight: 600; }
+.login-box select, .login-box input {
+    width: 100%;
+    padding: 12px 14px;
+    background: #0a0e27;
+    border: 1px solid #2a3459;
+    border-radius: 8px;
+    color: #e8eaf6;
+    font-size: 16px;
+    margin-bottom: 14px;
+    outline: none;
+    min-height: 46px;
+}
+.login-box select:focus, .login-box input:focus { border-color: #667eea; }
+.login-box .btn { width: 100%; padding: 14px; font-size: 15px; min-height: 48px; }
+.login-error { color: #ef5350; font-size: 12px; text-align: center; margin-top: 10px; min-height: 16px; }
+.hidden { display: none !important; }
+.profile-info { font-size: 11px; color: #66bb6a; margin-bottom: 14px; text-align: center; min-height: 14px; word-break: break-word; }
+.security-notice { background: rgba(255,167,38,.1); border: 1px solid rgba(255,167,38,.3); border-radius: 8px; padding: 10px; margin-bottom: 14px; font-size: 11px; color: #ffa726; text-align: center; line-height: 1.4; }
+
+/* MÓVIL */
+@media (max-width: 768px), (pointer: coarse) {
+    .special-keys { display: flex; }
+    .header-inner { padding: 8px 10px; }
+    .header h1 { font-size: 14px; }
+    .header h1 .target { display: none; }
+    .btn { padding: 7px 10px; font-size: 12px; min-height: 34px; }
+    .status { padding: 4px 8px; font-size: 10px; }
+}
+
+@media (max-width: 380px) {
+    .header h1 { font-size: 13px; }
+    .special-keys button { font-size: 11px; padding: 9px 4px; min-width: 38px; }
+}
+
+@media (max-height: 500px) and (orientation: landscape) {
+    .header-inner { padding: 4px 10px; }
+    .header h1 { font-size: 13px; }
+    .btn { min-height: 30px; padding: 5px 8px; }
+    .special-keys { padding: 4px; }
+    .special-keys button { padding: 6px 4px; min-width: 36px; }
+}
+</style>
+</head>
+<body>
+<div id="loginOverlay" class="login-overlay">
+    <div class="login-box">
+        <h2>💻 Terminal SSH</h2>
+        <p>Conexión segura a tus servidores VoIP</p>
+        <div class="security-notice">🔐 La contraseña se solicita en cada sesión y <strong>NO se almacena</strong>.</div>
+        <label>📡 Seleccionar Servidor</label>
+        <select id="perfilSelect" onchange="updateProfileInfo()">
+            <option value="">-- Seleccionar Perfil --</option>
+        </select>
+        <div id="profileInfo" class="profile-info"></div>
+        <label>🔑 Contraseña SSH</label>
+        <input type="password" id="sshPassword" placeholder="Ingresa la contraseña SSH..." autocomplete="off" autocapitalize="off" autocorrect="off">
+        <button class="btn btn-primary" onclick="connectTerminal()">🔌 Conectar</button>
+        <div id="loginError" class="login-error"></div>
+        <a href="/admin" class="btn btn-secondary" style="margin-top:10px;">← Volver al Admin</a>
+    </div>
+</div>
+
+<div class="header">
+    <div class="header-inner">
+        <h1>💻 <span class="target" id="headerTarget"></span></h1>
+        <div class="header-controls">
+            <span id="connStatus" class="status status-disconnected">Desconectado</span>
+            <button class="btn btn-primary" onclick="reconnect()" title="Reconectar">🔄</button>
+            <a href="/admin" class="btn btn-secondary" title="Admin">←</a>
+        </div>
+    </div>
+</div>
+
+<div id="terminal-container"></div>
+
+<div class="special-keys" id="specialKeys">
+    <button onclick="sendKey('\x09')">⇥</button>
+    <button onclick="sendKey('\x1b')">ESC</button>
+    <button onclick="sendKey('\x03')">^C</button>
+    <button onclick="sendKey('\x04')">^D</button>
+    <button onclick="sendKey('\x1a')">^Z</button>
+    <button onclick="sendKey('\x1b[A')">↑</button>
+    <button onclick="sendKey('\x1b[B')">↓</button>
+    <button onclick="sendKey('\x1b[D')">←</button>
+    <button onclick="sendKey('\x1b[C')">→</button>
+    <button onclick="sendKey('|')">|</button>
+    <button onclick="sendKey('&')">&</button>
+    <button onclick="sendKey('>')">></button>
+    <button onclick="sendKey('<')"><</button>
+    <button onclick="sendKey('~')">~</button>
+    <button onclick="sendKey('/')">/</button>
+    <button onclick="sendKey('-')">-</button>
+    <button onclick="sendKey('_')">_</button>
+    <button onclick="toggleFullscreen()" class="wide">⛶</button>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/xterm@5.3.0/lib/xterm.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xterm-addon-fit@0.8.0/lib/xterm-addon-fit.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xterm-addon-web-links@0.9.0/lib/xterm-addon-web-links.min.js"></script>
+<script>
+let term, fitAddon, eventSource, sessionId;
+let isConnected = false, perfilesData = [];
+const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.matchMedia('(pointer: coarse)').matches;
+
+function fitTerminal() {
+    if (!term || !fitAddon) return;
+    requestAnimationFrame(() => {
+        try {
+            fitAddon.fit();
+            sendResize();
+        } catch(e) {}
+    });
+}
+
+function initTerminal() {
+    term = new Terminal({
+        cursorBlink: true,
+        fontSize: isMobile ? 13 : 14,
+        fontFamily: "'Menlo', 'Consolas', 'Monaco', 'Courier New', monospace",
+        theme: {
+            background: '#0a0e27',
+            foreground: '#e8eaf6',
+            cursor: '#667eea',
+            cursorAccent: '#0a0e27',
+            selectionBackground: 'rgba(102,126,234,0.4)'
+        },
+        scrollback: 3000,
+        convertEol: true,
+        allowTransparency: false,
+        macOptionIsMeta: true,
+        rightClickSelectsWord: true
+    });
+    
+    fitAddon = new FitAddon.FitAddon();
+    term.loadAddon(fitAddon);
+    term.loadAddon(new WebLinksAddon.WebLinksAddon());
+    term.open(document.getElementById('terminal-container'));
+    
+    setTimeout(fitTerminal, 100);
+    setTimeout(fitTerminal, 300);
+    setTimeout(fitTerminal, 600);
+    
+    let resizeTimeout;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(fitTerminal, 150);
+    });
+    
+    if (screen.orientation) {
+        screen.orientation.addEventListener('change', () => {
+            setTimeout(fitTerminal, 400);
+        });
+    }
+    
+    if (window.visualViewport) {
+        window.visualViewport.addEventListener('resize', () => {
+            setTimeout(fitTerminal, 100);
+        });
+    }
+    
+    term.writeln('\x1b[1;34m╔══════════════════════════════════════╗\x1b[0m');
+    term.writeln('\x1b[1;34m║   \x1b[1;37mVoIP Provisioner - Terminal SSH\x1b[0m   \x1b[1;34m║\x1b[0m');
+    term.writeln('\x1b[1;34m╚══════════════════════════════════════╝\x1b[0m\r\n');
+    
+    const pt = sessionStorage.getItem('term_perfil');
+    const pw = sessionStorage.getItem('term_pass');
+    if (pt && pw) {
+        loadProfiles().then(() => {
+            document.getElementById('perfilSelect').value = pt;
+            document.getElementById('sshPassword').value = pw;
+            updateProfileInfo();
+            sessionStorage.removeItem('term_perfil');
+            sessionStorage.removeItem('term_pass');
+            setTimeout(() => connectTerminal(), 500);
+        });
+    } else {
+        loadProfiles();
+    }
+}
+
+async function loadProfiles() {
+    try {
+        const r = await fetch('/api/perfiles');
+        perfilesData = await r.json();
+        const s = document.getElementById('perfilSelect');
+        s.innerHTML = '<option value="">-- Seleccionar Perfil --</option>';
+        perfilesData.forEach(p => {
+            const o = document.createElement('option');
+            o.value = p.nombre;
+            o.textContent = p.nombre + ' (' + p.host + ')';
+            s.appendChild(o);
+        });
+    } catch(e) {
+        document.getElementById('loginError').textContent = 'Error cargando perfiles';
+    }
+}
+
+function updateProfileInfo() {
+    const n = document.getElementById('perfilSelect').value;
+    const p = perfilesData.find(x => x.nombre === n);
+    document.getElementById('profileInfo').textContent = p ? 
+        'Conectará a: ' + p.host + ':' + (p.puerto||22) + ' como ' + p.usuario : '';
+}
+
+async function connectTerminal() {
+    const pn = document.getElementById('perfilSelect').value;
+    const pw = document.getElementById('sshPassword').value;
+    const err = document.getElementById('loginError');
+    
+    if (!pn) { err.textContent = '⚠ Selecciona un perfil'; return; }
+    if (!pw) { err.textContent = '⚠ Ingresa la contraseña SSH'; return; }
+    
+    err.textContent = '⏳ Conectando...';
+    setStatus('connecting');
+    
+    try {
+        const r = await fetch('/ws/terminal/connect', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({perfil_nombre: pn, password_ssh: pw})
+        });
+        const d = await r.json();
+        
+        if (d.status !== 'ok') {
+            err.textContent = '❌ ' + (d.message || 'Error');
+            setStatus('disconnected');
+            return;
+        }
+        
+        sessionId = d.session_id;
+        document.getElementById('headerTarget').textContent = d.usuario + '@' + d.host;
+        document.getElementById('loginOverlay').classList.add('hidden');
+        document.getElementById('sshPassword').value = '';
+        
+        if (isMobile && document.activeElement) document.activeElement.blur();
+        
+        startStream();
+    } catch(e) {
+        err.textContent = '❌ Error de red: ' + e.message;
+        setStatus('disconnected');
+    }
+}
+
+function startStream() {
+    if (eventSource) eventSource.close();
+    eventSource = new EventSource('/ws/terminal/stream/' + sessionId);
+    
+    eventSource.onmessage = (e) => {
+        const m = e.data;
+        if (m === 'CONNECTED') {
+            isConnected = true;
+            setStatus('connected');
+            term.writeln('\r\n\x1b[32m✅ Conectado exitosamente\x1b[0m\r\n');
+            term.focus();
+            setTimeout(fitTerminal, 100);
+            setTimeout(fitTerminal, 300);
+            setTimeout(fitTerminal, 600);
+        } else if (m.startsWith('OUTPUT:')) {
+            try { term.write(atob(m.substring(7))); } catch(e) {}
+        } else if (m === 'DISCONNECTED' || m.startsWith('ERROR:')) {
+            isConnected = false;
+            setStatus('disconnected');
+            term.writeln('\r\n\x1b[31m❌ Conexión perdida\x1b[0m');
+        }
+    };
+    
+    eventSource.onerror = () => {
+        isConnected = false;
+        setStatus('disconnected');
+    };
+    
+    term.onData((d) => {
+        if (isConnected && sessionId) {
+            fetch('/ws/terminal/input/' + sessionId, {
+                method: 'POST',
+                headers: {'Content-Type': 'text/plain'},
+                body: d
+            }).catch(() => {});
+        }
+    });
+}
+
+function sendResize() {
+    if (isConnected && sessionId && term) {
+        fetch('/ws/terminal/resize/' + sessionId, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({cols: term.cols, rows: term.rows})
+        }).catch(() => {});
+    }
+}
+
+function sendKey(key) {
+    if (!isConnected || !sessionId) return;
+    fetch('/ws/terminal/input/' + sessionId, {
+        method: 'POST',
+        headers: {'Content-Type': 'text/plain'},
+        body: key
+    }).catch(() => {});
+    if (navigator.vibrate) navigator.vibrate(20);
+}
+
+function toggleFullscreen() {
+    if (!document.fullscreenElement) {
+        (document.documentElement.requestFullscreen || 
+         document.documentElement.webkitRequestFullscreen || 
+         function(){}).call(document.documentElement);
+    } else {
+        (document.exitFullscreen || 
+         document.webkitExitFullscreen || 
+         function(){}).call(document);
+    }
+}
+
+async function reconnect() {
+    if (sessionId) {
+        await fetch('/ws/terminal/disconnect/' + sessionId, {method: 'POST'}).catch(() => {});
+    }
+    sessionId = null;
+    isConnected = false;
+    if (eventSource) eventSource.close();
+    term.clear();
+    document.getElementById('loginOverlay').classList.remove('hidden');
+    document.getElementById('perfilSelect').value = '';
+    document.getElementById('sshPassword').value = '';
+    document.getElementById('profileInfo').textContent = '';
+    document.getElementById('loginError').textContent = '';
+    document.getElementById('headerTarget').textContent = '';
+    setStatus('disconnected');
+}
+
+function setStatus(s) {
+    const e = document.getElementById('connStatus');
+    e.className = 'status';
+    if (s === 'connected') { e.textContent = '🟢 Conectado'; e.classList.add('status-connected'); }
+    else if (s === 'connecting') { e.textContent = '🟡 Conectando...'; e.classList.add('status-connecting'); }
+    else { e.textContent = '🔴 Desconectado'; e.classList.add('status-disconnected'); }
+}
+
+window.addEventListener('beforeunload', () => {
+    if (sessionId) navigator.sendBeacon('/ws/terminal/disconnect/' + sessionId);
+});
+
+initTerminal();
+document.getElementById('sshPassword').addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') connectTerminal();
+});
+</script>
+</body>
+</html>

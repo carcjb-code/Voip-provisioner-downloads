@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="claro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>VoIP Provisioner</title>
+<style>
+:root{--page:#f6f8fc;--card:#fff;--title:#1c273d;--muted:#68758b;--line:#e2e8f0;--shadow:0 2px 7px rgba(28,39,61,.10)}
+html[data-theme="oscuro"]{--page:#0f1623;--card:#192436;--title:#eff3f9;--muted:#a5b2c6;--line:#34445c;--shadow:0 3px 9px rgba(0,0,0,.24)}
+*{box-sizing:border-box}
+html,body{min-height:100%;margin:0}
+body{min-height:100vh;background:var(--page);color:var(--title);font-family:Roboto,"Segoe UI",Arial,sans-serif;transition:background .18s,color .18s}
+.page{width:100%;max-width:900px;margin:0 auto;padding:22px 18px 24px}
+.titlebar{position:relative;display:flex;align-items:center;justify-content:center;height:48px;width:100%}
+.title{margin:0;text-align:center;font-size:24px;line-height:1.2;font-weight:700;letter-spacing:-.35px;color:var(--title)}
+.theme-toggle{position:absolute;left:0;top:6px;width:58px;height:36px;padding:0;border:0;background:transparent;cursor:pointer}
+.theme-track{position:absolute;left:2px;top:4px;width:54px;height:28px;border-radius:18px;background:#bdcfe4;transition:background .18s}
+.theme-thumb{position:absolute;left:5px;top:7px;width:22px;height:22px;border-radius:50%;background:#fff;color:#304763;display:flex;align-items:center;justify-content:center;font-size:12px;line-height:1;box-shadow:0 1px 3px rgba(0,0,0,.15);transition:left .18s}
+html[data-theme="oscuro"] .theme-track{background:#42536c}
+html[data-theme="oscuro"] .theme-thumb{left:31px;color:#2a364a}
+.help-button{position:absolute;right:0;top:3px;width:42px;height:42px;border-radius:50%;border:1px solid #efc94d;background:#fff6cc;color:#ad7700;font-size:25px;font-weight:700;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 4px rgba(0,0,0,.12)}
+.subtitle{height:38px;margin:0 0 20px;display:flex;align-items:center;justify-content:center;text-align:center;color:var(--muted);font-size:14px;font-weight:400}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.card{appearance:none;width:100%;height:180px;min-width:0;padding:11px 9px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;background:var(--card);border:1px solid var(--accent);border-radius:20px;color:var(--title);box-shadow:var(--shadow);text-decoration:none;cursor:pointer;transition:transform .14s,box-shadow .14s,background .18s;overflow:hidden}
+.card:hover{transform:translateY(-1px);box-shadow:0 5px 14px rgba(28,39,61,.15)}
+.card:active{transform:translateY(0)}
+.art{width:98px;max-width:100%;height:98px;flex:0 0 98px;object-fit:contain;object-position:center center;border-radius:0;display:block;margin:0 auto}
+.card-label{width:100%;margin-top:5px;text-align:center;font-size:14px;line-height:17px;font-weight:700;color:var(--accent)}
+.card-detail{width:100%;margin-top:4px;text-align:center;font-size:10px;line-height:13px;font-weight:400;color:var(--muted)}
+.prov{--accent:#217edc}.mon{--accent:#eb8434}.config{--accent:#69717e}.exit{--accent:#707e92}
+.exit-holder{width:72px;height:72px;flex:0 0 72px;margin:13px auto;border-radius:50%;background:#eff3f8;display:flex;align-items:center;justify-content:center}
+html[data-theme="oscuro"] .exit-holder{background:#2b3749}
+.power-symbol{width:48px;height:48px;overflow:visible}
+.power-symbol path{fill:none;stroke:#707e92;stroke-width:4;stroke-linecap:round;stroke-linejoin:round}
+.help-overlay{position:fixed!important;inset:0!important;z-index:2147483647;display:none;align-items:center;justify-content:center;padding:18px;overflow-y:auto;background:rgba(8,15,27,.62);overscroll-behavior:contain}
+.help-overlay.open{display:flex!important}
+.help-dialog{width:min(720px,96vw);max-height:calc(100vh - 36px);margin:auto;position:relative;flex:0 1 720px;overflow:auto;background:var(--card);color:var(--title);border:1px solid var(--line);border-radius:16px;box-shadow:0 18px 55px rgba(0,0,0,.3);padding:22px 24px}
+.help-head{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:6px}
+.help-head h2{margin:0;font-size:20px}
+.help-close{border:1px solid var(--line);border-radius:9px;background:transparent;color:var(--title);padding:7px 12px;cursor:pointer;font-size:13px}
+.help-section h3{margin:15px 0 4px;color:#217edc;font-size:14px;line-height:1.35}
+.help-section p{margin:0;color:var(--title);font-size:13px;line-height:1.55}
+@media(max-width:560px){.page{padding:22px 18px 24px}.title{font-size:24px}.grid{gap:14px}.card{height:180px}}
+@media(max-width:360px){.page{padding-left:12px;padding-right:12px}.card{padding-left:6px;padding-right:6px}}
+</style>
+</head>
+<body>
+<main class="page">
+  <header class="titlebar">
+    <button class="theme-toggle" id="themeToggle" type="button" title="Cambiar tema claro u oscuro" aria-label="Cambiar tema claro u oscuro"><span class="theme-track"></span><span class="theme-thumb" id="themeThumb">☀</span></button>
+    <h1 class="title">VoIP Provisioner</h1>
+    <button class="help-button" id="helpOpen" type="button" title="Ayuda: preguntas frecuentes y manual" aria-label="Ayuda">?</button>
+  </header>
+  <p class="subtitle">Gestión simple y centralizada de tu telefonía IP</p>
+  <section class="grid" aria-label="Menú principal">
+    <a class="card prov" href="/provisionamiento?vp_theme=claro" data-route="/provisionamiento">
+      <img class="art" src="/static/dashboard_provisionamiento.png" alt="Provisionamiento">
+      <span class="card-label">Provisionamiento</span><span class="card-detail">Internos y teléfonos</span>
+    </a>
+    <a class="card mon" href="/monitoreo?vp_theme=claro" data-route="/monitoreo">
+      <img class="art" src="/static/dashboard_monitoreo.jpg" alt="Monitoreo">
+      <span class="card-label">Monitoreo</span><span class="card-detail">Estado y llamadas</span>
+    </a>
+    <a class="card config" href="/admin?vp_theme=claro" data-route="/admin">
+      <img class="art" src="/static/dashboard_configuraciones.jpg" alt="Configuraciones">
+      <span class="card-label">Configuraciones</span><span class="card-detail">Administrar el sistema</span>
+    </a>
+    <a class="card exit" href="voip://exit" id="exitApp">
+      <span class="exit-holder" aria-hidden="true"><svg class="power-symbol" viewBox="0 0 48 48"><path d="M24 4v19"></path><path d="M13 10.5a19 19 0 1 0 22 0"></path></svg></span>
+      <span class="card-label">Salir</span><span class="card-detail">Cerrar la aplicación</span>
+    </a>
+  </section>
+</main>
+<div class="help-overlay" id="helpOverlay" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
+  <section class="help-dialog">
+    <header class="help-head"><h2 id="helpTitle">Ayuda · VoIP Provisioner</h2><button class="help-close" id="helpClose" type="button">Cerrar</button></header>
+    <div class="help-section">
+      <h3>MANUAL DE USO</h3>
+      <p>VoIP Provisioner permite administrar teléfonos y extensiones de un servidor Issabel desde la aplicación. Para operar sobre Issabel primero necesitás configurar y seleccionar el servidor.</p>
+      <h3>1. Configurar el servidor</h3>
+      <p>Entrá en Configuraciones y abrí Servidores SSH. Cargá host, usuario y clave, guardá el perfil y comprobá la conexión. Seleccioná el perfil correcto antes de sincronizar o hacer cambios.</p>
+      <h3>2. Provisionamiento</h3>
+      <p>Sincronizá la información existente antes de modificar extensiones. Revisá interno, edificio, piso, dependencia, modelo y MAC. Comprobá los datos para evitar reemplazar una configuración válida.</p>
+      <h3>3. Monitoreo</h3>
+      <p>Consultá el estado de internos, troncales y llamadas. Antes de colgar una llamada o cambiar una regla, verificá que estás trabajando sobre el servidor correcto.</p>
+      <h3>4. Excel y planillas</h3>
+      <p>Verificá el perfil seleccionado, la ruta y los permisos del archivo maestro. Comprobá el resultado de cada descarga o actualización.</p>
+      <h3>5. Plantillas de teléfonos</h3>
+      <p>Elegí una plantilla que corresponda exactamente al modelo del equipo. No uses plantillas de otro fabricante o modelo. Comprobá que las modificaciones queden guardadas.</p>
+      <h3>PREGUNTAS FRECUENTES</h3>
+      <h3>No conecta con Issabel</h3><p>Revisá IP, conectividad, puerto SSH, usuario, contraseña y permisos.</p>
+      <h3>Figura online, pero la sincronización falla</h3><p>Que el servidor responda no garantiza que el usuario SSH tenga permisos para todas las operaciones. Revisá el mensaje de error y los permisos.</p>
+      <h3>No puedo crear o modificar un interno</h3><p>Confirmá que elegiste el perfil correcto, sincronizá primero y revisá interno y tecnología.</p>
+      <h3>No aparecen los cambios de una plantilla</h3><p>Volvé a abrir la sección y confirmá si se guardaron. No cierres la aplicación mientras una operación indique que está en curso.</p>
+      <h3>RECOMENDACIONES</h3>
+      <p>Usá primero un servidor de prueba. Antes de modificar dialplan, rutas o configuraciones del PBX, asegurate de contar con una copia de seguridad. Si una operación falla, guardá el texto exacto del error.</p>
+    </div>
+  </section>
+</div>
+<script>
+(function(){
+  try{localStorage.setItem('vpDesktopShell','1');}catch(e){}
+  function applyTheme(mode){
+    mode=mode==='oscuro'?'oscuro':'claro';
+    document.documentElement.setAttribute('data-theme',mode);
+    try{localStorage.setItem('tema_voip',mode);localStorage.setItem('monitoreo-theme',mode==='claro'?'light':'dark');}catch(e){}
+    var thumb=document.getElementById('themeThumb');if(thumb)thumb.textContent=mode==='claro'?'☀':'☾';
+  }
+  var initial='claro';try{initial=localStorage.getItem('tema_voip')||'claro';}catch(e){}
+  applyTheme(initial);
+  document.getElementById('themeToggle').addEventListener('click',function(){applyTheme(document.documentElement.getAttribute('data-theme')==='claro'?'oscuro':'claro');});
+  document.querySelectorAll('a[data-route]').forEach(function(link){
+    link.addEventListener('click',function(event){event.preventDefault();var mode=document.documentElement.getAttribute('data-theme')||'claro';window.location.href=this.getAttribute('data-route')+'?vp_theme='+encodeURIComponent(mode);});
+  });
+  var overlay=document.getElementById('helpOverlay');
+  function openHelp(){window.scrollTo(0,0);document.documentElement.style.overflow='hidden';document.body.style.overflow='hidden';overlay.classList.add('open');}
+  function closeHelp(){overlay.classList.remove('open');document.documentElement.style.overflow='';document.body.style.overflow='';}
+  document.getElementById('helpOpen').addEventListener('click',openHelp);
+  document.getElementById('helpClose').addEventListener('click',closeHelp);
+  overlay.addEventListener('click',function(event){if(event.target===overlay)closeHelp();});
+  document.addEventListener('keydown',function(event){if(event.key==='Escape')closeHelp();});
+})();
+</script>
+</body>
+</html>
