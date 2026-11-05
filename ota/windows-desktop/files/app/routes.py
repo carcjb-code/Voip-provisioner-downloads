@@ -16493,6 +16493,21 @@ def api_vp_call_restrictions_save_v2():
                 raise ValueError('La regla a editar ya no existe. Actualizá la pantalla.')
         else:
             rule_id = uuid.uuid4().hex
+        if service_class:
+            # Una extensión sólo debe pertenecer a una clase combinada. Al asignarla,
+            # quitarla de clases previas y de permisos de troncal individuales.
+            filtered_rules = []
+            for old_rule in rules:
+                old_mode = str(old_rule.get('modo') or 'bloquear_prefijos')
+                if old_mode not in ('clase_servicio', 'permitir_troncales'):
+                    filtered_rules.append(old_rule)
+                    continue
+                remaining = [str(x) for x in (old_rule.get('internos') or []) if str(x) not in extensions]
+                if remaining:
+                    copy_rule = dict(old_rule)
+                    copy_rule['internos'] = remaining
+                    filtered_rules.append(copy_rule)
+            rules = filtered_rules
         rule = {'id': rule_id, 'modo': ('clase_servicio' if service_class else 'bloquear_prefijos'),
                 'nombre': nombre, 'prefijos': prefixes,
                 'internos': sorted(extensions, key=lambda x: (len(x), x)),
@@ -16558,7 +16573,7 @@ def api_vp_internos_permisos_troncales_v1():
         remote = _vp_call_restrictions_remote(perfil, {'mode': 'probe'}, timeout=90)
         assignments = {}
         for rule in (remote.get('reglas', []) or []):
-            if str(rule.get('modo') or 'bloquear_prefijos') != 'permitir_troncales':
+            if str(rule.get('modo') or 'bloquear_prefijos') not in ('permitir_troncales', 'clase_servicio'):
                 continue
             ids = sorted(set(str(x) for x in (rule.get('troncales_ids') or [])), key=lambda x: int(x))
             for ext in (rule.get('internos') or []):
