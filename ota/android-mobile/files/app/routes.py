@@ -16114,7 +16114,7 @@ def safe_rules(rules):
         prefs = r.get('prefijos') or []
         tids = r.get('troncales_ids') or []
         mode = str(r.get('modo') or 'bloquear_prefijos')
-        if mode not in ('bloquear_prefijos', 'permitir_troncales'):
+        if mode not in ('bloquear_prefijos', 'permitir_troncales', 'clase_servicio'):
             raise RuntimeError('El modo de una restricción no es válido.')
         if not exts or len(exts) > 1000:
             raise RuntimeError('Cada regla requiere internos válidos.')
@@ -16122,6 +16122,8 @@ def safe_rules(rules):
             raise RuntimeError('Cada bloqueo requiere entre 1 y 30 prefijos.')
         if mode == 'permitir_troncales' and (not tids or len(tids) > 100 or prefs):
             raise RuntimeError('Cada permiso de troncales requiere una lista válida de troncales y no admite prefijos.')
+        if mode == 'clase_servicio' and (not tids or len(tids) > 100 or not prefs or len(prefs) > 30):
+            raise RuntimeError('Cada clase de servicio requiere troncales y entre 1 y 30 prefijos de destino permitidos.')
         for x in exts:
             if not re.match(r'^\d{1,20}$', str(x)):
                 raise RuntimeError('Un interno de la restricción no pasó la validación.')
@@ -16172,6 +16174,14 @@ def render_block(rules, include_context=True):
             tids = sorted(set(str(x) for x in (r.get('troncales_ids') or [])), key=lambda x: int(x))
             trunk_expr = ' | '.join('"${DIAL_TRUNK}" = "%s"' % x for x in tids)
             lines.append(' same => n(' + label + '_p0),GotoIf($[' + trunk_expr + ']?' + label + '_next:' + label + '_block)')
+        elif mode == 'clase_servicio':
+            tids = sorted(set(str(x) for x in (r.get('troncales_ids') or [])), key=lambda x: int(x))
+            trunk_expr = ' | '.join('"${DIAL_TRUNK}" = "%s"' % x for x in tids)
+            lines.append(' same => n(' + label + '_p0),GotoIf($[' + trunk_expr + ']?' + label + '_d0:' + label + '_block)')
+            prefs = sorted(set(str(x) for x in (r.get('prefijos') or [])), key=lambda x: (len(x), x))
+            for pi, pref in enumerate(prefs):
+                fallback = label + ('_d%d' % (pi + 1) if pi + 1 < len(prefs) else '_block')
+                lines.append(' same => n(' + label + '_d%d),GotoIf($["${VP_RSTR_DEST:0:%d}" = "%s"]?%s:%s)' % (pi, len(pref), pref, label + '_next', fallback))
         else:
             prefs = sorted(set(str(x) for x in (r.get('prefijos') or [])), key=lambda x: (len(x), x))
             for pi, pref in enumerate(prefs):
@@ -16375,7 +16385,8 @@ def api_vp_call_restrictions_save_v2():
         nombre = str(data.get('nombre') or '').strip()
         if not nombre or len(nombre) > 100 or any(ord(c) < 32 for c in nombre):
             raise ValueError('Ingresá un nombre de regla de hasta 100 caracteres.')
-        raw_prefixes = data.get('prefijos', [])
+        service_class = str(data.get('modo') or '').strip().lower() == 'clase_servicio'
+        raw_prefixes = data.get('prefijos_permitidos', []) if service_class else data.get('prefijos', [])
         if isinstance(raw_prefixes, str):
             raw_prefixes = re.split(r'[\s,;]+', raw_prefixes.strip())
         if not isinstance(raw_prefixes, list):
@@ -16408,36 +16419,51 @@ def api_vp_call_restrictions_save_v2():
         if not set(extensions).issubset(known_exts):
             raise ValueError('Uno o más internos ya no existen en Issabel. Actualizá el catálogo y volvé a guardar.')
         alcance = str(data.get('alcance') or 'todas').strip().lower()
-        if alcance not in ('todas', 'troncal', 'ruta'):
-            raise ValueError('Elegí Todas las troncales, Una troncal o Una ruta saliente.')
         catalog = _vp_call_restrictions_catalog(perfil)
         target_id = ''
         target_name = 'Todas las troncales'
         trunk_ids = []
-        if alcance == 'troncal':
-            target_id = str(data.get('destino_id') or '').strip()
-            if not target_id.isdigit() or target_id not in catalog['trunk_ids']:
-                raise ValueError('La troncal seleccionada no existe o no se pudo verificar.')
-            target_name = next((x.get('nombre') for x in catalog['troncales'] if x.get('id') == target_id), 'Troncal ' + target_id)
-            trunk_ids = [target_id]
-        elif alcance == 'ruta':
-            target_id = str(data.get('destino_id') or '').strip()
-            if not target_id.isdigit() or target_id not in catalog['route_names']:
-                raise ValueError('La ruta saliente seleccionada no existe o no se pudo verificar.')
-            if not catalog['association_supported']:
-                raise ValueError('Esta versión no permite verificar la relación ruta–troncal. No se guardó nada para evitar afectar otras rutas.')
-            trunk_ids = sorted(set(catalog['route_trunks'].get(target_id, [])), key=lambda x: int(x))
-            if not trunk_ids:
-                raise ValueError('La ruta no tiene troncales asociadas en Issabel.')
-            shared = []
-            for tid in trunk_ids:
-                others = [rid for rid in catalog['trunk_routes'].get(tid, []) if rid != target_id]
-                if others:
-                    tname = next((x.get('nombre') for x in catalog['troncales'] if x.get('id') == tid), 'Troncal ' + tid)
-                    shared.append(tname + ' (también usada por ' + ', '.join(catalog['route_names'].get(rid, 'Ruta ' + rid) for rid in others) + ')')
-            if shared:
-                raise ValueError('No guardé la regla por ruta porque comparte troncales con otras rutas: ' + '; '.join(shared[:5]) + '. Elegí una troncal específica o Todas las troncales para evitar bloquear llamadas ajenas.')
-            target_name = catalog['route_names'].get(target_id, 'Ruta ' + target_id)
+        if service_class:
+            raw_tids = data.get('troncales_ids', [])
+            if not isinstance(raw_tids, list) or not raw_tids or len(raw_tids) > 100:
+                raise ValueError('Seleccioná al menos una troncal permitida para esta clase.')
+            for value in raw_tids:
+                value = str(value or '').strip()
+                if not value.isdigit() or len(value) > 12:
+                    raise ValueError('La selección contiene una troncal inválida.')
+                if value not in trunk_ids:
+                    trunk_ids.append(value)
+            if not set(trunk_ids).issubset(catalog.get('trunk_ids', set())):
+                raise ValueError('Una o más troncales seleccionadas ya no existen en Issabel.')
+            target_name = 'Troncales permitidas'
+            alcance = 'todas'
+        else:
+            if alcance not in ('todas', 'troncal', 'ruta'):
+                raise ValueError('Elegí Todas las troncales, Una troncal o Una ruta saliente.')
+            if alcance == 'troncal':
+                target_id = str(data.get('destino_id') or '').strip()
+                if not target_id.isdigit() or target_id not in catalog['trunk_ids']:
+                    raise ValueError('La troncal seleccionada no existe o no se pudo verificar.')
+                target_name = next((x.get('nombre') for x in catalog['troncales'] if x.get('id') == target_id), 'Troncal ' + target_id)
+                trunk_ids = [target_id]
+            elif alcance == 'ruta':
+                target_id = str(data.get('destino_id') or '').strip()
+                if not target_id.isdigit() or target_id not in catalog['route_names']:
+                    raise ValueError('La ruta saliente seleccionada no existe o no se pudo verificar.')
+                if not catalog['association_supported']:
+                    raise ValueError('Esta versión no permite verificar la relación ruta–troncal. No se guardó nada para evitar afectar otras rutas.')
+                trunk_ids = sorted(set(catalog['route_trunks'].get(target_id, [])), key=lambda x: int(x))
+                if not trunk_ids:
+                    raise ValueError('La ruta no tiene troncales asociadas en Issabel.')
+                shared = []
+                for tid in trunk_ids:
+                    others = [rid for rid in catalog['trunk_routes'].get(tid, []) if rid != target_id]
+                    if others:
+                        tname = next((x.get('nombre') for x in catalog['troncales'] if x.get('id') == tid), 'Troncal ' + tid)
+                        shared.append(tname + ' (también usada por ' + ', '.join(catalog['route_names'].get(rid, 'Ruta ' + rid) for rid in others) + ')')
+                if shared:
+                    raise ValueError('No guardé la regla por ruta porque comparte troncales con otras rutas: ' + '; '.join(shared[:5]) + '. Elegí una troncal específica o Todas las troncales para evitar bloquear llamadas ajenas.')
+                target_name = catalog['route_names'].get(target_id, 'Ruta ' + target_id)
         active = data.get('activo', True)
         if not isinstance(active, bool):
             raise ValueError('El estado activo debe ser verdadero o falso.')
@@ -16456,7 +16482,27 @@ def api_vp_call_restrictions_save_v2():
                 raise ValueError('La regla a editar ya no existe. Actualizá la pantalla.')
         else:
             rule_id = uuid.uuid4().hex
-        rule = {'id': rule_id, 'nombre': nombre, 'prefijos': prefixes,
+        was_edit = found is not None
+        if service_class:
+            # Una extensión sólo debe pertenecer a una clase combinada. Al asignarla,
+            # quitarla de clases previas y de permisos de troncal individuales.
+            filtered_rules = []
+            for old_rule in rules:
+                old_mode = str(old_rule.get('modo') or 'bloquear_prefijos')
+                if str(old_rule.get('id') or '') == rule_id:
+                    continue
+                if old_mode not in ('clase_servicio', 'permitir_troncales'):
+                    filtered_rules.append(old_rule)
+                    continue
+                remaining = [str(x) for x in (old_rule.get('internos') or []) if str(x) not in extensions]
+                if remaining:
+                    copy_rule = dict(old_rule)
+                    copy_rule['internos'] = remaining
+                    filtered_rules.append(copy_rule)
+            rules = filtered_rules
+            found = None
+        rule = {'id': rule_id, 'modo': ('clase_servicio' if service_class else 'bloquear_prefijos'),
+                'nombre': nombre, 'prefijos': prefixes,
                 'internos': sorted(extensions, key=lambda x: (len(x), x)),
                 'alcance': alcance, 'destino_id': target_id, 'destino_nombre': target_name,
                 'troncales_ids': trunk_ids, 'activo': active}
@@ -16466,7 +16512,7 @@ def api_vp_call_restrictions_save_v2():
             rules[found] = rule
         applied = _vp_call_restrictions_remote(perfil, {'mode': 'apply', 'reglas': rules}, timeout=90)
         backup_path = applied.get('backup', '') or ''
-        verb = 'Se creó' if found is None else 'Se actualizó'
+        verb = 'Se actualizó' if was_edit else 'Se creó'
         return jsonify({'ok': True, 'id': rule_id, 'mensaje': verb + ' la regla "' + nombre + '". Prefijos: ' + ', '.join(prefixes) + '. Internos afectados: ' + str(len(extensions)) + '.', 'respaldo': backup_path})
     except ValueError as exc:
         return jsonify({'ok': False, 'mensaje': str(exc), 'respaldo': backup_path}), 400
@@ -16520,7 +16566,7 @@ def api_vp_internos_permisos_troncales_v1():
         remote = _vp_call_restrictions_remote(perfil, {'mode': 'probe'}, timeout=90)
         assignments = {}
         for rule in (remote.get('reglas', []) or []):
-            if str(rule.get('modo') or 'bloquear_prefijos') != 'permitir_troncales':
+            if str(rule.get('modo') or 'bloquear_prefijos') not in ('permitir_troncales', 'clase_servicio'):
                 continue
             ids = sorted(set(str(x) for x in (rule.get('troncales_ids') or [])), key=lambda x: int(x))
             for ext in (rule.get('internos') or []):
@@ -16575,7 +16621,7 @@ def api_vp_interno_permisos_troncales_v1():
         rules = remote.get('reglas', []) or []
         updated = []
         for rule in rules:
-            if str(rule.get('modo') or 'bloquear_prefijos') != 'permitir_troncales':
+            if str(rule.get('modo') or 'bloquear_prefijos') not in ('permitir_troncales', 'clase_servicio'):
                 updated.append(rule)
                 continue
             remaining = [str(x) for x in (rule.get('internos') or []) if str(x) not in extensions]
@@ -16928,4 +16974,3 @@ def api_vp_issabel_native_cos_read_v1():
         logger.exception('[COS NATIVO ISSABEL] Error leyendo clases')
         return jsonify({'ok': False, 'mensaje': 'No se pudieron leer las clases nativas de Issabel: ' + str(exc)[:700]}), 500
 # FIN VP_ISSABEL_NATIVE_COS_READ_API_V1
-

@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "platform": "android-mobile",
-  "source_commit": "23f227c0370ea85914f1a2917140cc863cc886b5",
-  "updated_at": "2026-11-05T20:09:31.526078+00:00",
+  "source_commit": "5020071ae42cafa44bee32511aba70750a346187",
+  "updated_at": "2026-11-05T21:10:42.248746+00:00",
   "files": [
     {
       "path": "app/ami_client.py",
@@ -71,8 +71,8 @@
     },
     {
       "path": "app/routes.py",
-      "sha256": "4b35b4e4b230b33a644c3fda4a00a3ef36f524c6060fd5867190c6c99052c2c5",
-      "size": 640012
+      "sha256": "717e2552b3202106c64b1b65e98b7d4d8408d389770e58e0b9de6002bf977629",
+      "size": 643195
     },
     {
       "path": "app/ssh_client.py",
@@ -196,8 +196,8 @@
     },
     {
       "path": "templates/monitoreo.html",
-      "sha256": "173374235d7057a70674760dcf8e9bdebfbc13a12f60df098786ff7522957c46",
-      "size": 375062
+      "sha256": "7f455cdbb49c3f60d08e4ba07261c081de709dd7d1ea354c10ccccaf8a94a288",
+      "size": 377952
     },
     {
       "path": "templates/softphone.html",
@@ -5330,6 +5330,56 @@
     },
     {
       "source_commit": "23f227c0370ea85914f1a2917140cc863cc886b5",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "be601ee1c5dd6fc510a048a5a8cbcf95c1273d0a",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "14eaf6a2934d121a66ba766a429336e83cfaa655",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "d1c148d3284f7907b90e324f5d56115be9a9ec07",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "dd43dbb973954983beb2ea1533d7d125f84a74b6",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "6244a1a9b103c76494b3eabac9b14a7636d430cc",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "7dfd3fa9a780f40dd34b0e91ddba9498378e1e11",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "79f4edb7749a6ed0fa5dd948e2f21af1b598d950",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "c55743729449c4c216295971d46a3dc30f2c655e",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "b72c5cc00df291c29ccff657a28bc15f85163aa1",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "5020071ae42cafa44bee32511aba70750a346187",
       "requires_full_update": false,
       "full_update_paths": []
     }
