@@ -1594,6 +1594,7 @@ h1.vp-page-title,
           <input type="text" id="peerBuscar" placeholder="Número de interno o IP..." autocomplete="off">
         </div>
         <button type="button" class="btn" id="vpMgrBtnAbrir" onclick="vpMgrAbrir()" title="Crear, renombrar o eliminar los grupos de captura del servidor seleccionado">🗂️ Grupos de captura</button>
+        <button type="button" class="btn" id="vpPermisosTroncalesBtn" onclick="vpPermisosTroncalesAbrir('')" title="Definir las troncales permitidas para cada interno">🔐 Clases de servicio</button>
       </div>
 
       <div class="peer-tools" id="vpUbicMasiva">
@@ -1638,6 +1639,7 @@ h1.vp-page-title,
                 title="Clic para ordenar"
                 onclick="vpCambiarOrdenPeer('grupo')"
               >Grupo de captura <span class="vp-orden-ind">↕</span></th>
+              <th>Clase de servicio</th>
               <th>Ubicación</th>
               <th
                 id="vpDesvioTh"
@@ -2131,6 +2133,7 @@ function update(d){
   renderPeers(peers);
   vpCargarUbicacionesInternos();
   vpCargarGruposCaptura();
+  vpCargarPermisosTroncales();
 
   /*
    * Actualizamos los desvíos del servidor seleccionado.
@@ -3248,7 +3251,7 @@ function renderPeersPage(){
     );
 
   if(!pagina.length){
-    $('peersBody').innerHTML='<tr><td colspan="7" class="empty">'+
+    $('peersBody').innerHTML='<tr><td colspan="8" class="empty">'+
       (total ? 'No hay internos en esta página' : 'No hay internos que coincidan con la búsqueda o el filtro')+
       '</td></tr>';
   }else{
@@ -3281,6 +3284,7 @@ function renderPeersPage(){
         <td class="vp-grupo-cell">
   ${vpGrupoCapturaHtml(interno)}
 </td>
+        <td class="vp-permiso-troncal-cell">${vpPermisosTroncalesHtml(interno)}</td>
         <td>
           <select class="vp-ubicacion-select"
                   data-interno="${esc(interno)}"
@@ -5736,6 +5740,105 @@ function vpGrupoCapturaHtml(interno){
     </button>
   `;
 }
+
+
+/* VP_INTERNAL_TRUNK_PERMISSIONS_UI_V1 */
+var vpPermisosTroncales = {};
+var vpPermisosTroncalesCatalogo = [];
+var vpPermisosTroncalesExtensiones = [];
+var vpPermisosTroncalesPerfil = '';
+var vpPermisosTroncalesUltimaCarga = 0;
+var vpPermisosTroncalesCargando = false;
+var vpPermisosTroncalesError = '';
+
+function vpPermisosTroncalesHtml(interno){
+  var ids=vpPermisosTroncales[String(interno)]||[];
+  var names=ids.map(function(id){
+    var t=vpPermisosTroncalesCatalogo.find(function(x){return String(x.id)===String(id);});
+    return t?String(t.nombre||('Troncal '+id)):('Troncal '+id);
+  });
+  var label=names.length?names.join(', '):'Sin restricción (todas)';
+  return '<span title="'+esc(label)+'">'+esc(label)+'</span> <button type="button" class="vp-grupo-btn" title="Configurar troncales permitidas" onclick="vpPermisosTroncalesAbrir(\''+esc(String(interno))+'\')">⚙️</button>';
+}
+
+async function vpCargarPermisosTroncales(forzar){
+  var perfil=vpGrupoPerfilActual();
+  if(!perfil){vpPermisosTroncales={};vpPermisosTroncalesCatalogo=[];vpPermisosTroncalesExtensiones=[];vpPermisosTroncalesPerfil='';return;}
+  if(!forzar&&perfil===vpPermisosTroncalesPerfil&&Date.now()-vpPermisosTroncalesUltimaCarga<20000)return;
+  if(vpPermisosTroncalesCargando)return;
+  if(perfil!==vpPermisosTroncalesPerfil){vpPermisosTroncales={};vpPermisosTroncalesCatalogo=[];vpPermisosTroncalesExtensiones=[];vpPermisosTroncalesError='';}
+  vpPermisosTroncalesCargando=true;
+  try{
+    var r=await fetch('/api/monitoreo/internos/permisos-troncales?perfil_nombre='+encodeURIComponent(perfil)+'&_='+Date.now(),{cache:'no-store'});
+    var d=await r.json();
+    if(!r.ok||!d.ok)throw new Error(d.mensaje||'No se pudieron consultar las clases de servicio.');
+    if(perfil!==vpGrupoPerfilActual())return;
+    vpPermisosTroncalesPerfil=perfil;
+    vpPermisosTroncalesExtensiones=Array.isArray(d.extensiones)?d.extensiones:[];
+    vpPermisosTroncalesCatalogo=Array.isArray(d.troncales)?d.troncales:[];
+    vpPermisosTroncales=d.asignaciones&&typeof d.asignaciones==='object'?d.asignaciones:{};
+    vpPermisosTroncalesError=d.hook_conflictivo?'El hook de Asterisk requiere revisión antes de aplicar permisos.':'';
+    vpPermisosTroncalesUltimaCarga=Date.now();
+    renderPeersPage();
+  }catch(e){vpPermisosTroncalesError=e&&e.message?e.message:String(e);vpPermisosTroncalesUltimaCarga=Date.now()-15000;}
+  finally{vpPermisosTroncalesCargando=false;}
+}
+
+function vpPermisosTroncalesAbrir(interno){
+  var perfil=vpGrupoPerfilActual();
+  if(!perfil){alert('Seleccioná primero un servidor.');return;}
+  if(vpPermisosTroncalesPerfil!==perfil){
+    vpCargarPermisosTroncales(true).then(function(){
+      if(vpPermisosTroncalesPerfil!==perfil){alert(vpPermisosTroncalesError||'No se pudo cargar el catálogo.');return;}
+      vpPermisosTroncalesAbrir(interno);
+    });
+    return;
+  }
+  if(vpPermisosTroncalesError){alert(vpPermisosTroncalesError);return;}
+  if(!vpPermisosTroncalesExtensiones.length){alert('No se encontraron internos.');return;}
+  var modal=document.getElementById('vpPermisosTroncalesModal');
+  if(!modal){
+    var st=document.createElement('style');
+    st.textContent='#vpPermisosTroncalesModal{position:fixed;z-index:100120;inset:0;display:flex;align-items:center;justify-content:center;padding:12px;background:rgba(0,0,0,.6)}#vpPermisosTroncalesModal[hidden]{display:none!important}#vpPermisosTroncalesModal .vpt-box{width:min(600px,100%);max-height:92vh;overflow:auto;background:var(--panel);color:var(--text);border:1px solid var(--line);border-radius:12px;padding:16px}#vpPermisosTroncalesModal .vpt-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:8px;margin:10px 0}#vpPermisosTroncalesModal .vpt-list label{display:flex;gap:8px;align-items:center;border:1px solid var(--line);border-radius:8px;padding:8px}#vpPermisosTroncalesModal select{width:100%;padding:9px;background:var(--panel2);color:var(--text);border:1px solid var(--line);border-radius:7px}#vpPermisosTroncalesModal button{padding:8px 12px;border:1px solid var(--line);border-radius:7px;background:var(--panel2);color:var(--text)}#vpPermisosTroncalesModal .vpt-primary{background:var(--blue);color:white}';
+    document.head.appendChild(st);
+    modal=document.createElement('div');modal.id='vpPermisosTroncalesModal';modal.hidden=true;
+    modal.addEventListener('click',function(e){if(e.target===modal)modal.hidden=true;});
+    document.body.appendChild(modal);
+  }
+  var current=String(interno||'').trim();
+  var opts=vpPermisosTroncalesExtensiones.map(function(x){return '<option value="'+esc(x.interno)+'"'+(String(x.interno)===current?' selected':'')+'>'+esc(x.interno)+' · '+esc(x.tecnologia||'')+'</option>';}).join('');
+  var ext=current||String(vpPermisosTroncalesExtensiones[0].interno);
+  var ids=vpPermisosTroncales[ext]||[];
+  var trunks=vpPermisosTroncalesCatalogo.map(function(t){
+    return '<label><input type="checkbox" data-vpt-id="'+esc(t.id)+'"'+(ids.map(String).indexOf(String(t.id))>=0?' checked':'')+'> '+esc(t.nombre||('Troncal '+t.id))+' ('+esc(t.tecnologia||'')+' · ID '+esc(t.id)+')</label>';
+  }).join('');
+  modal.innerHTML='<div class="vpt-box"><div style="display:flex;justify-content:space-between;align-items:center"><h3>Clase de servicio · Troncales permitidas</h3><button type="button" id="vptClose">×</button></div><label for="vptInterno">Interno</label><select id="vptInterno">'+opts+'</select><p>Seleccioná una o más troncales autorizadas:</p><div class="vpt-list">'+(trunks||'No hay troncales configuradas.')+'</div><small>Si dejás todas desmarcadas, se quita la restricción y el interno conserva su acceso actual.</small><p id="vptError" style="color:var(--red)"></p><div style="display:flex;justify-content:flex-end;gap:8px;margin-top:14px"><button type="button" id="vptCancel">Cancelar</button><button type="button" class="vpt-primary" id="vptSave">Guardar permisos</button></div></div>';
+  modal.hidden=false;
+  function close(){modal.hidden=true;}
+  modal.querySelector('#vptClose').onclick=close;
+  modal.querySelector('#vptCancel').onclick=close;
+  modal.querySelector('#vptInterno').onchange=function(){
+    var a=vpPermisosTroncales[String(this.value)]||[];
+    modal.querySelectorAll('[data-vpt-id]').forEach(function(c){c.checked=a.map(String).indexOf(String(c.getAttribute('data-vpt-id')))>=0;});
+  };
+  modal.querySelector('#vptSave').onclick=function(){vpPermisosTroncalesGuardar(modal);};
+}
+
+async function vpPermisosTroncalesGuardar(modal){
+  var ext=String(modal.querySelector('#vptInterno').value||'');
+  var ids=[];
+  modal.querySelectorAll('[data-vpt-id]:checked').forEach(function(c){ids.push(String(c.getAttribute('data-vpt-id')));});
+  if(!confirm(ids.length?'El interno '+ext+' sólo podrá utilizar las troncales seleccionadas. Se respaldará extensions_custom.conf y se recargará el dialplan.':'Se quitará la restricción de troncales del interno '+ext+'.'))return;
+  var pass=await vpAdminPassword();if(pass===null||pass===undefined||!String(pass))return;
+  var btn=modal.querySelector('#vptSave');btn.disabled=true;btn.textContent='Guardando…';
+  try{
+    var r=await fetch('/api/monitoreo/interno/permisos-troncales',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({perfil_nombre:vpGrupoPerfilActual(),password:String(pass),internos:[ext],troncales_ids:ids})});
+    var d=await r.json();if(!r.ok||!d.ok)throw new Error(d.mensaje||('HTTP '+r.status));
+    modal.hidden=true;alert((d.mensaje||'Permisos guardados.')+(d.respaldo?'\nRespaldo: '+d.respaldo:''));await vpCargarPermisosTroncales(true);
+  }catch(e){modal.querySelector('#vptError').textContent=e&&e.message?e.message:String(e);}
+  finally{btn.disabled=false;btn.textContent='Guardar permisos';}
+}
+/* FIN VP_INTERNAL_TRUNK_PERMISSIONS_UI_V1 */
 
 
 

@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "platform": "android-mobile",
-  "source_commit": "f9359a157bc83af0d0329c050f260063fc18e397",
-  "updated_at": "2026-11-04T13:32:44.655943+00:00",
+  "source_commit": "43dde3ffe467047742f7731716de8d3a8a26c8af",
+  "updated_at": "2026-11-05T19:39:47.569241+00:00",
   "files": [
     {
       "path": "app/ami_client.py",
@@ -71,8 +71,8 @@
     },
     {
       "path": "app/routes.py",
-      "sha256": "9aab408a5946eab1d16a78ede82fdad32c26d2636e8e4c7b220ed86b43b2bdc0",
-      "size": 632660
+      "sha256": "4b35b4e4b230b33a644c3fda4a00a3ef36f524c6060fd5867190c6c99052c2c5",
+      "size": 640012
     },
     {
       "path": "app/ssh_client.py",
@@ -196,8 +196,8 @@
     },
     {
       "path": "templates/monitoreo.html",
-      "sha256": "55440ba57d6f09efc1decf148f4fb9dc45c35e2f5ad5b443163122f9745cd8ed",
-      "size": 364941
+      "sha256": "e9e09880501e27998e870867d1071a11e30899bd665fbe03f767c260a1ce350e",
+      "size": 373113
     },
     {
       "path": "templates/softphone.html",
@@ -5315,6 +5315,16 @@
     },
     {
       "source_commit": "f9359a157bc83af0d0329c050f260063fc18e397",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "9eaa0de30e8f7126e31f3d7ecfcc0f2f68200b83",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "43dde3ffe467047742f7731716de8d3a8a26c8af",
       "requires_full_update": false,
       "full_update_paths": []
     }

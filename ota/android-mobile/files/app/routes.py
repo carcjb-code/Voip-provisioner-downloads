@@ -16113,8 +16113,15 @@ def safe_rules(rules):
         exts = r.get('internos') or []
         prefs = r.get('prefijos') or []
         tids = r.get('troncales_ids') or []
-        if not exts or len(exts) > 1000 or not prefs or len(prefs) > 30:
-            raise RuntimeError('Cada restricción requiere internos y prefijos válidos.')
+        mode = str(r.get('modo') or 'bloquear_prefijos')
+        if mode not in ('bloquear_prefijos', 'permitir_troncales'):
+            raise RuntimeError('El modo de una restricción no es válido.')
+        if not exts or len(exts) > 1000:
+            raise RuntimeError('Cada regla requiere internos válidos.')
+        if mode == 'bloquear_prefijos' and (not prefs or len(prefs) > 30):
+            raise RuntimeError('Cada bloqueo requiere entre 1 y 30 prefijos.')
+        if mode == 'permitir_troncales' and (not tids or len(tids) > 100 or prefs):
+            raise RuntimeError('Cada permiso de troncales requiere una lista válida de troncales y no admite prefijos.')
         for x in exts:
             if not re.match(r'^\d{1,20}$', str(x)):
                 raise RuntimeError('Un interno de la restricción no pasó la validación.')
@@ -16158,18 +16165,24 @@ def render_block(rules, include_context=True):
             continue
         label = 'vpcr_%03d' % ix
         exts = sorted(set(str(x) for x in (r.get('internos') or [])))
-        prefs = sorted(set(str(x) for x in (r.get('prefijos') or [])), key=lambda x: (len(x), x))
         caller_expr = ' | '.join('"${VP_RSTR_CALLER}" = "%s"' % x for x in exts)
         lines.append(' same => n,GotoIf($[' + caller_expr + ']?' + label + '_p0:' + label + '_next)')
-        for pi, pref in enumerate(prefs):
-            following = label + ('_p%d' % (pi + 1) if pi + 1 < len(prefs) else '_next')
-            scope = label + ('_scope' if r.get('alcance') != 'todas' else '_block')
-            lines.append(' same => n(' + label + '_p%d),GotoIf($["${VP_RSTR_DEST:0:%d}" = "%s"]?%s:%s)' %
-                         (pi, len(pref), pref, scope, following))
-        if r.get('alcance') != 'todas':
+        mode = str(r.get('modo') or 'bloquear_prefijos')
+        if mode == 'permitir_troncales':
             tids = sorted(set(str(x) for x in (r.get('troncales_ids') or [])), key=lambda x: int(x))
             trunk_expr = ' | '.join('"${DIAL_TRUNK}" = "%s"' % x for x in tids)
-            lines.append(' same => n(' + label + '_scope),GotoIf($[' + trunk_expr + ']?' + label + '_block:' + label + '_next)')
+            lines.append(' same => n(' + label + '_p0),GotoIf($[' + trunk_expr + ']?' + label + '_next:' + label + '_block)')
+        else:
+            prefs = sorted(set(str(x) for x in (r.get('prefijos') or [])), key=lambda x: (len(x), x))
+            for pi, pref in enumerate(prefs):
+                following = label + ('_p%d' % (pi + 1) if pi + 1 < len(prefs) else '_next')
+                scope = label + ('_scope' if r.get('alcance') != 'todas' else '_block')
+                lines.append(' same => n(' + label + '_p%d),GotoIf($["${VP_RSTR_DEST:0:%d}" = "%s"]?%s:%s)' %
+                             (pi, len(pref), pref, scope, following))
+            if r.get('alcance') != 'todas':
+                tids = sorted(set(str(x) for x in (r.get('troncales_ids') or [])), key=lambda x: int(x))
+                trunk_expr = ' | '.join('"${DIAL_TRUNK}" = "%s"' % x for x in tids)
+                lines.append(' same => n(' + label + '_scope),GotoIf($[' + trunk_expr + ']?' + label + '_block:' + label + '_next)')
         lines.append(' same => n(' + label + '_block),NoOp(VoIP Provisioner restriction matched)')
         lines.append(' same => n,Playback(ss-noservice)')
         lines.append(' same => n,Hangup(21)')
@@ -16339,7 +16352,9 @@ def api_vp_call_restrictions_list_v2():
         if not perfil:
             return jsonify({'ok': False, 'mensaje': 'Seleccioná un servidor válido.'}), 400
         result = _vp_call_restrictions_remote(perfil, {'mode': 'probe'}, timeout=90)
-        return jsonify({'ok': True, 'reglas': result.get('reglas', []),
+        rules = [r for r in (result.get('reglas', []) or [])
+                 if str(r.get('modo') or 'bloquear_prefijos') != 'permitir_troncales']
+        return jsonify({'ok': True, 'reglas': rules,
                         'hook_conflictivo': result.get('hook_conflictivo', False)})
     except Exception as exc:
         logger.exception('[RESTRICCIONES V2] Error leyendo reglas')
@@ -16487,6 +16502,107 @@ def api_vp_call_restrictions_delete_v2():
     except Exception as exc:
         logger.exception('[RESTRICCIONES V2] Error eliminando regla')
         return jsonify({'ok': False, 'mensaje': 'No se pudo eliminar la regla: ' + str(exc)[:800], 'respaldo': backup_path}), 500
+# VP_INTERNAL_TRUNK_PERMISSIONS_API_V1
+@main_bp.route('/api/monitoreo/internos/permisos-troncales', methods=['GET'])
+def api_vp_internos_permisos_troncales_v1():
+    try:
+        perfil_nombre = str(request.args.get('perfil_nombre') or '').strip()
+        perfil = buscar_perfil(perfil_nombre, cargar_perfiles()) if perfil_nombre else None
+        if not perfil:
+            return jsonify({'ok': False, 'mensaje': 'Seleccioná un servidor válido.'}), 400
+        catalog = _vp_call_restrictions_catalog(perfil)
+        rows = _vp_ruteo_v6_sqlrun(perfil, "SELECT COALESCE(CAST(id AS CHAR),''),COALESCE(CAST(tech AS CHAR),'') FROM devices WHERE CAST(id AS CHAR) REGEXP '^[0-9]+$' ORDER BY CAST(id AS UNSIGNED),id;")
+        extensions = []
+        for line in rows:
+            p = line.split('\t')
+            if p and p[0].strip().isdigit():
+                extensions.append({'interno': p[0].strip(), 'tecnologia': (p[1].strip().upper() if len(p) > 1 else '')})
+        remote = _vp_call_restrictions_remote(perfil, {'mode': 'probe'}, timeout=90)
+        assignments = {}
+        for rule in (remote.get('reglas', []) or []):
+            if str(rule.get('modo') or 'bloquear_prefijos') != 'permitir_troncales':
+                continue
+            ids = sorted(set(str(x) for x in (rule.get('troncales_ids') or [])), key=lambda x: int(x))
+            for ext in (rule.get('internos') or []):
+                assignments[str(ext)] = ids
+        return jsonify({'ok': True, 'perfil': perfil_nombre, 'extensiones': extensions,
+                        'troncales': catalog.get('troncales', []), 'asignaciones': assignments,
+                        'hook_conflictivo': bool(remote.get('hook_conflictivo'))})
+    except Exception as exc:
+        logger.exception('[PERMISOS TRONCALES] Error consultando permisos por interno')
+        return jsonify({'ok': False, 'mensaje': 'No se pudieron consultar los permisos: ' + str(exc)[:700]}), 500
+
+
+@main_bp.route('/api/monitoreo/interno/permisos-troncales', methods=['POST'])
+def api_vp_interno_permisos_troncales_v1():
+    backup_path = ''
+    try:
+        data = request.get_json(silent=True) or {}
+        if not _vp_trunk_admin_password(data):
+            return jsonify({'ok': False, 'mensaje': 'Contraseña de administrador incorrecta.'}), 401
+        perfil_nombre = str(data.get('perfil_nombre') or '').strip()
+        perfil = buscar_perfil(perfil_nombre, cargar_perfiles()) if perfil_nombre else None
+        if not perfil:
+            return jsonify({'ok': False, 'mensaje': 'Seleccioná un servidor válido.'}), 400
+        raw_exts = data.get('internos', [])
+        if not isinstance(raw_exts, list) or not raw_exts or len(raw_exts) > 1000:
+            raise ValueError('Seleccioná uno o varios internos válidos.')
+        extensions = []
+        for value in raw_exts:
+            value = str(value or '').strip()
+            if not re.match(r'^\d{1,20}$', value):
+                raise ValueError('La selección contiene un interno inválido.')
+            if value not in extensions:
+                extensions.append(value)
+        raw_tids = data.get('troncales_ids', [])
+        if not isinstance(raw_tids, list) or len(raw_tids) > 100:
+            raise ValueError('La lista de troncales permitidas no es válida.')
+        trunk_ids = []
+        for value in raw_tids:
+            value = str(value or '').strip()
+            if not re.match(r'^\d{1,12}$', value):
+                raise ValueError('La selección contiene una troncal inválida.')
+            if value not in trunk_ids:
+                trunk_ids.append(value)
+        known_rows = _vp_ruteo_v6_sqlrun(perfil, "SELECT COALESCE(CAST(id AS CHAR),'') FROM devices WHERE CAST(id AS CHAR) REGEXP '^[0-9]+$';")
+        known_exts = set(x.split('\t')[0].strip() for x in known_rows if x.split('\t')[0].strip().isdigit())
+        if not set(extensions).issubset(known_exts):
+            raise ValueError('Uno o más internos ya no existen en Issabel. Actualizá el listado.')
+        catalog = _vp_call_restrictions_catalog(perfil)
+        if not set(trunk_ids).issubset(catalog.get('trunk_ids', set())):
+            raise ValueError('Una o más troncales ya no existen en el servidor seleccionado.')
+        remote = _vp_call_restrictions_remote(perfil, {'mode': 'probe'}, timeout=90)
+        rules = remote.get('reglas', []) or []
+        updated = []
+        for rule in rules:
+            if str(rule.get('modo') or 'bloquear_prefijos') != 'permitir_troncales':
+                updated.append(rule)
+                continue
+            remaining = [str(x) for x in (rule.get('internos') or []) if str(x) not in extensions]
+            if remaining:
+                copy_rule = dict(rule)
+                copy_rule['internos'] = remaining
+                updated.append(copy_rule)
+        if trunk_ids:
+            for ext in extensions:
+                updated.append({'id': uuid.uuid4().hex, 'modo': 'permitir_troncales',
+                                'nombre': 'Permisos de troncales - ' + ext, 'prefijos': [],
+                                'internos': [ext], 'alcance': 'todas', 'destino_id': '',
+                                'destino_nombre': 'Troncales permitidas', 'troncales_ids': trunk_ids,
+                                'activo': True})
+        applied = _vp_call_restrictions_remote(perfil, {'mode': 'apply', 'reglas': updated}, timeout=90)
+        backup_path = applied.get('backup', '') or ''
+        message = ('Se asignaron ' + str(len(trunk_ids)) + ' troncal(es) permitida(s) a ' + str(len(extensions)) + ' interno(s).') if trunk_ids else ('Se quitaron las restricciones de troncal de ' + str(len(extensions)) + ' interno(s).')
+        return jsonify({'ok': True, 'mensaje': message, 'respaldo': backup_path,
+                        'internos': extensions, 'troncales_ids': trunk_ids})
+    except ValueError as exc:
+        return jsonify({'ok': False, 'mensaje': str(exc), 'respaldo': backup_path}), 400
+    except Exception as exc:
+        logger.exception('[PERMISOS TRONCALES] Error guardando permisos por interno')
+        return jsonify({'ok': False, 'mensaje': 'No se pudieron guardar los permisos: ' + str(exc)[:800], 'respaldo': backup_path}), 500
+# FIN VP_INTERNAL_TRUNK_PERMISSIONS_API_V1
+
+
 # FIN VP_CALL_RESTRICTIONS_API_V2
 
 # VP_RUTEO_EXTERNO_ELIMINAR_API_V1
