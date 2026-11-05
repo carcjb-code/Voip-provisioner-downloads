@@ -9685,7 +9685,7 @@ async function vpRuteoV6GuardarRango(){
         h+='<div class="vpcr2-detail">'+(isService?'Troncales permitidas: '+esc(trunkNames.join(', '))+'<br>Destinos permitidos:':'Prefijos bloqueados: '+esc(targetLabel(r)))+'<br>'+(r.internos||[]).length+' interno(s) afectados</div><div class="vpcr2-pills">'+pref+'</div>';
         h+='<div class="vpcr2-detail">Internos: '+esc((r.internos||[]).join(', ')||'ninguno')+'</div><div class="vpcr2-card-actions"><button type="button" data-vpcr2-edit="'+id+'">Editar</button><button type="button" class="danger" data-vpcr2-delete="'+id+'">Eliminar</button></div></article>';
       });
-      h+='</div><div class="vpcr2-note">Los bloqueos se incorporan al dialplan personalizado de Asterisk en extensions_custom.conf y se recargan con respaldo previo. Para bloquear celulares podés usar 15; para llamadas internacionales, 00, según el número que la ruta envíe a la troncal. Las reglas por ruta sólo se aceptan si sus troncales no están compartidas con otras rutas.</div>';
+      h+='</div><div class="vpcr2-note">Las clases combinan una lista de troncales autorizadas con prefijos de destino permitidos. Si el interno intenta salir por otra troncal o marcar un destino que no comienza con uno de esos prefijos, la llamada se rechaza. Los cambios se aplican en extensions_custom.conf con respaldo previo y recarga del dialplan. Las reglas antiguas de prefijos bloqueados siguen funcionando.</div>';
     }
     h+='</section>';host.innerHTML=h;ensureModal();
     var b=host.querySelector('[data-vpcr2-new]');if(b)b.addEventListener('click',function(){openModal('');});
