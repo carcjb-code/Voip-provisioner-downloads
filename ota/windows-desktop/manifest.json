@@ -2,7 +2,7 @@
   "schema_version": 1,
   "platform": "windows-desktop",
   "source_commit": "803a8f61698e785ac7b49d926e117affbbbe48e4",
-  "updated_at": "2026-11-05T19:46:14.158576+00:00",
+  "updated_at": "2026-11-05T19:46:28.025244+00:00",
   "files": [
     {
       "path": "app/ami_client.py",
