@@ -16632,7 +16632,7 @@ def api_vp_interno_permisos_troncales_v1():
         rules = remote.get('reglas', []) or []
         updated = []
         for rule in rules:
-            if str(rule.get('modo') or 'bloquear_prefijos') != 'permitir_troncales':
+            if str(rule.get('modo') or 'bloquear_prefijos') not in ('permitir_troncales', 'clase_servicio'):
                 updated.append(rule)
                 continue
             remaining = [str(x) for x in (rule.get('internos') or []) if str(x) not in extensions]
