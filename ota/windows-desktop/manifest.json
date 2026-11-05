@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "platform": "windows-desktop",
-  "source_commit": "b86e892f60f6f453af7823207b66630e94f02a07",
-  "updated_at": "2026-11-05T20:58:47.615085+00:00",
+  "source_commit": "e7d5d80ab13c18f2690496371a5b24022769b443",
+  "updated_at": "2026-11-05T21:00:13.143387+00:00",
   "files": [
     {
       "path": "app/ami_client.py",
@@ -71,8 +71,8 @@
     },
     {
       "path": "app/routes.py",
-      "sha256": "29d0ddbe3c066e4da5ee454cea443a6aac3a6d2a430d306a158f213c2d6c9943",
-      "size": 640482
+      "sha256": "e2e44f504613c7612ddde97543bf40ba2f7e226db35b92d24d40a153727bc751",
+      "size": 642650
     },
     {
       "path": "app/ssh_client.py",
@@ -216,8 +216,8 @@
     },
     {
       "path": "templates/monitoreo.html",
-      "sha256": "266f8036a1625de4a0132848a527678188f916b49af7051806bdab7892a16080",
-      "size": 375302
+      "sha256": "1f02418e4aeb6a789d999ab8abee0bebd82dcbae66788738b78835882cd83f52",
+      "size": 377820
     },
     {
       "path": "templates/softphone.html",
@@ -5287,6 +5287,16 @@
     },
     {
       "source_commit": "b86e892f60f6f453af7823207b66630e94f02a07",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "bf3d6eea63f3206d0f4ba7d845ac235ca82e32d3",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "e7d5d80ab13c18f2690496371a5b24022769b443",
       "requires_full_update": false,
       "full_update_paths": []
     }
