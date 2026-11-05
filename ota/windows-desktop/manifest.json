@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "platform": "windows-desktop",
-  "source_commit": "803a8f61698e785ac7b49d926e117affbbbe48e4",
-  "updated_at": "2026-11-05T19:46:28.025244+00:00",
+  "source_commit": "b86e892f60f6f453af7823207b66630e94f02a07",
+  "updated_at": "2026-11-05T20:13:43.534892+00:00",
   "files": [
     {
       "path": "app/ami_client.py",
@@ -216,8 +216,8 @@
     },
     {
       "path": "templates/monitoreo.html",
-      "sha256": "98c218bb0f6394b3d3e2620aab4f3ade7eec0415f898e3045da07f5967f0b4ba",
-      "size": 373353
+      "sha256": "266f8036a1625de4a0132848a527678188f916b49af7051806bdab7892a16080",
+      "size": 375302
     },
     {
       "path": "templates/softphone.html",
@@ -5282,6 +5282,11 @@
     },
     {
       "source_commit": "803a8f61698e785ac7b49d926e117affbbbe48e4",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "b86e892f60f6f453af7823207b66630e94f02a07",
       "requires_full_update": false,
       "full_update_paths": []
     }
