@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "platform": "windows-desktop",
-  "source_commit": "d5183d7b5ab39f2dd516bccfc63acc1efada607b",
-  "updated_at": "2026-11-10T23:26:20.739181+00:00",
+  "source_commit": "e13857a54c5c2500bf829a2e263dcfddeb8b2684",
+  "updated_at": "2026-11-10T23:36:46.135817+00:00",
   "files": [
     {
       "path": "app/ami_client.py",
@@ -71,8 +71,8 @@
     },
     {
       "path": "app/routes.py",
-      "sha256": "b3c4025640e80d17f5d30ac0e35634f94ac717c774de1bf36a5950500defd109",
-      "size": 643665
+      "sha256": "e9224ae3f48b516ca855fc0ac20a8f6bd6624d67ed0349b988b8681dc559365e",
+      "size": 651235
     },
     {
       "path": "app/ssh_client.py",
@@ -191,8 +191,8 @@
     },
     {
       "path": "templates/admin.html",
-      "sha256": "b1eb58fefb2a452b4674809d4ef0413e82beca62145b3b24066b8647ecbeb976",
-      "size": 116966
+      "sha256": "96340ef2a20d2fb7df948c3c5fca21970aa562319bc4c20a722e4190eb9a1b0f",
+      "size": 122033
     },
     {
       "path": "templates/dashboard.html",
@@ -226,8 +226,8 @@
     },
     {
       "path": "templates/terminal.html",
-      "sha256": "5f5f680f00d037f9f34a82290af287aa9fba3dc43568efc7ef7afd5270b55d21",
-      "size": 17190
+      "sha256": "bea3b586f8a0f02f9aa6c5dafedab4246368eaf98895b48009106d0eb64e182f",
+      "size": 18284
     }
   ],
   "removed_paths": [],
@@ -5337,6 +5337,11 @@
     },
     {
       "source_commit": "d5183d7b5ab39f2dd516bccfc63acc1efada607b",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "e13857a54c5c2500bf829a2e263dcfddeb8b2684",
       "requires_full_update": false,
       "full_update_paths": []
     }

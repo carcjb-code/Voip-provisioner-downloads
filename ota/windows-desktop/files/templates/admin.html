@@ -229,8 +229,6 @@ h1.vp-page-title,
 <b>⚠️ Seguridad:</b> La contraseña SSH se utiliza únicamente para establecer la conexión.
 </div>
 
-<div class="grid-2">
-
 <div class="form-group">
 <label>Seleccionar Servidor</label>
 <select id="termPerfil" onchange="explorerReset()">
@@ -238,12 +236,8 @@ h1.vp-page-title,
 </select>
 </div>
 
-<div class="form-group">
-<label>Contraseña SSH</label>
-<input type="password" id="termPassword" autocomplete="off"
-       onkeydown="if(event.key==='Enter') abrirTerminal()">
-</div>
-
+<div class="info-box" style="margin:10px 0 16px">
+🔐 Terminal y Explorador solicitan usuario y contraseña SSH nuevamente cada vez que se abren. Las sesiones se cierran automáticamente tras 10 minutos sin actividad.
 </div>
 
 <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px">
@@ -256,6 +250,23 @@ h1.vp-page-title,
 📁 Abrir Explorador SSH
 </button>
 
+</div>
+
+<div id="explorerAuthModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:100000;align-items:center;justify-content:center;padding:18px">
+<div style="background:#fff;color:#20242a;border-radius:12px;padding:22px;width:100%;max-width:420px;box-shadow:0 12px 40px rgba(0,0,0,.35)">
+<h3 style="margin:0 0 8px">🔐 Autenticación SSH del Explorador</h3>
+<p style="font-size:13px;color:#555;margin:0 0 14px">Ingrese nuevamente las credenciales del servidor seleccionado.</p>
+<div style="font-size:13px;margin-bottom:12px">Servidor: <strong id="explorerAuthProfile"></strong></div>
+<label for="explorerAuthUser">Usuario SSH</label>
+<input type="text" id="explorerAuthUser" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Usuario del servidor">
+<label for="explorerAuthPassword">Contraseña SSH</label>
+<input type="password" id="explorerAuthPassword" autocomplete="new-password" autocapitalize="off" placeholder="Contraseña SSH">
+<div id="explorerAuthError" style="min-height:18px;color:#c0392b;font-size:12px;margin:4px 0 10px"></div>
+<div style="display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap">
+<button type="button" class="btn btn-secondary" onclick="explorerCerrarAuth()">Cancelar</button>
+<button type="button" class="btn btn-primary" onclick="explorerAutorizar()">🔓 Autenticar</button>
+</div>
+</div>
 </div>
 
 <div id="sshExplorer"
@@ -1665,25 +1676,100 @@ async function guardarCatalogoUbicaciones() {
 
 var explorerPath = '/';
 var explorerEditPath = null;
+var explorerSessionId = null;
 
 function explorerPerfil() {
     var el = document.getElementById('termPerfil');
     return el ? el.value : '';
 }
 
-function explorerPassword() {
-    var el = document.getElementById('termPassword');
-    return el ? el.value : '';
+function abrirTerminal() {
+    var perfil = explorerPerfil();
+    if (!perfil) {
+        showAlert('Seleccione primero un servidor SSH.', false);
+        return;
+    }
+    window.open('/admin/terminal?perfil=' + encodeURIComponent(perfil), '_blank');
+}
+
+function explorerMostrarAuth() {
+    var modal = document.getElementById('explorerAuthModal');
+    var profile = document.getElementById('explorerAuthProfile');
+    var user = document.getElementById('explorerAuthUser');
+    var password = document.getElementById('explorerAuthPassword');
+    var error = document.getElementById('explorerAuthError');
+    if (profile) profile.textContent = explorerPerfil();
+    if (user) user.value = '';
+    if (password) password.value = '';
+    if (error) error.textContent = '';
+    if (modal) modal.style.display = 'flex';
+    if (user) setTimeout(function(){ user.focus(); }, 50);
+}
+
+function explorerCerrarAuth() {
+    var modal = document.getElementById('explorerAuthModal');
+    if (modal) modal.style.display = 'none';
+    var user = document.getElementById('explorerAuthUser');
+    var password = document.getElementById('explorerAuthPassword');
+    if (user) user.value = '';
+    if (password) password.value = '';
 }
 
 function explorerReset() {
+    var oldSession = explorerSessionId;
+    explorerSessionId = null;
+    if (oldSession) fetch('/api/terminal/explorer/disconnect', {
+        method:'POST', headers:{'Content-Type':'application/json'}, cache:'no-store',
+        body:JSON.stringify({session_id:oldSession})
+    }).catch(function(){});
     explorerPath = '/';
-
+    explorerEditPath = null;
     var box = document.getElementById('sshExplorer');
     var editor = document.getElementById('explorerEditor');
-
     if (box) box.style.display = 'none';
     if (editor) editor.style.display = 'none';
+    explorerCerrarAuth();
+}
+
+function explorerSesionVencida() {
+    explorerSessionId = null;
+    explorerEditPath = null;
+    var editor = document.getElementById('explorerEditor');
+    if (editor) editor.style.display = 'none';
+    explorerSetEstado('⏱ Sesión vencida por 10 minutos de inactividad. Ingrese nuevamente usuario y contraseña.', true);
+    explorerMostrarAuth();
+}
+
+async function explorerAutorizar() {
+    var perfil = explorerPerfil();
+    var username = document.getElementById('explorerAuthUser').value.trim();
+    var password = document.getElementById('explorerAuthPassword').value;
+    var error = document.getElementById('explorerAuthError');
+    if (!perfil || !username || !password) {
+        if (error) error.textContent = 'Seleccione servidor e ingrese usuario y contraseña SSH.';
+        return;
+    }
+    if (error) error.textContent = '⏳ Verificando credenciales...';
+    try {
+        var response = await fetch('/api/terminal/explorer/auth', {
+            method:'POST', headers:{'Content-Type':'application/json'}, cache:'no-store',
+            body:JSON.stringify({perfil:perfil, username_ssh:username, password_ssh:password})
+        });
+        var raw = await response.text();
+        var result;
+        try { result = JSON.parse(raw); }
+        catch(e) { throw new Error('Respuesta no válida del servidor (HTTP ' + response.status + ').'); }
+        if (!response.ok || result.status !== 'ok') throw new Error(result.message || 'No se pudo autenticar en el servidor.');
+        explorerSessionId = result.session_id;
+        explorerCerrarAuth();
+        document.getElementById('sshExplorer').style.display = 'block';
+        explorerPath = '/';
+        await explorerCargar();
+    } catch(e) {
+        if (error) error.textContent = e.message;
+        document.getElementById('explorerAuthPassword').value = '';
+        document.getElementById('explorerAuthPassword').focus();
+    }
 }
 
 function explorerSetEstado(texto, error) {
@@ -1728,74 +1814,45 @@ function explorerFecha(ts) {
 }
 
 async function explorerApi(url, data) {
-
-    var response = await fetch(
-        url + '?t=' + Date.now(),
-        {
-            method:'POST',
-            headers:{
-                'Content-Type':'application/json'
-            },
-            cache:'no-store',
-            body:JSON.stringify(data)
-        }
-    );
-
+    if (!explorerSessionId) {
+        explorerMostrarAuth();
+        throw new Error('Debe autenticarse nuevamente en el servidor SSH.');
+    }
+    data = Object.assign({}, data || {}, {session_id:explorerSessionId});
+    delete data.password;
+    delete data.password_ssh;
+    var response = await fetch(url + '?t=' + Date.now(), {
+        method:'POST', headers:{'Content-Type':'application/json'}, cache:'no-store',
+        body:JSON.stringify(data)
+    });
     var text = await response.text();
-
     var json;
-
-    try {
-        json = JSON.parse(text);
-    } catch(e) {
-        throw new Error(
-            'El servidor devolvió una respuesta no válida (HTTP ' +
-            response.status + ').'
-        );
+    try { json = JSON.parse(text); }
+    catch(e) { throw new Error('El servidor devolvió una respuesta no válida (HTTP ' + response.status + ').'); }
+    if (response.status === 401) {
+        explorerSesionVencida();
+        throw new Error('Sesión vencida. Ingrese nuevamente usuario y contraseña.');
     }
-
-    if (!response.ok || json.status !== 'ok') {
-        throw new Error(
-            json.message || 'Operación SSH fallida.'
-        );
-    }
-
+    if (!response.ok || json.status !== 'ok') throw new Error(json.message || 'Operación SSH fallida.');
     return json;
 }
 
 async function explorerAbrir() {
-
-    var perfil = explorerPerfil();
-    var password = explorerPassword();
-
-    if (!perfil) {
+    if (!explorerPerfil()) {
         showAlert('Seleccione primero un servidor SSH.', false);
         return;
     }
-
-    if (!password) {
-        showAlert('Ingrese la contraseña SSH.', false);
-        document.getElementById('termPassword').focus();
-        return;
-    }
-
-    document.getElementById('sshExplorer').style.display = 'block';
-
-    explorerPath = '/';
-
-    await explorerCargar();
+    explorerReset();
+    explorerMostrarAuth();
 }
 
 async function explorerCargar() {
 
     var perfil = explorerPerfil();
-    var password = explorerPassword();
 
-    if (!perfil || !password) {
-        explorerSetEstado(
-            'Seleccione servidor e ingrese la contraseña SSH.',
-            true
-        );
+    if (!perfil || !explorerSessionId) {
+        explorerSetEstado('Autentíquese nuevamente para abrir el explorador.', true);
+        explorerMostrarAuth();
         return;
     }
 
@@ -2017,7 +2074,7 @@ function explorerNuevaCarpeta() {
         '/api/terminal/explorer/mkdir',
         {
             perfil:explorerPerfil(),
-            password:explorerPassword(),
+            session_id:explorerSessionId,
             path:explorerPath,
             name:nombre
         }
@@ -2064,8 +2121,8 @@ async function explorerProcesarUpload(input) {
     );
 
     form.append(
-        'password',
-        explorerPassword()
+        'session_id',
+        explorerSessionId || ''
     );
 
     form.append(
@@ -2105,6 +2162,10 @@ async function explorerProcesarUpload(input) {
             );
         }
 
+        if (r.status === 401) {
+            explorerSesionVencida();
+            throw new Error('Sesión vencida. Ingrese nuevamente usuario y contraseña.');
+        }
         if (!r.ok || d.status !== 'ok') {
             throw new Error(
                 d.message || 'No se pudo subir el archivo.'
@@ -2152,12 +2213,16 @@ async function explorerDescargar(path) {
                 },
                 body:JSON.stringify({
                     perfil:explorerPerfil(),
-                    password:explorerPassword(),
+                    session_id:explorerSessionId,
                     path:path
                 })
             }
         );
 
+        if (response.status === 401) {
+            explorerSesionVencida();
+            throw new Error('Sesión vencida. Ingrese nuevamente usuario y contraseña.');
+        }
         if (!response.ok) {
 
             var txt = await response.text();
@@ -2233,7 +2298,7 @@ async function explorerEditar(path) {
             '/api/terminal/explorer/read',
             {
                 perfil:explorerPerfil(),
-                password:explorerPassword(),
+                session_id:explorerSessionId,
                 path:path
             }
         );
@@ -2298,7 +2363,7 @@ async function explorerGuardarArchivo() {
             '/api/terminal/explorer/write',
             {
                 perfil:explorerPerfil(),
-                password:explorerPassword(),
+                session_id:explorerSessionId,
                 path:explorerEditPath,
                 content:contenido
             }
@@ -2364,7 +2429,7 @@ async function explorerRenombrar(path) {
             '/api/terminal/explorer/rename',
             {
                 perfil:explorerPerfil(),
-                password:explorerPassword(),
+                session_id:explorerSessionId,
                 old:path,
                 new_name:nuevo
             }
@@ -2405,7 +2470,7 @@ async function explorerEliminar(path) {
             '/api/terminal/explorer/delete',
             {
                 perfil:explorerPerfil(),
-                password:explorerPassword(),
+                session_id:explorerSessionId,
                 path:path
             }
         );
