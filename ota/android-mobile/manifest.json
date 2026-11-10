@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "platform": "android-mobile",
-  "source_commit": "5020071ae42cafa44bee32511aba70750a346187",
-  "updated_at": "2026-11-05T21:10:42.248746+00:00",
+  "source_commit": "881b3df04dd6a3cd515bf7f87955804560dc53e9",
+  "updated_at": "2026-11-10T23:29:48.158841+00:00",
   "files": [
     {
       "path": "app/ami_client.py",
@@ -71,8 +71,8 @@
     },
     {
       "path": "app/routes.py",
-      "sha256": "717e2552b3202106c64b1b65e98b7d4d8408d389770e58e0b9de6002bf977629",
-      "size": 643195
+      "sha256": "592882ebd98831fa8c9ad591d1e42fb8d6a8c84e15c76880a6b9d9d6745c2171",
+      "size": 650849
     },
     {
       "path": "app/ssh_client.py",
@@ -176,8 +176,8 @@
     },
     {
       "path": "templates/admin.html",
-      "sha256": "bf1b7f75f205af81776bca40aa0ba43adfb1059f4ae9cf9524e2ec8597b7ee0b",
-      "size": 115350
+      "sha256": "ee668eff5cf167b3142ecb617791e64250a03c915045e17ba4219d75da4b0d26",
+      "size": 120572
     },
     {
       "path": "templates/dashboard.html",
@@ -206,8 +206,8 @@
     },
     {
       "path": "templates/terminal.html",
-      "sha256": "5f5f680f00d037f9f34a82290af287aa9fba3dc43568efc7ef7afd5270b55d21",
-      "size": 17190
+      "sha256": "819a973460681293f8971d2628697f722408240dfcbe9503820dc1e44dcc4118",
+      "size": 18495
     }
   ],
   "removed_paths": [],
@@ -5380,6 +5380,11 @@
     },
     {
       "source_commit": "5020071ae42cafa44bee32511aba70750a346187",
+      "requires_full_update": false,
+      "full_update_paths": []
+    },
+    {
+      "source_commit": "881b3df04dd6a3cd515bf7f87955804560dc53e9",
       "requires_full_update": false,
       "full_update_paths": []
     }

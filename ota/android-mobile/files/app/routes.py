@@ -5,6 +5,7 @@ import threading
 from datetime import datetime
 import paramiko
 import uuid
+import secrets
 import select
 import base64
 import inspect
@@ -7882,191 +7883,359 @@ def api_ejecutar_backup_ahora():
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 500
 
+SSH_IDLE_TIMEOUT = 600
 _ssh_channels = {}
 _ssh_lock = threading.Lock()
+_explorer_sessions = {}
+_explorer_lock = threading.Lock()
+
+
+def _vp_close_terminal_session(session):
+    if not session:
+        return
+    for key in ('channel', 'ssh'):
+        try:
+            value = session.get(key)
+            if value:
+                value.close()
+        except Exception:
+            pass
+
+
+def _vp_terminal_session(session_id, touch=False):
+    now = time.time()
+    expired_session = None
+    with _ssh_lock:
+        session = _ssh_channels.get(session_id)
+        if session and now - float(session.get('last_activity', now)) >= SSH_IDLE_TIMEOUT:
+            expired_session = _ssh_channels.pop(session_id, None)
+            session = None
+        elif session and touch:
+            session['last_activity'] = now
+    if expired_session:
+        _vp_close_terminal_session(expired_session)
+    return session
+
+
+def _vp_remove_terminal_session(session_id):
+    with _ssh_lock:
+        session = _ssh_channels.pop(session_id, None)
+    if session:
+        _vp_close_terminal_session(session)
+    return bool(session)
+
+
+def _vp_ssh_session_cleanup_loop():
+    while True:
+        try:
+            now = time.time()
+            expired = []
+            with _ssh_lock:
+                for session_id, session in list(_ssh_channels.items()):
+                    if now - float(session.get('last_activity', now)) >= SSH_IDLE_TIMEOUT:
+                        expired.append(_ssh_channels.pop(session_id, None))
+            for session in expired:
+                _vp_close_terminal_session(session)
+
+            with _explorer_lock:
+                for session_id, session in list(_explorer_sessions.items()):
+                    if now - float(session.get('last_activity', now)) >= SSH_IDLE_TIMEOUT:
+                        _explorer_sessions.pop(session_id, None)
+        except Exception:
+            logger.exception("Error limpiando sesiones SSH inactivas")
+        time.sleep(15)
+
+
+try:
+    _vp_ssh_cleanup_thread = threading.Thread(
+        target=_vp_ssh_session_cleanup_loop,
+        name='voip-ssh-session-cleanup',
+        daemon=True
+    )
+    _vp_ssh_cleanup_thread.start()
+except Exception:
+    logger.exception("No se pudo iniciar el limpiador de sesiones SSH")
+
 
 @main_bp.route('/admin/terminal')
 def admin_terminal():
-    return render_template('terminal.html')
+    response = current_app.make_response(render_template('terminal.html'))
+    response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
+    response.headers['Pragma'] = 'no-cache'
+    return response
+
 
 @main_bp.route('/ws/terminal/connect', methods=['POST'])
 def ws_terminal_connect():
-    d = request.json or {}
-    perfil_nombre = d.get('perfil_nombre', '')
-    password_ssh = d.get('password_ssh', '')
+    data = request.get_json(silent=True) or {}
+    perfil_nombre = str(data.get('perfil_nombre') or '').strip()
+    username = str(data.get('username_ssh') or data.get('usuario_ssh') or '').strip()
+    password_ssh = str(data.get('password_ssh') or '')
+
     if not perfil_nombre:
         return jsonify({'status': 'error', 'message': 'Perfil requerido'}), 400
-    if not password_ssh:
-        return jsonify({'status': 'error', 'message': 'Contraseña SSH requerida'}), 400
-    pf = buscar_perfil(perfil_nombre)
-    if not pf:
+    if not username or not password_ssh:
+        return jsonify({'status': 'error', 'message': 'Ingrese nuevamente el usuario y la contraseña SSH.'}), 400
+
+    perfil = buscar_perfil(perfil_nombre, cargar_perfiles())
+    if not perfil:
         return jsonify({'status': 'error', 'message': 'Perfil no encontrado'}), 404
-    host = pf.get('host', '127.0.0.1')
-    port = int(pf.get('puerto', 22))
-    usuario = pf.get('usuario', 'root')
+
+    host = str(perfil.get('host') or '').strip()
+    try:
+        port = int(perfil.get('puerto', 22))
+    except Exception:
+        return jsonify({'status': 'error', 'message': 'Puerto SSH no válido.'}), 400
+    if not host or port < 1 or port > 65535:
+        return jsonify({'status': 'error', 'message': 'Servidor SSH no válido.'}), 400
+
+    ssh = None
+    channel = None
     try:
         ssh = paramiko.SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        ssh.connect(host, port=port, username=usuario, password=password_ssh, timeout=5)
+        ssh.connect(
+            hostname=host, port=port, username=username, password=password_ssh,
+            timeout=8, banner_timeout=8, auth_timeout=8,
+            allow_agent=False, look_for_keys=False
+        )
         channel = ssh.invoke_shell(term='xterm-256color', width=120, height=40)
         channel.setblocking(0)
-        session_id = str(uuid.uuid4())[:8]
+        session_id = secrets.token_urlsafe(32)
+        now = time.time()
         with _ssh_lock:
-            _ssh_channels[session_id] = {'ssh': ssh, 'channel': channel, 'perfil': perfil_nombre}
-        logger.info("TERMINAL: Sesion SSH creada para perfil: {} (ID: {})".format(perfil_nombre, session_id))
-        return jsonify({'status': 'ok', 'session_id': session_id, 'host': host, 'usuario': usuario})
+            _ssh_channels[session_id] = {
+                'ssh': ssh, 'channel': channel, 'perfil': perfil_nombre,
+                'username': username, 'created_at': now, 'last_activity': now
+            }
+        logger.info("TERMINAL: Sesion SSH creada para perfil: {}".format(perfil_nombre))
+        return jsonify({'status': 'ok', 'session_id': session_id, 'host': host, 'usuario': username})
     except paramiko.AuthenticationException:
-        return jsonify({'status': 'error', 'message': 'Contraseña SSH incorrecta'}), 401
-    except Exception as e:
-        logger.error("TERMINAL: Error conectando: {}".format(e))
-        return jsonify({'status': 'error', 'message': str(e)[:200]}), 500
+        _vp_close_terminal_session({'ssh': ssh, 'channel': channel})
+        return jsonify({'status': 'error', 'message': 'Usuario o contraseña SSH incorrectos.'}), 401
+    except Exception:
+        _vp_close_terminal_session({'ssh': ssh, 'channel': channel})
+        logger.exception("TERMINAL: Error conectando al perfil %s", perfil_nombre)
+        return jsonify({'status': 'error', 'message': 'No se pudo establecer la conexión SSH.'}), 502
+
 
 @main_bp.route('/ws/terminal/stream/<session_id>')
 def ws_terminal_stream(session_id):
     def generate():
-        with _ssh_lock:
-            session = _ssh_channels.get(session_id)
+        session = _vp_terminal_session(session_id)
         if not session:
-            yield "data: ERROR:Sesion no encontrada\n\n"
+            yield "data: ERROR:Sesion no encontrada o ya cerrada\n\n"
             return
         channel = session['channel']
         yield "data: CONNECTED\n\n"
-        ultimo_dato = time.time()
+        ultimo_keepalive = time.time()
         while True:
             try:
-                r, w, e = select.select([channel], [], [], 0.1)
-                if r:
+                if not _vp_terminal_session(session_id):
+                    yield "data: EXPIRED\n\n"
+                    return
+                readable, _, _ = select.select([channel], [], [], 0.2)
+                if readable:
                     data = channel.recv(4096)
                     if data:
                         encoded = base64.b64encode(data).decode('ascii')
                         yield "data: OUTPUT:{}\n\n".format(encoded)
-                        ultimo_dato = time.time()
                     else:
                         yield "data: DISCONNECTED\n\n"
-                        break
-                elif time.time() - ultimo_dato > 3:
+                        _vp_remove_terminal_session(session_id)
+                        return
+                elif time.time() - ultimo_keepalive > 15:
                     yield ": keepalive\n\n"
-                    ultimo_dato = time.time()
+                    ultimo_keepalive = time.time()
             except Exception:
                 yield "data: DISCONNECTED\n\n"
-                break
-    resp = Response(generate(), mimetype="text/event-stream")
-    resp.headers['Cache-Control'] = 'no-cache'
-    resp.headers['Access-Control-Allow-Origin'] = '*'
-    return resp
+                _vp_remove_terminal_session(session_id)
+                return
+    response = Response(generate(), mimetype="text/event-stream")
+    response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+    response.headers['Pragma'] = 'no-cache'
+    response.headers['X-Accel-Buffering'] = 'no'
+    return response
+
 
 @main_bp.route('/ws/terminal/input/<session_id>', methods=['POST'])
 def ws_terminal_input(session_id):
-    with _ssh_lock:
-        session = _ssh_channels.get(session_id)
+    session = _vp_terminal_session(session_id, touch=True)
     if not session:
-        return jsonify({'status': 'error', 'message': 'Sesion no encontrada'}), 404
+        return jsonify({'status': 'error', 'message': 'Sesión SSH vencida o cerrada. Vuelva a autenticarse.'}), 401
     try:
         data = request.get_data(as_text=True)
+        if not data or len(data) > 8192:
+            return jsonify({'status': 'error', 'message': 'Entrada de terminal no válida.'}), 400
         session['channel'].send(data)
         return jsonify({'status': 'ok'})
-    except Exception as e:
-        return jsonify({'status': 'error', 'message': str(e)}), 500
+    except Exception:
+        _vp_remove_terminal_session(session_id)
+        logger.exception("Error enviando datos a la terminal SSH")
+        return jsonify({'status': 'error', 'message': 'La sesión SSH se cerró.'}), 410
+
 
 @main_bp.route('/ws/terminal/disconnect/<session_id>', methods=['POST'])
 def ws_terminal_disconnect(session_id):
-    with _ssh_lock:
-        session = _ssh_channels.pop(session_id, None)
-    if session:
-        try:
-            session['channel'].close()
-            session['ssh'].close()
-        except Exception:
-            pass
-        logger.info("TERMINAL: Sesion cerrada: {}".format(session_id))
+    _vp_remove_terminal_session(session_id)
     return jsonify({'status': 'ok'})
+
 
 @main_bp.route('/ws/terminal/resize/<session_id>', methods=['POST'])
 def ws_terminal_resize(session_id):
-    with _ssh_lock:
-        session = _ssh_channels.get(session_id)
-    if session:
-        try:
-            d = request.json or {}
-            cols = int(d.get('cols', 120))
-            rows = int(d.get('rows', 40))
-            session['channel'].resize_pty(width=cols, height=rows)
-        except Exception:
-            pass
-    return jsonify({'status': 'ok'})
+    session = _vp_terminal_session(session_id, touch=True)
+    if not session:
+        return jsonify({'status': 'error', 'message': 'Sesión SSH vencida o cerrada. Vuelva a autenticarse.'}), 401
+    try:
+        data = request.get_json(silent=True) or {}
+        cols = max(20, min(int(data.get('cols', 120)), 400))
+        rows = max(5, min(int(data.get('rows', 40)), 150))
+        session['channel'].resize_pty(width=cols, height=rows)
+        return jsonify({'status': 'ok'})
+    except Exception:
+        return jsonify({'status': 'error', 'message': 'No se pudo cambiar el tamaño de la terminal.'}), 400
+
 
 # ===== SSH FILE EXPLORER / SFTP =====
 
-def _explorer_perfil_y_password(data):
-    """
-    Obtiene el perfil seleccionado y utiliza exclusivamente la contraseña
-    entregada desde la interfaz para esta sesión.
-    """
+def _explorer_auth_profile(data):
     data = data or {}
+    profile_name = str(data.get('perfil') or data.get('nombre') or '').strip()
+    username = str(data.get('username_ssh') or data.get('usuario_ssh') or '').strip()
+    password = str(data.get('password_ssh') or data.get('password') or '')
 
-    nombre = str(
-        data.get('perfil')
-        or data.get('nombre')
-        or ''
-    ).strip()
+    if not profile_name:
+        return None, None, None, "Debe seleccionar un servidor."
+    if not username or not password:
+        return None, None, None, "Ingrese nuevamente el usuario y la contraseña SSH."
 
-    password = data.get('password')
+    profile = buscar_perfil(profile_name, cargar_perfiles())
+    if not profile:
+        return None, None, None, "No se encontró el perfil seleccionado."
 
-    if password is None:
-        password = ''
+    host = str(profile.get('host') or '').strip()
+    try:
+        port = int(profile.get('puerto', 22))
+    except Exception:
+        return None, None, None, "El puerto SSH del perfil no es válido."
+    if not host or port < 1 or port > 65535:
+        return None, None, None, "El servidor SSH del perfil no es válido."
+    return dict(profile), username, password, None
 
-    password = str(password)
 
-    if not nombre:
-        return None, None, "Debe seleccionar un servidor."
+@main_bp.route('/api/terminal/explorer/auth', methods=['POST'])
+def terminal_explorer_auth():
+    data = request.get_json(silent=True) or {}
+    profile, username, password, error = _explorer_auth_profile(data)
+    if error:
+        return jsonify({'status': 'error', 'message': error}), 400
 
-    perfiles = cargar_perfiles()
-    perfil = buscar_perfil(nombre, perfiles)
+    host = str(profile.get('host') or '').strip()
+    port = int(profile.get('puerto', 22))
+    sftp = None
+    transport = None
+    try:
+        sftp, transport = conectar_sftp(
+            host, port, username, password, '/',
+            profile.get('ssh_compat', False)
+        )
+        if not sftp or not transport:
+            return jsonify({
+                'status': 'error',
+                'message': 'No se pudo autenticar. Verifique usuario, contraseña y servidor SSH.'
+            }), 401
 
-    if not perfil:
-        return None, None, "No se encontró el perfil seleccionado."
-
-    perfil = dict(perfil)
-
-    # Nunca reemplazamos permanentemente la contraseña almacenada.
-    # Para el explorador se utiliza la contraseña introducida en Terminal.
-    perfil['_explorer_password'] = password
-
-    return perfil, password, None
+        session_id = secrets.token_urlsafe(32)
+        now = time.time()
+        with _explorer_lock:
+            _explorer_sessions[session_id] = {
+                'perfil': str(profile.get('nombre') or data.get('perfil') or '').strip(),
+                'host': host, 'port': port, 'username': username,
+                'password': password, 'created_at': now, 'last_activity': now
+            }
+        response = jsonify({
+            'status': 'ok', 'session_id': session_id,
+            'host': host, 'usuario': username, 'expires_in': SSH_IDLE_TIMEOUT
+        })
+        response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
+        response.headers['Pragma'] = 'no-cache'
+        return response
+    except Exception:
+        logger.exception("Error autenticando sesión del explorador SSH")
+        return jsonify({'status': 'error', 'message': 'No se pudo autenticar contra el servidor SSH.'}), 502
+    finally:
+        try:
+            if sftp:
+                sftp.close()
+        except Exception:
+            pass
+        try:
+            if transport:
+                transport.close()
+        except Exception:
+            pass
 
 
 def _explorer_sftp(data):
-    perfil, password, error = _explorer_perfil_y_password(data)
+    data = data or {}
+    session_id = str(data.get('session_id') or '').strip()
+    requested_profile = str(data.get('perfil') or data.get('nombre') or '').strip()
+    if not session_id:
+        return None, None, None, "Sesión SFTP vencida o no válida. Ingrese nuevamente usuario y contraseña."
 
-    if error:
-        return None, None, None, error
+    now = time.time()
+    with _explorer_lock:
+        auth = _explorer_sessions.get(session_id)
+        if auth and now - float(auth.get('last_activity', now)) >= SSH_IDLE_TIMEOUT:
+            _explorer_sessions.pop(session_id, None)
+            auth = None
+        elif auth:
+            if requested_profile and requested_profile != auth.get('perfil'):
+                return None, None, None, "La sesión SFTP no corresponde al servidor seleccionado."
+            auth['last_activity'] = now
+            auth = dict(auth)
+    if not auth:
+        return None, None, None, "Sesión SFTP vencida o no válida. Ingrese nuevamente usuario y contraseña."
 
-    host = str(perfil.get('host', '')).strip()
-    puerto = int(perfil.get('puerto', 22))
-    usuario = str(perfil.get('usuario', 'root'))
+    profile = buscar_perfil(auth.get('perfil'), cargar_perfiles())
+    if not profile:
+        with _explorer_lock:
+            _explorer_sessions.pop(session_id, None)
+        return None, None, None, "El perfil SSH cambió o ya no existe. Autentíquese nuevamente."
 
-    if not host:
-        return None, None, None, "El perfil no tiene host."
+    profile = dict(profile)
+    host = str(profile.get('host') or '').strip()
+    try:
+        port = int(profile.get('puerto', 22))
+    except Exception:
+        port = -1
+    if host != auth.get('host') or port != auth.get('port'):
+        with _explorer_lock:
+            _explorer_sessions.pop(session_id, None)
+        return None, None, None, "El servidor del perfil cambió. Autentíquese nuevamente."
 
+    profile['usuario'] = auth.get('username')
     sftp, transport = conectar_sftp(
-        host,
-        puerto,
-        usuario,
-        password,
-        '/',
-        perfil.get('ssh_compat', False)
+        host, port, auth.get('username'), auth.get('password'),
+        '/', profile.get('ssh_compat', False)
     )
+    if not sftp or not transport:
+        return None, None, None, "No se pudo abrir SFTP. Autentíquese nuevamente."
+    return sftp, transport, profile, None
 
-    if not sftp:
-        return None, None, None, (
-            "No se pudo establecer conexión SSH/SFTP. "
-            "Verifique servidor, puerto, usuario y contraseña."
-        )
 
-    return sftp, transport, perfil, None
+@main_bp.route('/api/terminal/explorer/disconnect', methods=['POST'])
+def terminal_explorer_disconnect():
+    data = request.get_json(silent=True) or {}
+    session_id = str(data.get('session_id') or '').strip()
+    if session_id:
+        with _explorer_lock:
+            _explorer_sessions.pop(session_id, None)
+    return jsonify({'status': 'ok'})
 
 
 @main_bp.route('/api/terminal/explorer/list', methods=['POST'])
+
 def terminal_explorer_list():
     try:
         data = request.get_json(silent=True) or {}
@@ -8085,7 +8254,7 @@ def terminal_explorer_list():
             return jsonify({
                 'status': 'error',
                 'message': error
-            }), 400
+            }), 401
 
         try:
             entries = []
@@ -8188,7 +8357,7 @@ def terminal_explorer_mkdir():
             return jsonify({
                 'status': 'error',
                 'message': error
-            }), 400
+            }), 401
 
         try:
             destino = path.rstrip('/') + '/' + name
@@ -8238,7 +8407,7 @@ def terminal_explorer_delete():
             return jsonify({
                 'status': 'error',
                 'message': error
-            }), 400
+            }), 401
 
         try:
             try:
@@ -8321,7 +8490,7 @@ def terminal_explorer_rename():
             return jsonify({
                 'status': 'error',
                 'message': error
-            }), 400
+            }), 401
 
         try:
             sftp.rename(old, new_path)
@@ -8370,7 +8539,7 @@ def terminal_explorer_read():
             return jsonify({
                 'status': 'error',
                 'message': error
-            }), 400
+            }), 401
 
         try:
             with sftp.open(path, 'rb') as f:
@@ -8443,7 +8612,7 @@ def terminal_explorer_write():
             return jsonify({
                 'status': 'error',
                 'message': error
-            }), 400
+            }), 401
 
         try:
             with sftp.open(path, 'w') as f:
@@ -8516,7 +8685,7 @@ def terminal_explorer_upload():
             return jsonify({
                 'status': 'error',
                 'message': error
-            }), 400
+            }), 401
 
         try:
             nombre = os.path.basename(archivo.filename)
@@ -8593,7 +8762,7 @@ def terminal_explorer_download():
             return jsonify({
                 'status': 'error',
                 'message': error
-            }), 400
+            }), 401
 
         import tempfile
 

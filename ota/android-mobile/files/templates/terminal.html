@@ -204,14 +204,16 @@ body { display: flex; flex-direction: column; }
     <div class="login-box">
         <h2>💻 Terminal SSH</h2>
         <p>Conexión segura a tus servidores VoIP</p>
-        <div class="security-notice">🔐 La contraseña se solicita en cada sesión y <strong>NO se almacena</strong>.</div>
+        <div class="security-notice">🔐 Usuario y contraseña SSH se solicitan en cada conexión, no se guardan en el navegador y la sesión se cierra tras <strong>10 minutos sin actividad</strong>.</div>
         <label>📡 Seleccionar Servidor</label>
         <select id="perfilSelect" onchange="updateProfileInfo()">
             <option value="">-- Seleccionar Perfil --</option>
         </select>
         <div id="profileInfo" class="profile-info"></div>
+        <label>👤 Usuario SSH</label>
+        <input type="text" id="sshUsername" placeholder="Usuario del servidor (ej. root)" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false">
         <label>🔑 Contraseña SSH</label>
-        <input type="password" id="sshPassword" placeholder="Ingresa la contraseña SSH..." autocomplete="off" autocapitalize="off" autocorrect="off">
+        <input type="password" id="sshPassword" placeholder="Ingresa la contraseña SSH..." autocomplete="new-password" autocapitalize="off" autocorrect="off">
         <button class="btn btn-primary" onclick="connectTerminal()">🔌 Conectar</button>
         <div id="loginError" class="login-error"></div>
         <a href="/admin" class="btn btn-secondary" style="margin-top:10px;">← Volver al Admin</a>
@@ -320,20 +322,15 @@ function initTerminal() {
     term.writeln('\x1b[1;34m║   \x1b[1;37mVoIP Provisioner - Terminal SSH\x1b[0m   \x1b[1;34m║\x1b[0m');
     term.writeln('\x1b[1;34m╚══════════════════════════════════════╝\x1b[0m\r\n');
     
-    const pt = sessionStorage.getItem('term_perfil');
-    const pw = sessionStorage.getItem('term_pass');
-    if (pt && pw) {
-        loadProfiles().then(() => {
-            document.getElementById('perfilSelect').value = pt;
-            document.getElementById('sshPassword').value = pw;
+    const requestedProfile = new URLSearchParams(window.location.search).get('perfil') || sessionStorage.getItem('term_perfil') || '';
+    sessionStorage.removeItem('term_perfil');
+    sessionStorage.removeItem('term_pass');
+    loadProfiles().then(() => {
+        if (requestedProfile) {
+            document.getElementById('perfilSelect').value = requestedProfile;
             updateProfileInfo();
-            sessionStorage.removeItem('term_perfil');
-            sessionStorage.removeItem('term_pass');
-            setTimeout(() => connectTerminal(), 500);
-        });
-    } else {
-        loadProfiles();
-    }
+        }
+    });
 }
 
 async function loadProfiles() {
@@ -356,16 +353,18 @@ async function loadProfiles() {
 function updateProfileInfo() {
     const n = document.getElementById('perfilSelect').value;
     const p = perfilesData.find(x => x.nombre === n);
-    document.getElementById('profileInfo').textContent = p ? 
-        'Conectará a: ' + p.host + ':' + (p.puerto||22) + ' como ' + p.usuario : '';
+    document.getElementById('profileInfo').textContent = p ?
+        'Servidor: ' + p.host + ':' + (p.puerto||22) + '. Ingrese nuevamente su usuario y contraseña SSH.' : '';
 }
 
 async function connectTerminal() {
     const pn = document.getElementById('perfilSelect').value;
+    const username = document.getElementById('sshUsername').value.trim();
     const pw = document.getElementById('sshPassword').value;
     const err = document.getElementById('loginError');
-    
+
     if (!pn) { err.textContent = '⚠ Selecciona un perfil'; return; }
+    if (!username) { err.textContent = '⚠ Ingresa el usuario SSH'; return; }
     if (!pw) { err.textContent = '⚠ Ingresa la contraseña SSH'; return; }
     
     err.textContent = '⏳ Conectando...';
@@ -375,7 +374,8 @@ async function connectTerminal() {
         const r = await fetch('/ws/terminal/connect', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({perfil_nombre: pn, password_ssh: pw})
+            cache: 'no-store',
+            body: JSON.stringify({perfil_nombre: pn, username_ssh: username, password_ssh: pw})
         });
         const d = await r.json();
         
@@ -388,6 +388,7 @@ async function connectTerminal() {
         sessionId = d.session_id;
         document.getElementById('headerTarget').textContent = d.usuario + '@' + d.host;
         document.getElementById('loginOverlay').classList.add('hidden');
+        document.getElementById('sshUsername').value = '';
         document.getElementById('sshPassword').value = '';
         
         if (isMobile && document.activeElement) document.activeElement.blur();
@@ -415,6 +416,16 @@ function startStream() {
             setTimeout(fitTerminal, 600);
         } else if (m.startsWith('OUTPUT:')) {
             try { term.write(atob(m.substring(7))); } catch(e) {}
+        } else if (m === 'EXPIRED') {
+            isConnected = false;
+            sessionId = null;
+            if (eventSource) eventSource.close();
+            setStatus('disconnected');
+            term.writeln('\r\n\x1b[33m⏱ Sesión cerrada por 10 minutos de inactividad. Ingrese nuevamente.\x1b[0m');
+            document.getElementById('sshUsername').value = '';
+            document.getElementById('sshPassword').value = '';
+            document.getElementById('loginError').textContent = 'Sesión vencida. Autentíquese nuevamente.';
+            document.getElementById('loginOverlay').classList.remove('hidden');
         } else if (m === 'DISCONNECTED' || m.startsWith('ERROR:')) {
             isConnected = false;
             setStatus('disconnected');
@@ -480,6 +491,7 @@ async function reconnect() {
     term.clear();
     document.getElementById('loginOverlay').classList.remove('hidden');
     document.getElementById('perfilSelect').value = '';
+    document.getElementById('sshUsername').value = '';
     document.getElementById('sshPassword').value = '';
     document.getElementById('profileInfo').textContent = '';
     document.getElementById('loginError').textContent = '';
@@ -500,6 +512,9 @@ window.addEventListener('beforeunload', () => {
 });
 
 initTerminal();
+document.getElementById('sshUsername').addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') document.getElementById('sshPassword').focus();
+});
 document.getElementById('sshPassword').addEventListener('keypress', (e) => {
     if (e.key === 'Enter') connectTerminal();
 });
