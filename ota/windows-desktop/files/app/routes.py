@@ -16298,8 +16298,6 @@ def safe_rules(rules):
 def render_block(rules, include_context=True):
     if not rules:
         return ''
-    macro_info, macro_error, macro_rc = run_ast('core show application Macro')
-    macro_app_available = not bool(re.search(r'No such application|No such command|not registered|Unable to find', str(macro_info or '') + '\n' + str(macro_error or ''), re.I))
     encoded = base64.b64encode(json.dumps(rules, ensure_ascii=True, separators=(',', ':')).encode('utf-8')).decode('ascii')
     lines = [BEGIN]
     for offset in range(0, len(encoded), 120):
@@ -16360,12 +16358,8 @@ def render_block(rules, include_context=True):
             lines.append(' same => n,Set(DIAL_TRUNK_OPTIONS=${IF($["${DB_EXISTS(TRUNK/${DIAL_TRUNK}/dialopts)}" = "1"]?${DB_RESULT}:${TRUNK_OPTIONS})})')
             lines.append(' same => n,ExecIf($["${QCALLBACK}" = "1"]?Set(DIAL_TRUNK_OPTIONS=${STRREPLACE(DIAL_TRUNK_OPTIONS,T)}))')
             lines.append(' same => n,GotoIf($["${INTRACOMPANYROUTE}" = "YES"]?' + label + '_skipcid)')
-            if macro_app_available:
-                lines.append(' same => n,Macro(outbound-callerid,${DIAL_TRUNK})')
-                lines.append(' same => n(' + label + '_skipcid),ExecIf($["${PREFIX_TRUNK_${DIAL_TRUNK}}" != ""]?Macro(sub-flp-${DIAL_TRUNK}))')
-            else:
-                lines.append(' same => n,Gosub(macro-outbound-callerid,s,1(${DIAL_TRUNK}))')
-                lines.append(' same => n(' + label + '_skipcid),GosubIf($["${PREFIX_TRUNK_${DIAL_TRUNK}}" != ""]?sub-flp-${DIAL_TRUNK},s,1())')
+            lines.append(' same => n,Gosub(macro-outbound-callerid,s,1(${DIAL_TRUNK}))')
+            lines.append(' same => n(' + label + '_skipcid),GosubIf($["${PREFIX_TRUNK_${DIAL_TRUNK}}" != ""]?sub-flp-${DIAL_TRUNK},s,1())')
             lines.append(' same => n,Set(OUTNUM=${OUTPREFIX_${DIAL_TRUNK}}${DIAL_NUMBER})')
             lines.append(' same => n,Set(custom=${CUT(OUT_${DIAL_TRUNK},:,1)})')
             lines.append(' same => n,ExecIf($["${MOHCLASS}"!="default" & "${MOHCLASS}"!="" & "${FORCE_CONFIRM}"="" ]?Set(DIAL_TRUNK_MOH=${MOHCLASS}))')
@@ -16391,8 +16385,8 @@ def render_block(rules, include_context=True):
         lines.append(' same => n,Hangup(21)')
         lines.append(' same => n(' + label + '_next),NoOp(Continuar evaluación de restricciones)')
     if include_context:
-        hook_exit = 'MacroExit()' if macro_app_available else 'Return()'
-        lines.extend([' same => n,' + hook_exit, END, ''])
+        # El hook es invocado por FreePBX/Issabel mediante Gosub().
+        lines.extend([' same => n,Return()', END, ''])
     else:
         lines.extend([END, ''])
     return '\n'.join(lines)
