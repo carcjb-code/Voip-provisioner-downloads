@@ -16298,6 +16298,8 @@ def safe_rules(rules):
 def render_block(rules, include_context=True):
     if not rules:
         return ''
+    macro_info, macro_error, macro_rc = run_ast('core show application Macro')
+    macro_app_available = not bool(re.search(r'No such application|No such command|not registered|Unable to find', str(macro_info or '') + '\n' + str(macro_error or ''), re.I))
     encoded = base64.b64encode(json.dumps(rules, ensure_ascii=True, separators=(',', ':')).encode('utf-8')).decode('ascii')
     lines = [BEGIN]
     for offset in range(0, len(encoded), 120):
@@ -16328,13 +16330,51 @@ def render_block(rules, include_context=True):
             trunk_expr = ' | '.join('"${DIAL_TRUNK}" = "%s"' % x for x in tids)
             lines.append(' same => n(' + label + '_p0),GotoIf($[' + trunk_expr + ']?' + label + '_next:' + label + '_block)')
         elif mode == 'clase_servicio':
-            tids = sorted(set(str(x) for x in (r.get('troncales_ids') or [])), key=lambda x: int(x))
-            trunk_expr = ' | '.join('"${DIAL_TRUNK}" = "%s"' % x for x in tids)
-            lines.append(' same => n(' + label + '_p0),GotoIf($[' + trunk_expr + ']?' + label + '_d0:' + label + '_block)')
-            prefs = sorted(set(str(x) for x in (r.get('prefijos') or [])), key=lambda x: (len(x), x))
+            # La clase de servicio debe elegir la troncal antes del Dial().
+            # Se conserva el orden guardado de troncales_ids como prioridad.
+            tids = []
+            for value in (r.get('troncales_ids') or []):
+                tid = str(value)
+                if tid not in tids:
+                    tids.append(tid)
+            prefs = sorted(set(str(x) for x in (r.get('prefijos') or [])), key=lambda x: (-len(x), x))
+            lines.append(' same => n(' + label + '_p0),Goto(' + label + '_d0)')
             for pi, pref in enumerate(prefs):
                 fallback = label + ('_d%d' % (pi + 1) if pi + 1 < len(prefs) else '_block')
-                lines.append(' same => n(' + label + '_d%d),GotoIf($["${VP_RSTR_DEST:0:%d}" = "%s"]?%s:%s)' % (pi, len(pref), pref, label + '_next', fallback))
+                lines.append(' same => n(' + label + '_d%d),GotoIf($["${VP_RSTR_DEST:0:%d}" = "%s"]?%s:%s)' % (pi, len(pref), pref, label + '_t0', fallback))
+            # Elegir la primera troncal habilitada que no haya alcanzado OUTMAXCHANS.
+            for ti, tid in enumerate(tids):
+                next_trunk = label + ('_t%d' % (ti + 1) if ti + 1 < len(tids) else '_block')
+                selected = label + '_t%d_selected' % ti
+                lines.append(' same => n(' + label + '_t%d),GotoIf($["x${OUTDISABLE_%s}" = "xon"]?%s)' % (ti, tid, next_trunk))
+                lines.append(' same => n,GotoIf($["${OUTMAXCHANS_%s}" = ""]?%s)' % (tid, selected))
+                lines.append(' same => n,GotoIf($[${GROUP_COUNT(OUT_%s)} >= ${OUTMAXCHANS_%s}]?%s:%s)' % (tid, tid, next_trunk, selected))
+                lines.append(' same => n(' + selected + '),Set(VP_RSTR_SELECTED_TRUNK=' + tid + ')')
+                lines.append(' same => n,Goto(' + label + '_apply)')
+            lines.append(' same => n(' + label + '_apply),GotoIf($["${DIAL_TRUNK}" = "${VP_RSTR_SELECTED_TRUNK}"]?' + label + '_ready:' + label + '_switch)')
+            # El trunk anterior ya pudo modificar DIAL_NUMBER con su propio prefijo.
+            # No se adivina ni se deshace una transformación: se rechaza de forma segura.
+            lines.append(' same => n(' + label + '_switch),GotoIf($["${PREFIX_TRUNK_${DIAL_TRUNK}}" != ""]?' + label + '_prefix_conflict)')
+            lines.append(' same => n,Set(DIAL_TRUNK=${VP_RSTR_SELECTED_TRUNK})')
+            lines.append(' same => n,Set(OUTBOUND_GROUP=OUT_${DIAL_TRUNK})')
+            lines.append(' same => n,Set(DIAL_TRUNK_OPTIONS=${IF($["${DB_EXISTS(TRUNK/${DIAL_TRUNK}/dialopts)}" = "1"]?${DB_RESULT}:${TRUNK_OPTIONS})})')
+            lines.append(' same => n,ExecIf($["${QCALLBACK}" = "1"]?Set(DIAL_TRUNK_OPTIONS=${STRREPLACE(DIAL_TRUNK_OPTIONS,T)}))')
+            lines.append(' same => n,GotoIf($["${INTRACOMPANYROUTE}" = "YES"]?' + label + '_skipcid)')
+            if macro_app_available:
+                lines.append(' same => n,Macro(outbound-callerid,${DIAL_TRUNK})')
+                lines.append(' same => n(' + label + '_skipcid),ExecIf($["${PREFIX_TRUNK_${DIAL_TRUNK}}" != ""]?Macro(sub-flp-${DIAL_TRUNK}))')
+            else:
+                lines.append(' same => n,Gosub(macro-outbound-callerid,s,1(${DIAL_TRUNK}))')
+                lines.append(' same => n(' + label + '_skipcid),GosubIf($["${PREFIX_TRUNK_${DIAL_TRUNK}}" != ""]?sub-flp-${DIAL_TRUNK},s,1())')
+            lines.append(' same => n,Set(OUTNUM=${OUTPREFIX_${DIAL_TRUNK}}${DIAL_NUMBER})')
+            lines.append(' same => n,Set(custom=${CUT(OUT_${DIAL_TRUNK},:,1)})')
+            lines.append(' same => n,ExecIf($["${MOHCLASS}"!="default" & "${MOHCLASS}"!="" & "${FORCE_CONFIRM}"="" ]?Set(DIAL_TRUNK_MOH=${MOHCLASS}))')
+            lines.append(' same => n,ExecIf($["${FORCE_CONFIRM}"!="" ]?Set(DIAL_TRUNK_OPTIONS=${DIAL_TRUNK_OPTIONS}U(macro-confirm)))')
+            lines.append(' same => n,Goto(' + label + '_ready)')
+            lines.append(' same => n(' + label + '_prefix_conflict),NoOp(VoIP Provisioner: no se cambia de troncal porque la ruta anterior ya aplico prefijo)')
+            lines.append(' same => n,Playback(ss-noservice)')
+            lines.append(' same => n,Hangup(21)')
+            lines.append(' same => n(' + label + '_ready),NoOp(VoIP Provisioner: clase de servicio usa troncal ${DIAL_TRUNK})')
         else:
             prefs = sorted(set(str(x) for x in (r.get('prefijos') or [])), key=lambda x: (len(x), x))
             for pi, pref in enumerate(prefs):
@@ -16351,7 +16391,8 @@ def render_block(rules, include_context=True):
         lines.append(' same => n,Hangup(21)')
         lines.append(' same => n(' + label + '_next),NoOp(Continuar evaluación de restricciones)')
     if include_context:
-        lines.extend([' same => n,MacroExit()', END, ''])
+        hook_exit = 'MacroExit()' if macro_app_available else 'Return()'
+        lines.extend([' same => n,' + hook_exit, END, ''])
     else:
         lines.extend([END, ''])
     return '\n'.join(lines)
